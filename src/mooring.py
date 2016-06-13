@@ -9,27 +9,27 @@ import math
 from spar_utils import fairlead_anchor_table,ref_table
 
 class Mooring(Component):
-    # environment 
-    water_density = Float(1025,iotype='in',units='kg/m**3',desc='density of water')
+    """Environmental factor inputs.""" 
+    water_density = Float(iotype='in',units='kg/m**3',desc='density of water')
     water_depth = Float(iotype='in',units='m',desc='water depth')
-    scope_ratio = Float(1.5,iotype='in',units='m',desc = 'scope to fairlead height ratio')
-    pretension_percent = Float(5.0,iotype='in',desc='Pre-Tension Percentage of MBL (match PreTension)')
-    mooring_diameter = Float(0.09,iotype='in',units='m',desc='diameter of mooring chain')
-    fairlead_depth = Float(13.0,iotype='in',units='m',desc = 'fairlead depth')
-    number_of_mooring_lines = Int(3,iotype='in',desc='number of mooring lines')
-    mooring_type = Str('CHAIN',iotype='in',desc='CHAIN, STRAND, IWRC, or FIBER')
-    anchor_type = Str('PILE',iotype='in',desc='PILE or DRAG')
-    fairlead_offset_from_shell = Float(0.5,iotype='in',units='m',desc='fairlead offset from shell')
-    user_MBL = Float(0.0,iotype='in',units='N',desc='user defined minimum breaking load ')
-    user_WML = Float(0.0,iotype='in',units='kg/m',desc='user defined wet mass/length')
-    user_AE_storm = Float(0.0,iotype='in',units='Pa',desc='user defined E modulus')
-    user_MCPL = Float(0.0,iotype='in',units='USD/m',desc='user defined mooring cost per length')
-    user_anchor_cost = Float(0.0,iotype='in',units='USD',desc='user defined cost per anchor')
-    misc_cost_factor = Float(10.0,iotype='in',desc='miscellaneous cost factor in percent')
-    number_of_discretizations = Int(20,iotype='in',desc='number of segments for mooring discretization')
+    scope_ratio = Float(iotype='in',units='m',desc = 'scope to fairlead height ratio')
+    pretension_percent = Float(iotype='in',desc='Pre-Tension Percentage of MBL (match PreTension)')
+    mooring_diameter = Float(iotype='in',units='m',desc='diameter of mooring chain')
+    fairlead_depth = Float(iotype='in',units='m',desc = 'fairlead depth')
+    number_of_mooring_lines = Int(iotype='in',desc='number of mooring lines')
+    mooring_type = Str(iotype='in',desc='CHAIN, STRAND, IWRC, or FIBER')
+    anchor_type = Str(iotype='in',desc='PILE or DRAG')
+    fairlead_offset_from_shell = Float(iotype='in',units='m',desc='fairlead offset from shell')
+    user_MBL = Float(iotype='in',units='N',desc='user defined minimum breaking load ')
+    user_WML = Float(iotype='in',units='kg/m',desc='user defined wet mass/length')
+    user_AE_storm = Float(iotype='in',units='Pa',desc='user defined E modulus')
+    user_MCPL = Float(iotype='in',units='USD/m',desc='user defined mooring cost per length')
+    user_anchor_cost = Float(iotype='in',units='USD',desc='user defined cost per anchor')
+    misc_cost_factor = Float(iotype='in',desc='miscellaneous cost factor in percent')
+    number_of_discretizations = Int(iotype='in',desc='number of segments for mooring discretization')
     spar_elevations = Array(iotype='in', units='m',desc = 'end elevation of each section')
     spar_outer_diameter = Array(iotype='in',units='m',desc='top outer diameter')
-    # outputs 
+    """Outputs.""" 
     mooring_total_cost = Float(iotype='out',units='USD',desc='total cost for anchor + legs + miscellaneous costs')
     mooring_keel_to_CG = Float(iotype='out',units='m',desc='KGM used in spar.py')
     mooring_vertical_load = Float(iotype='out',units='N',desc='mooring vertical load in all mooring lines')
@@ -132,11 +132,7 @@ class Mooring(Component):
         # INITIAL CONDITIONS
         KGM = DRAFT - FD 
         VTOP =  np.interp(PTEN,Ttop,Vtop)*NM
-        #print PTEN #take this out
-        #print Ttop #take this out
-        #print mkh #take this out
         MHK = np.interp(PTEN,Ttop,mkh)
-        print MHK #take this out
         MVK = np.interp(PTEN,Ttop,mkv)*NM
         TMM = (WML+np.pi*MDIA**2/4*WDEN)*S*NM
         self.mooring_keel_to_CG = KGM

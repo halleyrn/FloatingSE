@@ -8,18 +8,21 @@ from tower_RNA import Tower_RNA
 import numpy as np
 import time
 #from spar_utils import filtered_stiffeners_table
+from spar_utils import sys_print
 
 class sparAssembly(Assembly):
     """ Top level assembly """
-    # environmental factors 
-    #air_density = Float(1.198,iotype='in', units='kg/m**3', desc='density of air') 
+    
+    """Environmental factors with default inputs.""" 
+    air_density = Float(1.198,iotype='in', units='kg/m**3', desc='density of air') 
     wind_reference_speed = Float(iotype='in', units='m/s', desc='reference wind speed')
     wind_reference_height = Float(iotype='in', units='m', desc='reference height')
     gust_factor = Float(1.0,iotype='in', desc='gust factor')
     alpha = Float(iotype='in', desc='power law exponent')
     water_depth = Float(iotype='in',units='m',desc='water depth')
-    #water_density = Float(1025,iotype='in',units='kg/m**3',desc='density of water')
-    # inputs from tower_RNA compoenent
+    water_density = Float(1025,iotype='in',units='kg/m**3',desc='density of water')
+    
+    """Inputs from tower_RNA component with default values."""
     tower_base_outer_diameter = Float(iotype='in',units='m',desc='outer diameter of tower base')
     tower_top_outer_diameter = Float(iotype='in',units='m',desc='outer diameter of tower top')
     tower_length = Float(iotype='in',units='m',desc='tower length')
@@ -29,11 +32,12 @@ class sparAssembly(Assembly):
     cut_out_speed = Float(25.,iotype='in', units='m/s',desc='cut-out speed of turbine') 
     tower_mass = Float(iotype='in', units='kg',desc='tower mass') 
     RNA_mass = Float(iotype='in', units='kg',desc='RNA mass') 
-    #gravity = Float(9.806,iotype='in', units='m/s**2', desc='gravity')
+    gravity = Float(9.806,iotype='in', units='m/s**2', desc='gravity')
     load_condition =  Str(iotype='in',desc='Load condition - N for normal or E for extreme')
     significant_wave_height = Float(iotype='in', units='m', desc='significant wave height')
     significant_wave_period = Float(iotype='in', units='m', desc='significant wave period')
-    # spar
+    
+    """Inputs from spar component with default values."""
     spar_elevations = Array(iotype='in', units='m',desc = 'elevations of each section')
     example_turbine_size = Str(iotype='in',desc='for example cases, 3MW, 6MW, or 10 MW')
     spar_outer_diameter = Array(iotype='in',units='m',desc='top outer diameter')
@@ -48,7 +52,8 @@ class sparAssembly(Assembly):
     E = Float(200.e9,iotype='in', units='Pa', desc='young"s modulus of spar material')
     nu = Float(0.3,iotype='in', desc='poisson"s ratio of spar material')
     yield_stress = Float(345000000.,iotype='in', units='Pa', desc='yield stress of spar material')
-    # mooring
+    
+    """Inputs from mooring component with default values."""
     fairlead_depth = Float(13.0,iotype='in',units='m',desc = 'fairlead depth')
     scope_ratio = Float(1.5,iotype='in',units='m',desc = 'scope to fairlead height ratio')
     pretension_percent = Float(5.0,iotype='in',desc='Pre-Tension Percentage of MBL (match PreTension)')
@@ -64,7 +69,8 @@ class sparAssembly(Assembly):
     user_anchor_cost = Float(0.0,iotype='in',units='USD',desc='user defined cost per anchor')
     misc_cost_factor = Float(10.0,iotype='in',desc='miscellaneous cost factor in percent')
     number_of_discretizations = Int(20,iotype='in',desc='number of segments for mooring discretization')
-    # ballast stuff inputs
+    
+    """Ballast inputs from spar component with default values."""
     shell_mass_factor = Float(1.0,iotype='in',desc='shell mass factor')
     bulkhead_mass_factor = Float(1.0,iotype='in',desc='bulkhead mass factor')
     ring_mass_factor = Float(1.0,iotype='in',desc='ring mass factor')
@@ -75,7 +81,8 @@ class sparAssembly(Assembly):
     permanent_ballast_density = Float(4492.,iotype='in',units='kg/m**3',desc='density of permanent ballast')
     fixed_ballast_density = Float(4000.,iotype='in',units='kg/m**3',desc='density of fixed ballast')
     offset_amplification_factor = Float(1.0,iotype='in',desc='amplification factor for offsets') 
-    # costs
+    
+    """Cost inputs from spar component with default values."""
     straight_col_cost = Float(3490.,iotype='in',units='USD',desc='cost of straight columns in $/ton')
     tapered_col_cost = Float(4720.,iotype='in',units='USD',desc='cost of tapered columns in $/ton')
     outfitting_cost = Float(6980.,iotype='in',units='USD',desc='cost of tapered columns in $/ton')
@@ -102,7 +109,7 @@ class sparAssembly(Assembly):
         self.connect('tower_base_outer_diameter','tower_RNA.base_outer_diameter')
         self.connect('tower_top_outer_diameter','tower_RNA.top_outer_diameter')
         self.connect('tower_length','tower_RNA.length')
-        #self.connect('air_density',['tower_RNA.air_density','spar.air_density'])
+        self.connect('air_density',['tower_RNA.air_density','spar.air_density'])
         self.connect('wind_reference_speed',['tower_RNA.wind_reference_speed','spar.wind_reference_speed'])
         self.connect('wind_reference_height',['tower_RNA.wind_reference_height','spar.wind_reference_height'])
         self.connect('gust_factor',['tower_RNA.gust_factor','spar.gust_factor'])
@@ -132,7 +139,7 @@ class sparAssembly(Assembly):
         self.connect('misc_cost_factor','mooring.misc_cost_factor')
         self.connect('number_of_discretizations','mooring.number_of_discretizations')
         self.connect('spar_outer_diameter',['mooring.spar_outer_diameter','spar.outer_diameter'])
-        #self.connect('water_density',['mooring.water_density','spar.water_density'])
+        self.connect('water_density',['mooring.water_density','spar.water_density'])
         self.connect('wall_thickness','spar.wall_thickness')
         self.connect('number_of_rings','spar.number_of_rings')
         self.connect('neutral_axis','spar.neutral_axis')
@@ -144,7 +151,7 @@ class sparAssembly(Assembly):
         self.connect('tapered_col_cost','spar.tapered_col_cost')
         self.connect('outfitting_cost','spar.outfitting_cost')
         self.connect('ballast_cost','spar.ballast_cost')
-        #self.connect('gravity','spar.gravity')
+        self.connect('gravity','spar.gravity')
         self.connect('load_condition','spar.load_condition')
         self.connect('significant_wave_height','spar.significant_wave_height')
         self.connect('significant_wave_period','spar.significant_wave_period')
@@ -243,7 +250,7 @@ class sparAssemblyCalculation(sparAssembly):
         self.connect('tower_base_outer_diameter','tower_RNA.base_outer_diameter')
         self.connect('tower_top_outer_diameter','tower_RNA.top_outer_diameter')
         self.connect('tower_length','tower_RNA.length')
-        #self.connect('air_density',['tower_RNA.air_density','spar.air_density'])
+        self.connect('air_density',['tower_RNA.air_density','spar.air_density'])
         self.connect('wind_reference_speed',['tower_RNA.wind_reference_speed','spar.wind_reference_speed'])
         self.connect('wind_reference_height',['tower_RNA.wind_reference_height','spar.wind_reference_height'])
         self.connect('gust_factor',['tower_RNA.gust_factor','spar.gust_factor'])
@@ -273,7 +280,7 @@ class sparAssemblyCalculation(sparAssembly):
         self.connect('misc_cost_factor','mooring.misc_cost_factor')
         self.connect('number_of_discretizations','mooring.number_of_discretizations')
         self.connect('spar_outer_diameter',['mooring.spar_outer_diameter','spar.outer_diameter'])
-        #self.connect('water_density',['mooring.water_density','spar.water_density'])
+        self.connect('water_density',['mooring.water_density','spar.water_density'])
         self.connect('wall_thickness','spar.wall_thickness')
         self.connect('number_of_rings','spar.number_of_rings')
         self.connect('neutral_axis','spar.neutral_axis')
@@ -285,7 +292,7 @@ class sparAssemblyCalculation(sparAssembly):
         self.connect('tapered_col_cost','spar.tapered_col_cost')
         self.connect('outfitting_cost','spar.outfitting_cost')
         self.connect('ballast_cost','spar.ballast_cost')
-        #self.connect('gravity','spar.gravity')
+        self.connect('gravity','spar.gravity')
         self.connect('load_condition','spar.load_condition')
         self.connect('significant_wave_height','spar.significant_wave_height')
         self.connect('significant_wave_period','spar.significant_wave_period')
@@ -320,32 +327,6 @@ class sparAssemblyCalculation(sparAssembly):
         self.connect('mooring.intact_mooring','spar.intact_mooring')
         self.connect('mooring.mooring_mass','spar.mooring_mass')
 
-def sys_print(example):
-    print 'scope ratio: ',example.scope_ratio
-    print 'pretension percent: ',example.pretension_percent
-    print 'mooring diameter: ',example.mooring_diameter
-    print 'PBH: ', example.permanent_ballast_height
-    print 'FBH: ', example.fixed_ballast_height
-    print 'YNA: ',example.spar.neutral_axis
-    print 'number of stiffeners: ',example.number_of_rings
-    print 'wall thickness: ',example.wall_thickness
-    print 'spar outer diameters', example.spar.outer_diameter
-    print '-------------------------------'
-    print 'WBH: ', example.spar.water_ballast_height
-    print 'heel angle: ',example.spar.heel_angle
-    print 'min offset unity: ',example.spar.min_offset_unity
-    print 'max offset unity: ',example.spar.max_offset_unity 
-    print 'VAL: ',example.spar.VAL
-    print 'VAG: ',example.spar.VAG
-    print 'VEL: ',example.spar.VEL
-    print 'VEG: ',example.spar.VEG
-    print 'web compactness: ',example.spar.web_compactness
-    print 'flange compactness: ',example.spar.flange_compactness
-    print '-------------------------------'
-    print 'spar mass: ', example.spar.spar_mass
-    print 'shell mass: ', example.spar.shell_mass
-    print 'bulkhead mass: ', example.spar.bulkhead_mass
-    print 'stiffener mass: ', example.spar.stiffener_mass
 
 def example_218WD_3MW():
     example = sparAssembly()
