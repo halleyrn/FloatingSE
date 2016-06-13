@@ -14,8 +14,8 @@ import numpy as np
 import time
 #from spar_utils import filtered_stiffeners_table
 
-# calculation with properties based mostly on the OC3 
 def example_OC3():
+    """Calculation with properties based mostly on the OC3."""
     example = sparAssemblyCalculation()
     example.tower_base_outer_diameter = 6.0
     example.tower_top_outer_diameter = 3.5
