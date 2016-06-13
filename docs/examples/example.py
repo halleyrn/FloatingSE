@@ -8,38 +8,11 @@ sys.path.append(os.path.expanduser('~') + '/Dropbox/NREL/NREL_WISDEM/src/twister
 from openmdao.main.api import Component, Assembly, convert_units
 from openmdao.main.datatypes.api import Float, Array, Enum, Str, Int, Bool
 from openmdao.lib.drivers.api import COBYLAdriver,SLSQPdriver
-from sparAssembly import sparAssemblyCalculation
+from sparAssembly import sparAssemblyCalculation, sys_print
 #from spar_discrete import spar_discrete
 import numpy as np
 import time
 #from spar_utils import filtered_stiffeners_table
-
-def sys_print(example):
-    print 'scope ratio: ',example.scope_ratio
-    print 'pretension percent: ',example.pretension_percent
-    print 'mooring diameter: ',example.mooring_diameter
-    print 'PBH: ', example.permanent_ballast_height
-    print 'FBH: ', example.fixed_ballast_height
-    print 'YNA: ',example.spar.neutral_axis
-    print 'number of stiffeners: ',example.number_of_rings
-    print 'wall thickness: ',example.wall_thickness
-    print 'spar outer diameters', example.spar.outer_diameter
-    print '-------------------------------'
-    print 'WBH: ', example.spar.water_ballast_height
-    print 'heel angle: ',example.spar.heel_angle
-    print 'min offset unity: ',example.spar.min_offset_unity
-    print 'max offset unity: ',example.spar.max_offset_unity 
-    print 'VAL: ',example.spar.VAL
-    print 'VAG: ',example.spar.VAG
-    print 'VEL: ',example.spar.VEL
-    print 'VEG: ',example.spar.VEG
-    print 'web compactness: ',example.spar.web_compactness
-    print 'flange compactness: ',example.spar.flange_compactness
-    print '-------------------------------'
-    print 'spar mass: ', example.spar.spar_mass
-    print 'shell mass: ', example.spar.shell_mass
-    print 'bulkhead mass: ', example.spar.bulkhead_mass
-    print 'stiffener mass: ', example.spar.stiffener_mass
 
 # calculation with properties based mostly on the OC3 
 def example_OC3():
@@ -81,7 +54,7 @@ def example_OC3():
     example.significant_wave_height = 10.820
     example.significant_wave_period = 9.800
     example.run()
-    print '----------218WD_3MW------------'
+    print '-------------OC3---------------'
     sys_print(example)
 
 if __name__ == "__main__":

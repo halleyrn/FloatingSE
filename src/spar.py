@@ -131,6 +131,7 @@ class Spar(Component):
         RCGX = self.RNA_center_of_gravity_x
         VTOP = self.mooring_vertical_load
         MHK = self.mooring_horizontal_stiffness
+        #print MHK #take this out
         MVK = self.mooring_vertical_stiffness
         KGM = self.mooring_keel_to_CG
         OD = np.array(self.outer_diameter)
@@ -142,7 +143,7 @@ class Spar(Component):
         for i in range(0,NSEC+1):
             if  self.elevations[i] >0:
                 ODTW = OD[i+1]
-        print ODTW
+        #print ODTW
         LB = ELS-ELE # lengths of each section
         DRAFT = abs(min(ELE))
         FB = ELS [0] # freeboard

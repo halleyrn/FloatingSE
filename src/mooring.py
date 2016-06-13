@@ -133,7 +133,11 @@ class Mooring(Component):
         # INITIAL CONDITIONS
         KGM = DRAFT - FD 
         VTOP =  np.interp(PTEN,Ttop,Vtop)*NM
+        #print PTEN #take this out
+        #print Ttop #take this out
+        #print mkh #take this out
         MHK = np.interp(PTEN,Ttop,mkh)
+        print MHK #take this out
         MVK = np.interp(PTEN,Ttop,mkv)*NM
         TMM = (WML+np.pi*MDIA**2/4*WDEN)*S*NM
         self.mooring_keel_to_CG = KGM
