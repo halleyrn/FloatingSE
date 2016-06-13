@@ -6,6 +6,8 @@ from sympy.solvers import solve
 from sympy import Symbol
 import math
 from spar_utils import windPowerLaw,dragForce,CD,windDrag,thrust_table
+
+# what is this for?
 pi=np.pi
 
 class Tower_RNA(Component):
@@ -36,8 +38,8 @@ class Tower_RNA(Component):
     
     def __init__(self):
         super(Tower_RNA,self).__init__()
-    def execute(self):
-       
+    
+    def execute(self):   
         # tower
         FB = self.spar_elevations[0]
         TBOD = self.base_outer_diameter

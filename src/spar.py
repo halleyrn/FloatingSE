@@ -7,6 +7,8 @@ from sympy.solvers import solve
 from sympy import Symbol
 import math
 from spar_utils import full_stiffeners_table,thrust_table,plasticityRF,frustumVol,frustumCG,ID,waveProperties,waveU,waveUdot,CD,inertialForce,windPowerLaw,pipeBuoyancy,rootsearch,bisect,roots,calcPsi,dragForce,curWaveDrag,windDrag,calculateWindCurrentForces
+
+#what is this for?
 pi=np.pi
 
 class Spar(Component):
@@ -93,8 +95,10 @@ class Spar(Component):
     shell_mass = Float(iotype='out',units='kg',desc='total mass of spar system')
     bulkhead_mass = Float(iotype='out',units='kg',desc='total mass of spar system')
     stiffener_mass = Float(iotype='out',units='kg',desc='total mass of spar system')
+    
     def __init__(self):
         super(Spar,self).__init__()
+    
     def execute(self):
         ''' 
         '''

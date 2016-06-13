@@ -320,7 +320,6 @@ class sparAssemblyCalculation(sparAssembly):
         self.connect('mooring.intact_mooring','spar.intact_mooring')
         self.connect('mooring.mooring_mass','spar.mooring_mass')
 
-
 def sys_print(example):
     print 'scope ratio: ',example.scope_ratio
     print 'pretension percent: ',example.pretension_percent

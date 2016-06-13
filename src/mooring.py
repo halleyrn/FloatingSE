@@ -8,7 +8,6 @@ from sympy import Symbol
 import math
 from spar_utils import fairlead_anchor_table,ref_table
 
-
 class Mooring(Component):
     # environment 
     water_density = Float(1025,iotype='in',units='kg/m**3',desc='density of water')
@@ -42,9 +41,9 @@ class Mooring(Component):
     intact_mooring = Array(iotype='out',units='m',desc='range of intact mooring')
     mooring_mass = Float(iotype='out',units='kg',desc='total mass of mooring')
 
-
     def __init__(self):
         super(Mooring,self).__init__()
+    
     def execute(self):
         WD = self.water_depth
         FD = self.fairlead_depth
