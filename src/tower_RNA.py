@@ -6,16 +6,14 @@ from sympy.solvers import solve
 from sympy import Symbol
 import math
 from spar_utils import windPowerLaw,dragForce,CD,windDrag,thrust_table
-
-# what is this for?
 pi=np.pi
 
 class Tower_RNA(Component):
     """Environmental factor inputs."""
-    air_density = Float(iotype='in', units='kg/m**3', desc='density of air') 
+    air_density = Float(1.198, iotype='in', units='kg/m**3', desc='density of air') 
     wind_reference_speed = Float(iotype='in', units='m/s', desc='reference wind speed')
     wind_reference_height = Float(iotype='in', units='m', desc='reference height')
-    gust_factor = Float(iotype='in', desc='gust factor')
+    gust_factor = Float(1.0, iotype='in', desc='gust factor')
     alpha = Float(iotype='in', desc='power law exponent')
     """Additional inputs."""
     base_outer_diameter = Float(iotype='in',units='m',desc='outer diameter of tower base')
@@ -26,7 +24,7 @@ class Tower_RNA(Component):
     rotor_diameter = Float(iotype='in', units='m',desc='rotor diameter')
     RNA_center_of_gravity_x = Float(iotype='in', units='m',desc='rotor center of gravity') 
     RNA_center_of_gravity_y = Float(iotype='in', units='m',desc='rotor center of gravity') 
-    cut_out_speed = Float(iotype='in', units='m/s',desc='cut-out speed of turbine') 
+    cut_out_speed = Float(25.0, iotype='in', units='m/s',desc='cut-out speed of turbine') 
     tower_mass = Float(iotype='in', units='kg',desc='tower mass') 
     RNA_mass = Float(iotype='in', units='kg',desc='RNA mass') 
     """Outputs."""

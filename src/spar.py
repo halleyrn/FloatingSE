@@ -7,16 +7,14 @@ from sympy.solvers import solve
 from sympy import Symbol
 import math
 from spar_utils import full_stiffeners_table,thrust_table,plasticityRF,frustumVol,frustumCG,ID,waveProperties,waveU,waveUdot,CD,inertialForce,windPowerLaw,pipeBuoyancy,rootsearch,bisect,roots,calcPsi,dragForce,curWaveDrag,windDrag,calculateWindCurrentForces
-
-#what is this for?
 pi=np.pi
 
 class Spar(Component):
     """Environmental factor inputs."""
-    gust_factor = Float(iotype='in', desc='gust factor')
-    gravity = Float(iotype='in', units='m/s**2', desc='gravity')
-    air_density = Float(iotype='in', units='kg/m**3', desc='density of air')
-    water_density = Float(iotype='in',units='kg/m**3',desc='density of water')
+    gust_factor = Float(1.0, iotype='in', desc='gust factor')
+    gravity = Float(9.806, iotype='in', units='m/s**2', desc='gravity')
+    air_density = Float(1.198, iotype='in', units='kg/m**3', desc='density of air')
+    water_density = Float(1025, iotype='in',units='kg/m**3',desc='density of water')
     water_depth = Float(iotype='in', units='m', desc='water depth')
     load_condition =  Str(iotype='in',desc='Load condition - N for normal or E for extreme')
     significant_wave_height = Float(iotype='in', units='m', desc='significant wave height')
@@ -28,10 +26,10 @@ class Spar(Component):
     number_of_rings = Array(iotype='in',desc = 'number of stiffeners in each section')
     neutral_axis = Float(iotype='in',units='m',desc = 'neutral axis location')
     """Costs inputs."""
-    straight_col_cost = Float(iotype='in',units='USD',desc='cost of straight columns in $/ton')
-    tapered_col_cost = Float(iotype='in',units='USD',desc='cost of tapered columns in $/ton')
-    outfitting_cost = Float(iotype='in',units='USD',desc='cost of tapered columns in $/ton')
-    ballast_cost = Float(iotype='in',units='USD',desc='cost of tapered columns in $/ton')
+    straight_col_cost = Float(3490, iotype='in',units='USD',desc='cost of straight columns in $/ton')
+    tapered_col_cost = Float(4720, iotype='in',units='USD',desc='cost of tapered columns in $/ton')
+    outfitting_cost = Float(6980, iotype='in',units='USD',desc='cost of tapered columns in $/ton')
+    ballast_cost = Float(100, iotype='in',units='USD',desc='cost of tapered columns in $/ton')
     """Additional inputs."""
     stiffener_curve_fit = Bool(iotye='in', desc='flag for using optimized stiffener dimensions or discrete stiffeners')
     stiffener_index = Int(iotype='in',desc='index of stiffener from filtered table')
@@ -39,21 +37,21 @@ class Spar(Component):
     outer_diameter = Array(iotype='in', units='m',desc = 'outer diameter of each section')
     elevations = Array(iotype='in', units='m',desc = 'elevations of each section')
     bulk_head = Array(iotype='in',desc = 'N for none, T for top, B for bottom') 
-    material_density = Float(iotype='in', units='kg/m**3', desc='density of spar material')
-    E = Float(iotype='in', units='Pa', desc='young"s modulus of spar material')
-    nu = Float(iotype='in', desc='poisson"s ratio of spar material')
-    yield_stress = Float(iotype='in', units='Pa', desc='yield stress of spar material')
+    material_density = Float(7850.,iotype='in', units='kg/m**3', desc='density of spar material')
+    E = Float(200.e9,iotype='in', units='Pa', desc='young"s modulus of spar material')
+    nu = Float(0.3,iotype='in', desc='poisson"s ratio of spar material')
+    yield_stress = Float(345000000.,iotype='in', units='Pa', desc='yield stress of spar material')
     """Ballast stuff inputs."""
-    shell_mass_factor = Float(iotype='in',desc='shell mass factor')
-    bulkhead_mass_factor = Float(iotype='in',desc='bulkhead mass factor')
-    ring_mass_factor = Float(iotype='in',desc='ring mass factor')
-    outfitting_factor = Float(iotype='in',desc='outfitting factor')
-    spar_mass_factor = Float(iotype='in',desc='spar mass factor')
-    permanent_ballast_height = Float(iotype='in',units='m',desc='height of permanent ballast')
-    fixed_ballast_height = Float(iotype='in',units='m',desc='height of fixed ballast')
-    permanent_ballast_density = Float(iotype='in',units='kg/m**3',desc='density of permanent ballast')
-    fixed_ballast_density = Float(iotype='in',units='kg/m**3',desc='density of fixed ballast')
-    offset_amplification_factor = Float(iotype='in',desc='amplification factor for offsets') 
+    shell_mass_factor = Float(1.0,iotype='in',desc='shell mass factor')
+    bulkhead_mass_factor = Float(1.0,iotype='in',desc='bulkhead mass factor')
+    ring_mass_factor = Float(1.0,iotype='in',desc='ring mass factor')
+    outfitting_factor = Float(0.06,iotype='in',desc='outfitting factor')
+    spar_mass_factor = Float(1.05,iotype='in',desc='spar mass factor')
+    permanent_ballast_height = Float(3.,iotype='in',units='m',desc='height of permanent ballast')
+    fixed_ballast_height = Float(5.,iotype='in',units='m',desc='height of fixed ballast')
+    permanent_ballast_density = Float(4492.,iotype='in',units='kg/m**3',desc='density of permanent ballast')
+    fixed_ballast_density = Float(4000.,iotype='in',units='kg/m**3',desc='density of fixed ballast')
+    offset_amplification_factor = Float(1.0,iotype='in',desc='amplification factor for offsets')  
     """Inputs from tower_RNA.py."""
     RNA_keel_to_CG = Float(iotype='in',units='m',desc='RNA keel to center of gravity')
     RNA_mass = Float(iotype='in',units='kg',desc='RNA mass')
