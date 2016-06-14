@@ -31,11 +31,11 @@ if __name__ == '__main__':
 
     mooring_1 = Map( )
     
-    mooring_1.map_set_sea_depth(100)
+    mooring_1.map_set_sea_depth(320.0)
     mooring_1.map_set_gravity(9.806)
-    mooring_1.map_set_sea_density(1020.0)
+    mooring_1.map_set_sea_density(1025.0)
 
-    mooring_1.read_file("./baseline_2.map") # 100 m depth
+    mooring_1.read_file("./input.map") # 100 m depth
     mooring_1.init( )
 
     epsilon = 1e-3
