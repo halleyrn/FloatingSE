@@ -19,7 +19,7 @@ class MainFile(object):
 	def write_to_main_input(self, water_depth, gravity, water_density):
 		self.water_depth = water_depth
 		#print "water depth: "+ str(self.water_depth)
-		file = open("./MAP/main_input.txt", "w")
+		file = open("./MAP/main_input.txt", "wb")
 		file.write("water_depth:\t%s\t" % str(water_depth))
 		file.write("gravity:\t%s\t" % str(gravity))
 		file.write("water_density:\t%s\n" % str(water_density))
@@ -27,7 +27,7 @@ class MainFile(object):
 
 	def write_line_dictionary_header(self):
 		"""Writes the first three lines of the input.map file."""
-		file = open("./MAP/input.map", "w")
+		file = open("./MAP/input.map", "wb")
 		file.write("----------------------")
 		file.write(" LINE DICTIONARY ---------------------------------------\n")
 		file.write("LineType  ")
@@ -54,7 +54,7 @@ class MainFile(object):
 		element_axial_stiffness, cable_sea_friction_coefficient):
 		"""Writes the forth line of the input.map file. This is where line type
 		properties are inputted."""
-		file = open("./MAP/input.map", "a")
+		file = open("./MAP/input.map", "ab")
 		if line_type in self.line_types:
 			raise ValueError("Already have %s line type." % line_type)
 		else:
@@ -72,7 +72,7 @@ class MainFile(object):
 
 	def write_node_properties_header(self):
 		"""Writes the node properties header"""
-		file = open("./MAP/input.map", "a")
+		file = open("./MAP/input.map", "ab")
 		file.write("----------------------")
 		file.write(" NODE PROPERTIES ---------------------------------------\n")
 		file.write("Node  ")
@@ -102,7 +102,7 @@ class MainFile(object):
 		z_coordinate, point_mass_appl, displaced_volume_appl, x_force_appl,
 		y_force_appl, z_force_appl):
 		"""Writes the input information for all the nodes."""
-		file = open("./MAP/input.map", "a")
+		file = open("./MAP/input.map", "ab")
 		file.write("%d   " % number)
 		if node_type.lower() == "fix":
 			file.write("%s   " % node_type)
@@ -148,7 +148,7 @@ class MainFile(object):
 
 
 	def write_line_properties_header(self):
-		file = open("./MAP/input.map", "a")
+		file = open("./MAP/input.map", "ab")
 		file.write("----------------------")
 		file.write(" LINE PROPERTIES ---------------------------------------\n")
 		file.write("Line    ")
@@ -167,7 +167,7 @@ class MainFile(object):
 
 	def write_line_properties(self, line_number, line_type, unstretched_length,
 		anchor_node_number, fairlead_node_number, control_output_text_stream):
-		file = open("./MAP/input.map", "a")
+		file = open("./MAP/input.map", "ab")
 		file.write("%d   " % line_number)
 		if line_type in self.line_types:
 			file.write("%s   " % line_type)
@@ -190,7 +190,7 @@ class MainFile(object):
 		file.close()
 
 	def write_solver_options(self):
-		file = open("./MAP/input.map", "a")
+		file = open("./MAP/input.map", "ab")
 		file.write("----------------------")
 		file.write(" SOLVER OPTIONS-----------------------------------------\n")
 		file.write("Option\n")
