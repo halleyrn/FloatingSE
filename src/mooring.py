@@ -7,6 +7,7 @@ from sympy.solvers import solve
 from sympy import Symbol
 import math
 from spar_utils import fairlead_anchor_table,ref_table
+from MAP_input import MainFile
 
 class Mooring(Component):
     """Environmental factor inputs.""" 
@@ -29,6 +30,7 @@ class Mooring(Component):
     number_of_discretizations = Int(20,iotype='in',desc='number of segments for mooring discretization')
     spar_elevations = Array(iotype='in', units='m',desc = 'end elevation of each section')
     spar_outer_diameter = Array(iotype='in',units='m',desc='top outer diameter')
+    gravity = Float(9.806, iotype='in', units='m/s**2', desc='gravity')
     """Outputs.""" 
     mooring_total_cost = Float(iotype='out',units='USD',desc='total cost for anchor + legs + miscellaneous costs')
     mooring_keel_to_CG = Float(iotype='out',units='m',desc='KGM used in spar.py')
@@ -45,6 +47,7 @@ class Mooring(Component):
         super(Mooring,self).__init__()
     
     def execute(self):
+        G = self. gravity
         WD = self.water_depth
         FD = self.fairlead_depth
         MDIA = self.mooring_diameter
@@ -60,6 +63,9 @@ class Mooring(Component):
         DRAFT = abs(min(ELE))
         FH = WD-FD 
         S = FH*SR
+
+        for_MAP = MainFile(WD,G,WDEN)
+
         if MTYPE == 'CHAIN':    
             MBL = 27600.*MDIA**2*(44.-80.*MDIA)*10**3
             WML = 18070.*MDIA**2

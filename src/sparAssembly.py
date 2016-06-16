@@ -108,6 +108,7 @@ class sparAssembly(Assembly):
         self.create_passthrough('mooring.number_of_discretizations','number_of_discretizations')
         self.create_passthrough('spar.water_density','water_density')
         self.connect('water_density','mooring.water_density')
+        self.connect('gravity','mooring.gravity')
 
         """Connect outputs to inputs."""
         self.connect('tower_RNA.RNA_keel_to_CG','spar.RNA_keel_to_CG')

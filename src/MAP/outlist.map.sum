@@ -1,0 +1,23 @@
+Outputs were generated using MAP++ 1.20.10.
+
+    Thursday June 16-2016 at 15:02:02 PM
+
+    Gravity constant          [m/s^2]  : 9.81
+    Sea density               [kg/m^3] : 1025.00
+    Water depth               [m]      : 320.00
+    Vessel reference position [m]      : 0.00 , 0.00 , 0.00
+
+    Cable Type          : )
+    Diameter     [m]    : 0.0000
+    Mass Density [kg/m] : 0.00
+    EA           [N]    : 0.00
+    omega        [N/m]  : 0.00
+    CB                  : 0.00
+
+    Cable Type          : CHAIN
+    Diameter     [m]    : 0.0900
+    Mass Density [kg/m] : 77.71
+    EA           [N]    : 384243000.00
+    omega        [N/m]  : 698.05
+    CB                  : 1.00
+

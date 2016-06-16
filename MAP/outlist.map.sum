@@ -1,6 +1,6 @@
 Outputs were generated using MAP++ 1.20.10.
 
-    Tuesday June 14-2016 at 16:09:46 PM
+    Thursday June 16-2016 at 08:58:52 AM
 
     Gravity constant          [m/s^2]  : 9.81
     Sea density               [kg/m^3] : 1025.00
@@ -100,12 +100,12 @@ Term. criteria  |  2 : ||x_i - x_{i-1}||  <= INNER_XTOL.
 ---------------------- LINE DICTIONARY ---------------------------------------
 LineType  Diam      MassDenInAir   EA            CB
 [-]       [m]       [kg/m]         [N]           [-]
-chain     0.09      77.7066    384243000        1.0    1.0E8    0.6 -1.0    0.05
+chain   0.09   77.7066   384243000   1.0   1.0E8   0.6   -1.0   0.05
 ---------------------- NODE PROPERTIES ---------------------------------------
 Node  Type       X       Y       Z      M     B     FX    FY    FZ
 [-]   [-]       [m]     [m]     [m]    [kg]  [mˆ3]  [N]   [N]   [N]
-1     fix       853.87   0      depth   0     0      #      #       #
-2     vessel    5.2      0      -70     0     0      #      #       # 
+1   fix   853.87   0   depth   0   0   #   #   #
+2   vessel   5.2   0   -70   0   0   #   #   # 
 3   fix   -426.9350   -739.4731   depth   0   0   #   #   #
 4   vessel   -2.6000   -4.5033   -70.0000   0   0   #   #   #
 5   fix   -426.9350   739.4731   depth   0   0   #   #   #
@@ -113,7 +113,7 @@ Node  Type       X       Y       Z      M     B     FX    FY    FZ
 ---------------------- LINE PROPERTIES ---------------------------------------
 Line  LineType  UnstrLen  NodeAnch  NodeFair  Flags
 [-]      [-]       [m]       [-]       [-]       [-]
-1        chain     902.2      1         2        gy_pos  gz_a_pos 
+1   chain   902.2   1   2   gy_pos  gz_a_pos 
 2   chain   902.2   3   4   gy_pos   gz_a_pos   
 3   chain   902.2   5   6   gy_pos   gz_a_pos   
 ---------------------- SOLVER OPTIONS-----------------------------------------
