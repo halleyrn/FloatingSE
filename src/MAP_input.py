@@ -18,6 +18,7 @@ class MainFile(object):
 
 	def write_to_main_input(self, water_depth, gravity, water_density):
 		self.water_depth = water_depth
+		#print "water depth: "+ str(self.water_depth)
 		file = open("./MAP/main_input.txt", "w")
 		file.write("water_depth:\t%s\t" % str(water_depth))
 		file.write("gravity:\t%s\t" % str(gravity))
@@ -57,15 +58,15 @@ class MainFile(object):
 		if line_type in self.line_types:
 			raise ValueError("Already have %s line type." % line_type)
 		else:
-			file.write("%s\t" % line_type)
+			file.write("%s   " % line_type)
 			self.line_types.append(line_type)
-		file.write("%f\t" % diameter)
-		file.write("%f\t" % air_mass_density)
-		file.write("%f\t" % element_axial_stiffness)
-		file.write("%f\t" % cable_sea_friction_coefficient)
-		file.write("1.0E8\t")
-		file.write("0.6\t")
-		file.write("-1.0\t")
+		file.write("%f   " % diameter)
+		file.write("%f   " % air_mass_density)
+		file.write("%f   " % element_axial_stiffness)
+		file.write("%f   " % cable_sea_friction_coefficient)
+		file.write("1.0E8   ")
+		file.write("0.6   ")
+		file.write("-1.0   ")
 		file.write("0.05\n")
 		file.close()
 
@@ -102,40 +103,46 @@ class MainFile(object):
 		y_force_appl, z_force_appl):
 		"""Writes the input information for all the nodes."""
 		file = open("./MAP/input.map", "a")
-		file.write("%d\t" % number)
+		file.write("%d   " % number)
 		if node_type.lower() == "fix":
-			file.write("%s\t" % node_type)
+			file.write("%s   " % node_type)
 			self.fix_nodes.append(number)
 		elif node_type.lower() == "connect":
-			file.write("%s\t" % node_type)
+			file.write("%s   " % node_type)
 			self.connect_nodes.append(number)
 		elif node_type.lower() == "vessel":
-			file.write("%s\t" % node_type)
+			file.write("%s   " % node_type)
 			self.vessel_nodes.append(number)
 		else:
 			raise ValueError("%s is not a valid node type for node %d" 
 				% (node_type, number))
-		file.write("%f\t" % x_coordinate)
-		if y_coordinate == self.water_depth:
-			file.write("depth\t")
-		else:
-			file.write("%f\t" % y_coordinate)
-		file.write("%f\t" % z_coordinate)
-		file.write("%f\t" % point_mass_appl)
-		file.write("%f\t" % displaced_volume_appl)
-		if x_force_appl.isdigit():
-			if node_type.lower() != "connect":
-				raise ValueError("%s can only have '#' force applied values."
-					% node_type)
-			file.write("%f\t" % x_force_appl)
-			file.write("%f\t" % y_force_appl)
-			file.write("%f\t" % z_force_appl)
-		else:
-			if node_type.lower() == "connect":
+		
+		if node_type.lower() == "connect":
+			file.write("#%f   " % x_coordinate)
+			file.write("#%f   " % y_coordinate)
+			file.write("#%f   " % z_coordinate)
+			file.write("%f   " % point_mass_appl)
+			file.write("%f   " % displaced_volume_appl)
+			if not x_force_appl.isdigit() or not y_force_appl.isdigit() or not z_force_appl.isdigit():
 				raise ValueError("%s must have numerical force applied values."
 					% node_type)
-			file.write("%s\t" % x_force_appl)
-			file.write("%s\t" % y_force_appl)
+			file.write("%f   " % x_force_appl)
+			file.write("%f   " % y_force_appl)
+			file.write("%f\n" % z_force_appl)
+		else:
+			file.write("%f   " % x_coordinate)
+			file.write("%f   " % y_coordinate)
+			if z_coordinate == self.water_depth:
+				file.write("depth   ")
+			else:
+				file.write("%f   " % z_coordinate)
+			file.write("%f   " % point_mass_appl)
+			file.write("%f   " % displaced_volume_appl)
+			if x_force_appl.isdigit() or y_force_appl.isdigit() or z_force_appl.isdigit():
+				raise ValueError("%s can only have '#' force applied values."
+					% node_type)
+			file.write("%s   " % x_force_appl)
+			file.write("%s   " % y_force_appl)
 			file.write("%s\n" % z_force_appl)
 		file.close()
 
@@ -161,22 +168,24 @@ class MainFile(object):
 	def write_line_properties(self, line_number, line_type, unstretched_length,
 		anchor_node_number, fairlead_node_number, control_output_text_stream):
 		file = open("./MAP/input.map", "a")
-		file.write("%d\t" % line_number)
+		file.write("%d   " % line_number)
 		if line_type in self.line_types:
-			file.write("%s\t" % line_type)
+			file.write("%s   " % line_type)
 			
 		else:
 			raise ValueError("%s is not a previously defined linetype within the" 
 				+ " Line Dictionary." % line_type)
-		file.write("%f\t" % unstretched_length)
-		if anchor_node_number in self.connect_nodes or anchor_node_number in self.fix_nodes:
-			if fairlead_node_number in self.connect_nodes or fairlead_node_number in self.vessel_nodes:
-				file.write("%d\t" % anchor_node_number)
-				file.write("%d\t" % fairlead_node_number)
-			else:
-				raise ValueError("%d cannot be an fairlead node" % fairlead_node_number)
-		else:
-			raise ValueError("%d cannot be an anchor node" % anchor_node_number)
+		file.write("%f   " % unstretched_length)
+		# if anchor_node_number in self.connect_nodes or anchor_node_number in self.fix_nodes:
+		# 	if fairlead_node_number in self.connect_nodes or fairlead_node_number in self.vessel_nodes:
+		# 		file.write("%d   " % anchor_node_number)
+		# 		file.write("%d   " % fairlead_node_number)
+		# 	else:
+		# 		raise ValueError("%d cannot be an fairlead node" % fairlead_node_number)
+		# else:
+		# 	raise ValueError("%d cannot be an anchor node" % anchor_node_number)
+		file.write("%d   " % anchor_node_number)
+		file.write("%d   " % fairlead_node_number)
 		file.write("%s\n" % control_output_text_stream)
 		file.close()
 
@@ -216,10 +225,6 @@ if __name__ == '__main__':
 	"""Testing the interface using homogeneous line OC3 mooring information."""
 	OC3 = MainFile()
 	OC3.write_to_main_input(320.0, 9.806, 1025.0)
-	# file = open("MAP/main_input.txt","r")
-	# data = file.readline().split()
-	# print data
-	# file.close
 	OC3.write_line_dictionary_header()
 	OC3.write_line_dictionary("CHAIN", 0.09, 77.7066, 384243000, 1.0)
 	OC3.write_node_properties_header()
