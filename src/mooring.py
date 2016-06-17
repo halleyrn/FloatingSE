@@ -5,7 +5,6 @@ import numpy as np
 from scipy.optimize import fmin, minimize
 from sympy.solvers import solve
 from sympy import Symbol
-import math
 from MAP_input import MainFile
 pi = np.pi
 
@@ -89,7 +88,7 @@ class Mooring(Component):
             WML = 160.9*MDIA**2+5.522*MDIA-0.04798
             AE_storm = (10120*MDIA**2+320.7*MDIA-35.47)*10**6
             AE_drift = (5156*MDIA**2+142.7*MDIA-16)*10**6
-            AREA = (np.pi/4)*MDIA**2
+            AREA = (pi/4)*MDIA**2
             MCPL = 0.53676471*(MBL/1000./G)
         else: 
             print "PLEASE PICK AVAILABLE MOORIN' TYPE M8"
@@ -105,10 +104,9 @@ class Mooring(Component):
         PTEN = MBL*PPER/100.
         MWPL = WML*G
         
-        n = 754.
         max_a =(MBL-MWPL*FH)/MWPL
-        INC = max_a/n
-        a = np.array(np.linspace(0.0,INC*n,num=n+1))
+        INC = max_a/754.
+        a = np.array(np.linspace(0.0,INC*754.,num=754.+1))
         H = MWPL*a
         Ttop = H + MWPL*FH
         Vtop = (Ttop**2-H**2)**0.5
@@ -177,12 +175,12 @@ class Mooring(Component):
             pi-np.arcsin(x0/XMAX*np.sin(direction[1]/180.*pi)))]
 
         # fairlead
-        fairlead_x = np.array(((ODB/2)+FOFF)*np.cos(direction*np.pi/180.))
-        fairlead_y = np.array(((ODB/2)+FOFF)*np.sin(direction*np.pi/180.))
+        fairlead_x = np.array(((ODB/2)+FOFF)*np.cos(direction*pi/180.))
+        fairlead_y = np.array(((ODB/2)+FOFF)*np.sin(direction*pi/180.))
         fairlead_z = np.array([-FD]*len(fairlead_x))
         # anchor 
-        anchor_x = np.array(fairlead_x+x0*np.cos(direction*np.pi/180.))
-        anchor_y = np.array(fairlead_y+x0*np.sin(direction*np.pi/180.))
+        anchor_x = np.array(fairlead_x+x0*np.cos(direction*pi/180.))
+        anchor_y = np.array(fairlead_y+x0*np.sin(direction*pi/180.))
         anchor_z = np.array([-WD]*len(anchor_x))
         # delta 
         delta = (survival_mooring[1]-survival_mooring[0])/NDIS
@@ -239,9 +237,9 @@ class Mooring(Component):
         VTOP =  np.interp(PTEN,Ttop,Vtop)*NM
         MHK = np.interp(PTEN,Ttop,mkh)
         MVK = np.interp(PTEN,Ttop,mkv)*NM
-        TMM = (WML+np.pi*MDIA**2/4*WDEN)*S*NM
+        TMM = (WML+pi*MDIA**2/4*WDEN)*S*NM
         self.mooring_keel_to_CG = KGM
         self.mooring_vertical_load = VTOP 
         self.mooring_horizontal_stiffness = MHK
         self.mooring_vertical_stiffness = MVK
-        self.mooring_mass = (WML+math.pi*MDIA**2/4*WDEN)*S*NM
+        self.mooring_mass = (WML+pi*MDIA**2/4*WDEN)*S*NM

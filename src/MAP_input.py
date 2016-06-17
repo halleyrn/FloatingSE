@@ -51,7 +51,7 @@ class MainFile(object):
 		file.close()
 
 	def write_line_dictionary(self, line_type, diameter, air_mass_density,
-		element_axial_stiffness, cable_sea_friction_coefficient):
+		element_axial_stiffness, cable_sea_friction_coefficient=1):
 		"""Writes the forth line of the input.map file. This is where line type
 		properties are inputted."""
 		file = open("./MAP/input.map", "ab")
@@ -99,8 +99,8 @@ class MainFile(object):
 
 
 	def write_node_properties(self, number, node_type, x_coordinate, y_coordinate,
-		z_coordinate, point_mass_appl, displaced_volume_appl, x_force_appl,
-		y_force_appl, z_force_appl):
+		z_coordinate, point_mass_appl, displaced_volume_appl, x_force_appl ="#",
+		y_force_appl = "#", z_force_appl = "#"):
 		"""Writes the input information for all the nodes."""
 		file = open("./MAP/input.map", "ab")
 		file.write("%d   " % number)
@@ -138,7 +138,7 @@ class MainFile(object):
 				file.write("%f   " % z_coordinate)
 			file.write("%f   " % point_mass_appl)
 			file.write("%f   " % displaced_volume_appl)
-			if x_force_appl.isdigit() or y_force_appl.isdigit() or z_force_appl.isdigit():
+			if str(x_force_appl).isdigit() or str(y_force_appl).isdigit() or str(z_force_appl).isdigit():
 				raise ValueError("%s can only have '#' force applied values."
 					% node_type)
 			file.write("%s   " % x_force_appl)
@@ -166,7 +166,7 @@ class MainFile(object):
 		file.close()
 
 	def write_line_properties(self, line_number, line_type, unstretched_length,
-		anchor_node_number, fairlead_node_number, control_output_text_stream):
+		anchor_node_number, fairlead_node_number, control_output_text_stream = " "):
 		file = open("./MAP/input.map", "ab")
 		file.write("%d   " % line_number)
 		if line_type in self.line_types:
@@ -228,8 +228,8 @@ if __name__ == '__main__':
 	OC3.write_line_dictionary_header()
 	OC3.write_line_dictionary("CHAIN", 0.09, 77.7066, 384243000, 1.0)
 	OC3.write_node_properties_header()
-	OC3.write_node_properties(1, "FIX", 853.87, 0, 320.0, 0, 0, "#", "#", "#")
-	OC3.write_node_properties(2, "VESSEL", 5.2, 0, -70.0, 0, 0, "#", "#", "#")
+	OC3.write_node_properties(1, "FIX", 853.87, 0, 320.0, 0, 0)
+	OC3.write_node_properties(2, "VESSEL", 5.2, 0, -70.0, 0, 0)
 	OC3.write_line_properties_header()
 	OC3.write_line_properties(1, "CHAIN", 902.2, 1, 2, "gy_pos  gz_a_pos")
 	OC3.write_solver_options()
