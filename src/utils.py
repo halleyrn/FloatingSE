@@ -1,18 +1,16 @@
 # -*- coding: utf-8 -*-
-"""
-
-"""
-import numpy as np
+#import numpy as np
 from math import pi, cos, sqrt, radians, sin, exp, log10, log, floor, ceil
 import scipy as scp
 from scipy.optimize import fmin, minimize
 from sympy.solvers import solve
 from sympy import Symbol
-import math
-pi=np.pi
+from numpy import asarray, array, cosh, sinh, tanh, interp, append, zeros, str_
 
 ##### FOR SPAR COMPONENT 
 def rootsearch(f,a,b,dx):
+    """I am not sure what this does, so I will be sure to go back and change
+    this later --Halley"""
     x1 = a; f1 = f(a)
     x2 = a + dx; f2 = f(x2)
     while f1*f2 > 0.0:
@@ -21,7 +19,10 @@ def rootsearch(f,a,b,dx):
         x1 = x2; f1 = f2
         x2 = x1 + dx; f2 = f(x2)
     return x1,x2
+
 def bisect(f,x1,x2,switch=0,epsilon=1.0e-9):
+    """I am not sure what this does, so I will be sure to go back and change
+    this later --Halley"""
     f1 = f(x1)
     if f1 == 0.0:
         return x1
@@ -31,7 +32,7 @@ def bisect(f,x1,x2,switch=0,epsilon=1.0e-9):
     if f1*f2 > 0.0:
         print('Root is not bracketed')
         return None
-    n = int(math.ceil(math.log(abs(x2 - x1)/epsilon)/math.log(2.0)))
+    n = int(ceil(log(abs(x2 - x1)/epsilon)/log(2.0)))
     for i in range(n):
         x3 = 0.5*(x1 + x2); f3 = f(x3)
         if (switch == 1) and (abs(f3) >abs(f1)) and (abs(f3) > abs(f2)):
@@ -45,8 +46,10 @@ def bisect(f,x1,x2,switch=0,epsilon=1.0e-9):
             x2 =x3
             f2 = f3
     return (x1 + x2)/2.0
+
 def roots(f, a, b, eps=1e-3):
-    #print ('The roots on the interval [%f, %f] are:' % (a,b))
+    """I am not sure what this does, so I will be sure to go back and change
+    this later --Halley"""
     while 1:
         x1,x2 = rootsearch(f,a,b,eps)
         if x1 != None:
@@ -54,24 +57,29 @@ def roots(f, a, b, eps=1e-3):
             root = bisect(f,x1,x2,1)
             if root != None:
                 pass
-                #print (round(root,-int(math.log(eps, 10))))
                 return root
         else:
-                    #print ('\nDone')
             break
-def calcPsi(F,FY): # for calculating allowable stresses
+
+def calcPsi(F,FY):
+    """Calculates allowable stresses."""
     dum = FY/2
     if F <= dum:
         return 1.2
     elif F > dum and F < FY:
         return 1.4 - 0.4*F/FY
     else: return 1
+
 def dragForce(D,CD,L,V,DEN):
+    """I am not sure what this does, so I will be sure to go back and change
+    this later --Halley"""
     DF = 0.5 * DEN * CD * D * L * V**2
     if V < 0 :
         DF = -DF 
     return DF
+
 def curWaveDrag(Hs,Tp,WD,ODT,ODB,ELS,SL,CG,VDOT,G,WDEN): 
+    """Calculates current and wave drag."""
     JMAX = np.array([0]*10)
     if Hs != 0:    
         H,Tw,k = waveProperties(Hs,Tp,WD,G)
@@ -112,7 +120,10 @@ def curWaveDrag(Hs,Tp,WD,ODT,ODB,ELS,SL,CG,VDOT,G,WDEN):
         m = m + fmax*L2 
         L = DL*i
     return m/(SL-CG)
+
 def windDrag(TLEN,TBOD,TTOD,WREFS,WREFH,ALPHA,FB,ADEN,GF):
+    """I am not sure what this does, so I will be sure to go back and change
+    this later --Halley"""
     TCG = (TLEN/4.)*(((TBOD/2.)**2+2.*(TBOD/2.)*(TTOD/2.)+3.*(TTOD/2.)**2.)/((TBOD/2.)**2+(TBOD/2.)*(TTOD/2.)+(TTOD/2.)**2))
     DL = TLEN/100.
     S = -(TBOD-TTOD)/TLEN
@@ -130,68 +141,94 @@ def windDrag(TLEN,TBOD,TTOD,WREFS,WREFH,ALPHA,FB,ADEN,GF):
             L=DL*i
     TWF = m/TCG
     return TCG,TWF
-def plasticityRF(F,FY): # plasticity reduction factor
+
+def plasticityRF(F,FY):
+    """Calculates plasticity reduction factor."""
     dum = FY/F
     if F > FY/2:
         return F*dum*(1+3.75*dum**2)**(-0.25)
     else: 
         return F*1
-def frustumVol(D1,D2,H): # calculates frustum volume - array or scalar inputs
-    D1 = np.asarray(D1)
-    D2 = np.asarray(D2)
+
+def frustumVol(D1,D2,H):
+    """Calculates frustum volume as an array or as a scalar input"""
+    D1 = asarray(D1)
+    D2 = asarray(D2)
     is_scalar=False if D1.ndim>0 else True
     D1.shape=(1,)*(1-D1.ndim) + D1.shape
     D2.shape=(1,)*(1-D2.ndim) + D2.shape
     l = len(D1)
-    fV = np.array([0.]*l)
+    fV = array([0.]*l)
     fV = pi * (H / 3) * ((D1/2.)**2 + (D1/2.)*(D2/2.) + (D2/2.)**2)
     return fV if not is_scalar else (fV)
-def frustumCG(D1,D2,H):  # calculates frustum center of gravity - array or scalar inputs
-    # frustum vertical CG
-    D1 = np.asarray(D1)
-    D2 = np.asarray(D2)
+
+def frustumCG(D1,D2,H):  
+    """Calculates frustum center of gravity as an array or as a scalar input."""
+    D1 = asarray(D1)
+    D2 = asarray(D2)
     is_scalar=False if D1.ndim>0 else True
     D1.shape=(1,)*(1-D1.ndim) + D1.shape
     D2.shape=(1,)*(1-D2.ndim) + D2.shape
     l = len(D1)
-    fCG = np.array([0.]*l)
+    fCG = array([0.]*l)
     fCG = H / 4. * (((D1/2.)**2 + 2.*(D1/2.)*(D2/2.) + 3.*(D2/2.)**2)/((D1/2.)**2 + (D1/2.) * (D2/2.)+ (D2/2.)**2))
     return fCG if not is_scalar else (fCG)
-def ID(D,WALL):  # calculates inner diameter - array or scalar inputs
-    D = np.asarray(D)
+
+def ID(D,WALL):  
+    """Calculates inner diameter - array or scalar inputs"""
+    D = asarray(D)
     is_scalar = False if D.ndim>0 else True
     D.shape = (1,)*(1-D.ndim) + D.shape   
     l = len(D)
-    ID = np.array([0.]*l)
+    ID = array([0.]*l)
     ID = D - 2.*WALL
     return ID if not is_scalar else (ID)
+
 def waveProperties(Hs,T,D,G):
+    """I am not sure what this does, so I will be sure to go back and change
+    this later --Halley"""
     waveHeight = 1.1*Hs
     wavePeriod = 11.1*(waveHeight/G)**0.5
     k0 = 2 * pi / ( T * (G * D) **0.5)
     ktol =1 
     while ktol > 0.001:
-        k = ( 2* pi/T) **2 / (G * np.tanh(k0*D))
+        k = ( 2* pi/T) **2 / (G * tanh(k0*D))
         ktol = abs(k-k0)
         k0 = k
     waveNumber = k 
     return waveHeight,wavePeriod,waveNumber
+
 def waveU(H,T,k,z,D,theta):
-    return (pi*H/T)*(np.cosh(k*(z+D))/np.sinh(k*D))*np.cos(theta)
+    """I am not sure what this does, so I will be sure to go back and change
+    this later --Halley"""
+    return (pi*H/T)*(cosh(k*(z+D))/sinh(k*D))*cos(theta)
+
 def waveUdot(H,T,k,z,D,theta):
-    return (2*pi**2*H/T**2)* (np.cosh(k*(z+D))/np.sinh(k*D))*np.sin(theta)
+    """I am not sure what this does, so I will be sure to go back and change
+    this later --Halley"""
+    return (2*pi**2*H/T**2)* (cosh(k*(z+D))/sinh(k*D))*sin(theta)
+
 def windPowerLaw(uref,href,alpha,H) :
+    """I am not sure what this does, so I will be sure to go back and change
+    this later --Halley"""
     return uref*(H/href)**alpha
+
 def pipeBuoyancy(D,WDEN):
+    """I am not sure what this does, so I will be sure to go back and change
+    this later --Halley"""
     return pi/4 * D**2 *WDEN 
+
 def currentSpeed(XNEW,water_depth): # dummy linear profile; replace with actual site info if available
+    """I am not sure what this does, so I will be sure to go back and change
+    this later --Halley"""
     CDEPTH = [0.000, 61.000, 91.000, water_depth]
     CSPEED = [0.570, 0.570, 0.100, 0.100]
-    #CDEPTH = [0.000, 61.000, 91.000, water_depth]
-    #CSPEED = [.6875, .6875, -.0175,-0.0175]
-    return np.interp(abs(XNEW),CDEPTH,CSPEED)
+    return interp(abs(XNEW),CDEPTH,CSPEED)
+
 def CD(U,D,DEN):
-    RE = np.log10(abs(U) * D / DEN)
+    """I am not sure what this does, so I will be sure to go back and change
+    this later --Halley"""
+    RE = log10(abs(U) * D / DEN)
     if RE <= 5.:
         return 1.2
     elif RE < 5.301:
@@ -210,14 +247,20 @@ def CD(U,D,DEN):
         return 0.6
     else:
         return 0.8
+
 def inertialForce(D,CA,L,A,VDOT,DEN):
+    """I am not sure what this does, so I will be sure to go back and change
+    this later --Halley"""
     IF = 0.25 * pi * DEN * D** 2 * L * (A + CA * (A - VDOT))
     if A < 0:
         IF = -IF
     return IF
+
 def calculateWindCurrentForces (KCGO,VD,N,AR,BH,OD,NSEC,T,LB,MDEN,DRAFT,ELE,ELS,WDEN,ADEN,G,Hs,Ts,WD,WREFS,WREFH,ALPHA): 
+    """I am not sure what this does, so I will be sure to go back and change
+    this later --Halley"""
     ODT = OD # outer diameter - top
-    ODB = np.append(OD[1:NSEC],OD[-1]) # outer diameter - bottom
+    ODB = append(OD[1:NSEC],OD[-1]) # outer diameter - bottom
     WOD = (ODT+ODB)/2 # average outer diameter 
     COD = WOD # center outer diameter
     IDT = ID(ODT,T)
@@ -230,23 +273,22 @@ def calculateWindCurrentForces (KCGO,VD,N,AR,BH,OD,NSEC,T,LB,MDEN,DRAFT,ELE,ELS,
     KCG = DRAFT + ELE + SCG # keel to shell center of gravity
     KCB = DRAFT + ELE + SCG
     SHB = OV*WDEN #  outer volume --> displaced water mass
-    coneH = np.array([0.]*NSEC)
+    coneH = array([0.]*NSEC)
     for i in range(0,len(LB)):
         if ODB[i]==ODT[i]:
             coneH[i]=LB[i]
         else:
             coneH[i] = -LB[i] * (ODB[i]/ODT[i]) / (1 - ODB[i]/ODT[i]) # cone height 
     # initialize arrays 
-    SCF = np.array([0.]*NSEC)
-    KCS = np.array([0.]*NSEC)
-    SCM = np.array([0.]*NSEC)
-    SWF = np.array([0.]*NSEC)
-    KWS = np.array([0.]*NSEC)
-    SWM = np.array([0.]*NSEC)
-    BHM = np.array([0.]*NSEC)
-    RGM = np.array([0.]*NSEC)
-    for i in range (0,NSEC): 
-    #for i in range(0,NSEC) :  # iterate through the sections
+    SCF = array([0.]*NSEC)
+    KCS = array([0.]*NSEC)
+    SCM = array([0.]*NSEC)
+    SWF = array([0.]*NSEC)
+    KWS = array([0.]*NSEC)
+    SWM = array([0.]*NSEC)
+    BHM = array([0.]*NSEC)
+    RGM = array([0.]*NSEC)
+    for i in range (0,NSEC): # iterate through the sections
         if i <(NSEC-1) : # everything but the last section 
             if ELE[i] <0 : # if bottom end underwater
                 HWL = abs(ELE[i]) 
@@ -328,33 +370,28 @@ def calculateWindCurrentForces (KCGO,VD,N,AR,BH,OD,NSEC,T,LB,MDEN,DRAFT,ELE,ELS,
             KCG[i] = (KCG[i] * SHM[i] + (DRAFT + ELE[i] + 0.5 * T[i]) * BHM[i]) / (SHM[i] + BHM[i])
         else: 
             KCG[i] = KCG[i]
-    #total_mass = sum(SHM)+sum(RGM)+sum(BHM)
-    #TCG,TWF = windDrag(TLEN,TBOD,TTOD,WREFS,WREFH,ALPHA,FB,ADEN,GF)
     return (SHM,RGM,BHM,SHB,SWF,SWM,SCF,SCM,KCG,KCB)
 
 
-
-
-
-
-
-
-
-
 def thrust_table(size_of_turbine,ADEN,RWA): 
-    wind = np.array(range(0,26))
+    """I am not sure what this does, so I will be sure to go back and change
+    this later --Halley"""
+    wind = array(range(0,26))
     if size_of_turbine == '3MW':
-        Ct = np.array([0.001,0.001,0.001,0.001,0.868,0.869,0.879,0.869,0.868,0.868,0.778,0.675,0.542,0.393,0.305,0.244,0.199,0.166,0.141,0.120,0.104,0.091,0.080,0.072,0.064,0.058])
+        Ct = array([0.001,0.001,0.001,0.001,0.868,0.869,0.879,0.869,0.868,0.868,0.778,0.675,0.542,0.393,0.305,0.244,0.199,0.166,0.141,0.120,0.104,0.091,0.080,0.072,0.064,0.058])
     elif size_of_turbine == '6MW':
-        Ct = np.array([0.001,0.001,0.001,0.768,0.768,0.762,0.764,0.768,0.758,0.763,0.688,0.608,0.434,0.328,0.259,0.209,0.171,0.143,0.122,0.104,0.089,0.078,0.070,0.062,0.055,0.050])
+        Ct = array([0.001,0.001,0.001,0.768,0.768,0.762,0.764,0.768,0.758,0.763,0.688,0.608,0.434,0.328,0.259,0.209,0.171,0.143,0.122,0.104,0.089,0.078,0.070,0.062,0.055,0.050])
     elif size_of_turbine == '10MW': 
-        Ct = np.array([0.001,0.001,0.001,0.923,0.923,0.919,0.904,0.858,0.814,0.814,0.814,0.814,0.577,0.419,0.323,0.259,0.211,0.175,0.148,0.126,0.109,0.095,0.084,0.074,0.066,0.059])
+        Ct = array([0.001,0.001,0.001,0.923,0.923,0.919,0.904,0.858,0.814,0.814,0.814,0.814,0.577,0.419,0.323,0.259,0.211,0.175,0.148,0.126,0.109,0.095,0.084,0.074,0.066,0.059])
     else: 
         print "examples are 3MW, 6MW, or 10MW"
     thrust = 0.5*ADEN*wind**2.*RWA*Ct/1000.
-    return (wind,Ct,thrust)    
+    return (wind,Ct,thrust) 
+
 def filtered_stiffeners_table():
-    TABLE = np.zeros(125,dtype=[('name',np.str_, 16),('area','f8'),('d','f8'),('tw','f8'),('bf','f8'),('tf','f8'),('yna','f8'),('Ir','f8')])
+    """I am not sure what this does, so I will be sure to go back and change
+    this later --Halley"""
+    TABLE = zeros(125,dtype=[('name',str_, 16),('area','f8'),('d','f8'),('tw','f8'),('bf','f8'),('tf','f8'),('yna','f8'),('Ir','f8')])
     # name area(m^2) depth(m) web thickness(m) flange width(m) flange thickness(m) yna(m) Ir (m^4)
     TABLE [0] = ('ST1.5x3.75',1.1,1.5,0.349,2.51,0.26,1.068,0.2)
     TABLE [1] = ('ST1.5x2.85',0.83,1.5,0.17,2.33,0.26,1.171,0.114)
@@ -484,7 +521,9 @@ def filtered_stiffeners_table():
     return TABLE
 
 def full_stiffeners_table():
-    TABLE = np.zeros(327,dtype=[('name',np.str_, 16),('area','f8'),('d','f8'),('tw','f8'),('bf','f8'),('tf','f8'),('yna','f8'),('Ir','f8')])
+    """I am not sure what this does, so I will be sure to go back and change
+    this later --Halley"""
+    TABLE = zeros(327,dtype=[('name',str_, 16),('area','f8'),('d','f8'),('tw','f8'),('bf','f8'),('tf','f8'),('yna','f8'),('Ir','f8')])
     # name area(m^2) depth(m) web thickness(m) flange width(m) flange thickness(m) yna(m) Ir (m^4)
     TABLE [0] = ('ST1.5x3.75',1.1, 1.5,0.349,2.51,0.26,1.068,0.2)
     TABLE [1] = ('ST1.5x2.85',0.83,1.5,0.17,2.33,0.26,1.171,0.114)

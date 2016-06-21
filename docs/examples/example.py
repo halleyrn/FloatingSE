@@ -9,11 +9,10 @@ from openmdao.main.api import Component, Assembly, convert_units
 from openmdao.main.datatypes.api import Float, Array, Enum, Str, Int, Bool
 from openmdao.lib.drivers.api import COBYLAdriver,SLSQPdriver
 from sparAssembly import sparAssemblyCalculation
-#from spar_discrete import spar_discrete
 import numpy as np
 import time
-#from spar_utils import filtered_stiffeners_table
-from spar_utils import sys_print
+#from utils import filtered_stiffeners_table
+from utils import sys_print
 
 def example_OC3():
     """Calculation with properties based mostly on the OC3."""
@@ -32,7 +31,7 @@ def example_OC3():
     example.RNA_mass = 125000.
     example.RNA_center_of_gravity_x = 5.75
     example.RNA_center_of_gravity_y = 3.5
-    example.fairlead_depth = 13. 
+    example.fairlead_depth = 70. 
     example.scope_ratio = 1.5
     example.pretension_percent = 5.
     example.mooring_diameter = 0.09

@@ -1,6 +1,6 @@
 Outputs were generated using MAP++ 1.20.10.
 
-    Thursday June 16-2016 at 16:34:03 PM
+    Monday June 20-2016 at 14:14:10 PM
 
     Gravity constant          [m/s^2]  : 9.81
     Sea density               [kg/m^3] : 1025.00
@@ -134,7 +134,7 @@ outer_tol 1e-4
  outer_cd
  inner_max_its 100
  outer_max_its 500
-repeat 120 240
+repeat 120 240 
  krylov_accelerator 3
  ref_position 0.0 0.0 -6.0
  -172.772029

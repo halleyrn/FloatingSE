@@ -7,8 +7,8 @@ from tower_RNA import Tower_RNA
 #from spar_discrete import spar_discrete
 import numpy as np
 import time
-#from spar_utils import filtered_stiffeners_table
-from spar_utils import sys_print
+#from utils import filtered_stiffeners_table
+from utils import sys_print
 
 class sparAssembly(Assembly):
     """ Top level assembly """
@@ -283,7 +283,7 @@ class sparAssemblyCalculation(sparAssembly):
 
 
 def example_218WD_3MW():
-    print 'statring 3MW' #delete
+    """Executes an optimization of 218WD 3MW."""
     example = sparAssembly()
     example.tower_base_outer_diameter = 4.890
     example.tower_top_outer_diameter = 2.5
@@ -320,13 +320,12 @@ def example_218WD_3MW():
     example.load_condition = 'N'
     example.significant_wave_height = 10.820*1.5
     example.significant_wave_period = 9.800
-    print 'staring example.run()'#delete
     example.run()
-    print 'finished example.run()'#delete
     print '----------218WD_3MW------------'
     sys_print(example)
 
 def example_218WD_6MW():
+    """Executes an optimization of 218WD 6MW."""
     example = sparAssembly()
     example.tower_base_outer_diameter = 6.0
     example.tower_top_outer_diameter = 3.51
@@ -373,6 +372,7 @@ def example_218WD_6MW():
     sys_print(example)
 
 def example_218WD_10MW():
+    """Executes an optimization of 218WD 10MW."""
     example = sparAssembly()
     example.tower_base_outer_diameter = 7.72
     example.tower_top_outer_diameter = 4.050

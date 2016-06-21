@@ -6,7 +6,7 @@ from scipy.optimize import fmin, minimize
 from sympy.solvers import solve
 from sympy import Symbol
 import math
-from spar_utils import full_stiffeners_table,thrust_table,plasticityRF,frustumVol,frustumCG,ID,waveProperties,waveU,waveUdot,CD,inertialForce,windPowerLaw,pipeBuoyancy,rootsearch,bisect,roots,calcPsi,dragForce,curWaveDrag,windDrag,calculateWindCurrentForces
+from utils import full_stiffeners_table,thrust_table,plasticityRF,frustumVol,frustumCG,ID,waveProperties,waveU,waveUdot,CD,inertialForce,windPowerLaw,pipeBuoyancy,rootsearch,bisect,roots,calcPsi,dragForce,curWaveDrag,windDrag,calculateWindCurrentForces
 pi=np.pi
 
 class Spar(Component):

@@ -5,7 +5,7 @@ from scipy.optimize import fmin, minimize
 from sympy.solvers import solve
 from sympy import Symbol
 import math
-from spar_utils import windPowerLaw,dragForce,CD,windDrag,thrust_table
+from utils import windPowerLaw,dragForce,CD,windDrag,thrust_table
 pi=np.pi
 
 class Tower_RNA(Component):
