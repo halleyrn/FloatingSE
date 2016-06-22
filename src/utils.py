@@ -7,7 +7,6 @@ from sympy.solvers import solve
 from sympy import Symbol
 from numpy import asarray, array, cosh, sinh, tanh, interp, append, zeros, str_
 
-##### FOR SPAR COMPONENT 
 def rootsearch(f,a,b,dx):
     """I am not sure what this does, so I will be sure to go back and change
     this later --Halley"""
@@ -80,7 +79,7 @@ def dragForce(D,CD,L,V,DEN):
 
 def curWaveDrag(Hs,Tp,WD,ODT,ODB,ELS,SL,CG,VDOT,G,WDEN): 
     """Calculates current and wave drag."""
-    JMAX = np.array([0]*10)
+    JMAX = array([0]*10)
     if Hs != 0:    
         H,Tw,k = waveProperties(Hs,Tp,WD,G)
     # calculate current and wave drag 
@@ -389,10 +388,10 @@ def thrust_table(size_of_turbine,ADEN,RWA):
     return (wind,Ct,thrust) 
 
 def filtered_stiffeners_table():
-    """I am not sure what this does, so I will be sure to go back and change
-    this later --Halley"""
+    """This looks like a incomplete table of stiffiners. Each entry has a name,
+    area(m^2), depth(m), web thickness(m), flange width(m), flange thickness(m),
+    yna(m), and Ir (m^4)."""
     TABLE = zeros(125,dtype=[('name',str_, 16),('area','f8'),('d','f8'),('tw','f8'),('bf','f8'),('tf','f8'),('yna','f8'),('Ir','f8')])
-    # name area(m^2) depth(m) web thickness(m) flange width(m) flange thickness(m) yna(m) Ir (m^4)
     TABLE [0] = ('ST1.5x3.75',1.1,1.5,0.349,2.51,0.26,1.068,0.2)
     TABLE [1] = ('ST1.5x2.85',0.83,1.5,0.17,2.33,0.26,1.171,0.114)
     TABLE [2] = ('ST2x4.75',1.39,2.,0.326,2.8,0.293,1.447,0.462)
@@ -521,10 +520,10 @@ def filtered_stiffeners_table():
     return TABLE
 
 def full_stiffeners_table():
-    """I am not sure what this does, so I will be sure to go back and change
-    this later --Halley"""
+    """This looks like a table of stiffiners. Each entry has a name, area(m^2),
+    depth(m), web thickness(m), flange width(m), flange thickness(m), yna(m),
+    and Ir (m^4)."""
     TABLE = zeros(327,dtype=[('name',str_, 16),('area','f8'),('d','f8'),('tw','f8'),('bf','f8'),('tf','f8'),('yna','f8'),('Ir','f8')])
-    # name area(m^2) depth(m) web thickness(m) flange width(m) flange thickness(m) yna(m) Ir (m^4)
     TABLE [0] = ('ST1.5x3.75',1.1, 1.5,0.349,2.51,0.26,1.068,0.2)
     TABLE [1] = ('ST1.5x2.85',0.83,1.5,0.17,2.33,0.26,1.171,0.114)
     TABLE [2] = ('ST2x4.75',1.39,2,0.326,2.8,0.293,1.447,0.462)
@@ -856,6 +855,7 @@ def full_stiffeners_table():
 
 
 def sys_print(example):
+    """Prints the results of the optimization."""
     print 'scope ratio: ',example.scope_ratio
     print 'pretension percent: ',example.pretension_percent
     print 'mooring diameter: ',example.mooring_diameter

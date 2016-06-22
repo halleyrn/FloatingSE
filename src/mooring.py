@@ -219,21 +219,6 @@ class Mooring(Component):
         fairlead_loc = [fairlead_x,fairlead_y,fairlead_z]
         anchor_loc = [anchor_x,anchor_y,anchor_z]
 
-
-        massInAir = massInWater + waterDensity*pi*(mooringDiameter**2)/4
-        for_MAP = MainFile(waterDepth, g, waterDensity)
-        for_MAP.write_line_dictionary_header()
-        for_MAP.write_line_dictionary(mooringType, mooringDiameter, massInAir, AE_storm)
-        for_MAP.write write_node_properties_header()
-        for_MAP.write_node_properties(1, "FIX", fairlead_x[0], fairlead_y[0], fairlead_z[0], 0, 0)
-        for_MAP.write_node_properties(2, "VESSEL", anchor_x[0], anchor_y[0], anchor_z[0], 0, 0) 
-        for_MAP.write_line_properties_header()
-        for_MAP.write_line_properties(1, mooringType, scope, 1, 2)
-        for_MAP.write_solver_options(numberMooringLines)
-        for_MAP.run_MAP()
-        # read the stiffness_matrix.txt
-
-
         self.sum_forces_x = sum_FX
         self.offset_x = X_Offset
         # COST

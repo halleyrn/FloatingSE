@@ -1,10 +1,10 @@
 # This Python file uses the following encoding: utf-8
 import os, sys
-from main import run
+#from main import run
 
 
-class MainFile(object):
-	"""The MainFile class takes everything from FloatingSE and puts it in the
+class InputMAP(object):
+	"""The InputMAP class takes everything from FloatingSE and puts it in the
 	correct format for MAP++. MAP++ then outputs a linearlized stiffness matrix
 	that FloatingSE uses in its optimization analysis."""
 	def __init__(self, water_depth, gravity, water_density):
@@ -12,7 +12,7 @@ class MainFile(object):
 		type, fixed nodes, connect node, and vessel nodes as empyt lists. Sets
 		water depth, gravity, and water density as WATER_DEPTH, GRAVITY, and
 		WATER_DENSITY, respectively."""
-		super(MainFile, self).__init__()
+		super(InputMAP, self).__init__()
 		self.x_stiffness = 0
 		self.y_stiffness = 0
 		self.z_stiffness = 0
@@ -22,7 +22,17 @@ class MainFile(object):
 		self.vessel_nodes = []
 		self.water_depth = water_depth
 		self.gravity = gravity
-		self. water_density = water_density
+		self.water_density = water_density
+
+	def write_to_main_input(self):
+
+		file = open(os.path.abspath("../src/main_input.txt"), "wb")
+		file.write("water_depth:\t%s\t" % str(self.water_depth))
+		file.write("gravity:\t%s\t" % str(self.gravity))
+		file.write("water_density:\t%s\n" % str(self.water_density))
+		file.close()
+
+
 
 	def write_line_dictionary_header(self):
 		"""Writes the first three lines of the input.map file:
@@ -30,7 +40,7 @@ class MainFile(object):
 LineType  Diam      MassDenInAir   EA            CB   CIntDamp  Ca   Cdn    Cdt
 (-)       (m)       (kg/m)        (N)           (-)   (Pa-s)    (-)  (-)    (-)
 		"""
-		file = open("./input.map", "wb")
+		file = open(os.path.abspath("../src/input.map"), "wb")
 		file.write("----------------------")
 		file.write(" LINE DICTIONARY ---------------------------------------\n")
 		file.write("LineType  ")
@@ -59,16 +69,16 @@ LineType  Diam      MassDenInAir   EA            CB   CIntDamp  Ca   Cdn    Cdt
 		DIAMETER, AIR_MASS_DENSITY, ELEMENT_AXIAL_STIFFNESS, and CABLE_SEA_
 		FRICTION_COEFFICIENT is inputted. CABLE_SEA_FRICTION_COEFFICIENT defaults
 		to 1 when none is given."""
-		file = open("./input.map", "ab")
+		file = open(os.path.abspath("../src/input.map"), "ab")
 		if line_type in self.line_types:
 			raise ValueError("Already have %s line type." % line_type)
 		else:
 			file.write("%s   " % line_type)
 			self.line_types.append(line_type)
-		file.write("%f   " % diameter)
-		file.write("%f   " % air_mass_density)
-		file.write("%f   " % element_axial_stiffness)
-		file.write("%f   " % cable_sea_friction_coefficient)
+		file.write("%.5f   " % diameter)
+		file.write("%.5f   " % air_mass_density)
+		file.write("%.5f   " % element_axial_stiffness)
+		file.write("%.5f   " % cable_sea_friction_coefficient)
 		file.write("1.0E8   ")
 		file.write("0.6   ")
 		file.write("-1.0   ")
@@ -81,7 +91,7 @@ LineType  Diam      MassDenInAir   EA            CB   CIntDamp  Ca   Cdn    Cdt
 Node  Type       X       Y       Z      M     B     FX      FY      FZ
 (-)   (-)       (m)     (m)     (m)    (kg)  (mˆ3)  (N)     (N)     (N)
 		"""
-		file = open("./input.map", "ab")
+		file = open(os.path.abspath("../src/input.map"), "ab")
 		file.write("----------------------")
 		file.write(" NODE PROPERTIES ---------------------------------------\n")
 		file.write("Node  ")
@@ -112,7 +122,7 @@ Node  Type       X       Y       Z      M     B     FX      FY      FZ
 		y_force_appl = "#", z_force_appl = "#"):
 		"""Writes the input information for a node based on NODE_TYPE. X_FORCE_APPL, 
 		Y_FORCE_APP, Z_FORCE_APP defaults to '#' if none is given."""
-		file = open("./input.map", "ab")
+		file = open(os.path.abspath("../src/input.map"), "ab")
 		file.write("%d   " % number)
 		if node_type.lower() == "fix":
 			file.write("%s   " % node_type)
@@ -128,26 +138,26 @@ Node  Type       X       Y       Z      M     B     FX      FY      FZ
 				% (node_type, number))
 		
 		if node_type.lower() == "connect":
-			file.write("#%f   " % x_coordinate)
-			file.write("#%f   " % y_coordinate)
-			file.write("#%f   " % z_coordinate)
-			file.write("%f   " % point_mass_appl)
-			file.write("%f   " % displaced_volume_appl)
+			file.write("#%.5f   " % x_coordinate)
+			file.write("#%.5f   " % y_coordinate)
+			file.write("#%.5f   " % z_coordinate)
+			file.write("%.5f   " % point_mass_appl)
+			file.write("%.5f   " % displaced_volume_appl)
 			if not x_force_appl.isdigit() or not y_force_appl.isdigit() or not z_force_appl.isdigit():
 				raise ValueError("%s must have numerical force applied values."
 					% node_type)
-			file.write("%f   " % x_force_appl)
-			file.write("%f   " % y_force_appl)
-			file.write("%f\n" % z_force_appl)
+			file.write("%.5f   " % x_force_appl)
+			file.write("%.5f   " % y_force_appl)
+			file.write("%.5f\n" % z_force_appl)
 		else:
-			file.write("%f   " % x_coordinate)
-			file.write("%f   " % y_coordinate)
+			file.write("%.5f   " % x_coordinate)
+			file.write("%.5f   " % y_coordinate)
 			if z_coordinate == self.water_depth:
 				file.write("depth   ")
 			else:
-				file.write("%f   " % z_coordinate)
-			file.write("%f   " % point_mass_appl)
-			file.write("%f   " % displaced_volume_appl)
+				file.write("%.5f   " % z_coordinate)
+			file.write("%.5f   " % point_mass_appl)
+			file.write("%.5f   " % displaced_volume_appl)
 			if str(x_force_appl).isdigit() or str(y_force_appl).isdigit() or str(z_force_appl).isdigit():
 				raise ValueError("%s can only have '#' force applied values."
 					% node_type)
@@ -163,7 +173,7 @@ Node  Type       X       Y       Z      M     B     FX      FY      FZ
 Line    LineType  UnstrLen  NodeAnch  NodeFair  Flags
 (-)      (-)       (m)       (-)       (-)       (-)
 		"""
-		file = open("./input.map", "ab")
+		file = open(os.path.abspath("../src/input.map"), "ab")
 		file.write("----------------------")
 		file.write(" LINE PROPERTIES ---------------------------------------\n")
 		file.write("Line    ")
@@ -185,7 +195,7 @@ Line    LineType  UnstrLen  NodeAnch  NodeFair  Flags
 		"""Writes the input information for the line properties. This explains
 		what node number is the ANCHOR and what node number is the FAIRLEAD, 
 		as well as the UNSTRETCHED_LENGTH between the two nodes."""
-		file = open("./input.map", "ab")
+		file = open(os.path.abspath("../src/input.map"), "ab")
 		file.write("%d   " % line_number)
 		if line_type in self.line_types:
 			file.write("%s   " % line_type)
@@ -193,7 +203,7 @@ Line    LineType  UnstrLen  NodeAnch  NodeFair  Flags
 		else:
 			raise ValueError("%s is not a previously defined linetype within the" 
 				+ " Line Dictionary." % line_type)
-		file.write("%f   " % unstretched_length)
+		file.write("%.5f   " % unstretched_length)
 		# if anchor_node_number in self.connect_nodes or anchor_node_number in self.fix_nodes:
 		# 	if fairlead_node_number in self.connect_nodes or fairlead_node_number in self.vessel_nodes:
 		# 		file.write("%d   " % anchor_node_number)
@@ -242,7 +252,7 @@ repeat 120 240
   -28.179102
 
 		"""
-		file = open("./input.map", "ab")
+		file = open(os.path.abspath("../src/input.map"), "ab")
 		file.write("----------------------")
 		file.write(" SOLVER OPTIONS-----------------------------------------\n")
 		file.write("Option\n")
@@ -279,15 +289,16 @@ repeat 120 240
 		file.write("  -28.179102\n")
 		file.close()
 
-	def run_MAP(self):
-		"""This function runs MAP++."""
-		run(self.water_depth, self.gravity, self.water_density)
+	# def run_MAP(self):
+	# 	"""This function runs MAP++."""
+	# 	run(self.water_depth, self.gravity, self.water_density)
+
 
 
 if __name__ == '__main__':
 	"""Testing the interface using homogeneous line OC3 mooring information."""
 	OC3 = MainFile(320.0, 9.806, 1025.0)
-	# OC3.write_to_main_input(320.0, 9.806, 1025.0)
+	OC3.write_to_main_input()
 	OC3.write_line_dictionary_header()
 	OC3.write_line_dictionary("CHAIN", 0.09, 77.7066, 384243000, 1.0)
 	OC3.write_node_properties_header()
@@ -296,5 +307,5 @@ if __name__ == '__main__':
 	OC3.write_line_properties_header()
 	OC3.write_line_properties(1, "CHAIN", 902.2, 1, 2, "gy_pos  gz_a_pos")
 	OC3.write_solver_options(3)
-	OC3.run_MAP()
+	#OC3.run_MAP()
 
