@@ -114,4 +114,26 @@ if __name__ == '__main__':
      
     plt.show()
     
+    surge = 5.0 # 5 meter surge displacements
+    mooring_1.displace_vessel(surge,0,0,0,0,0)
+    mooring_1.update_states(0.0,0)
+     
+    K = mooring_1.linear(epsilon)    
+    print "\nLinearized stiffness matrix with %2.2f surge vessel displacement:\n"%(surge)
+    print np.array(K)
+
+    fig = plt.figure()
+    ax = Axes3D(fig)
+    for i in range(0,mooring_1.size_lines()):
+        x = mooring_1.plot_x( i, 10 )
+        y = mooring_1.plot_y( i, 10 )
+        z = mooring_1.plot_z( i, 10 )        
+        ax.plot(x,y,z,'b-')
+     
+    ax.set_xlabel('X [m]')
+    ax.set_ylabel('Y [m]')
+    ax.set_zlabel('Z [m]')           
+     
+    plt.show()
+    
     mooring_1.end( )
