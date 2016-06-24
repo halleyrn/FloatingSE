@@ -1,261 +1,456 @@
-from openmdao.main.api import Component, Assembly,convert_units
-from openmdao.lib.datatypes.api import Float, Array, Str, Int, Bool
-from openmdao.lib.drivers.api import SLSQPdriver
-from numpy import pi, array, arcsin, arcsinh, arccosh, linspace, interp, arccosh, sin, empty, object, power, cos
-from scipy.optimize import fmin, minimize
-from sympy.solvers import solve
-from sympy import Symbol
-from input_map import InputMAP
+# This Python file uses the following encoding: utf-8
+
+'''
+  Copyright (C) 2014 mdm                                     
+  marco[dot]masciola[at]gmail                                
+                                                             
+Licensed to the Apache Software Foundation (ASF) under one   
+or more contributor license agreements.  See the NOTICE file 
+distributed with this work for additional information        
+regarding copyright ownership.  The ASF licenses this file   
+to you under the Apache License, Version 2.0 (the            
+"License"); you may not use this file except in compliance   
+with the License.  You may obtain a copy of the License at   
+                                                             
+  http://www.apache.org/licenses/LICENSE-2.0                 
+                                                             
+Unless required by applicable law or agreed to in writing,   
+software distributed under the License is distributed on an  
+"AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY       
+KIND, either express or implied.  See the License for the    
+specific language governing permissions and limitations            
+under the License.                                             
+'''  
+
+from mapsys import *
+import matplotlib.pyplot as plt
+from mpl_toolkits.mplot3d import Axes3D
+from numpy import array, set_printoptions, diag, cos, pi, sin
 import os
+import sys
 
-class Map(Component):
-    """Creates a mooring component that can be optimized using MAP and 
-    OpenMDAO.""" 
-    water_density = Float(1025, iotype='in',units='kg/m**3',desc='density of water')
-    water_depth = Float(iotype='in',units='m',desc='water depth')
-    scope_ratio = Float(1.5, iotype='in',units='m',desc = 'scope to fairlead height ratio')
-    pretension_percent = Float(5.0, iotype='in',desc='Pre-Tension Percentage of minBreakingLoad (match PreTension)')
-    mooring_diameter = Float(.09, iotype='in',units='m',desc='diameter of mooring chain')
-    fairlead_depth = Float(13, iotype='in',units='m',desc = 'fairlead depth')
-    number_of_mooring_lines = Int(3, iotype='in',desc='number of mooring lines')
-    mooring_type = Str('CHAIN', iotype='in',desc='CHAIN, STRAND, IWRC, or FIBER')
-    anchor_type = Str('PILE', iotype='in',desc='PILE or DRAG')
-    fairlead_offset_from_shell = Float(.5, iotype='in',units='m',desc='fairlead offset from shell')
-    user_MBL = Float(0.0,iotype='in',units='N',desc='user defined minimum breaking load ')
-    user_WML = Float(0.0,iotype='in',units='kg/m',desc='user defined wet mass/length')
-    user_AE_storm = Float(0.0,iotype='in',units='Pa',desc='user defined E modulus')
-    user_MCPL = Float(0.0,iotype='in',units='USD/m',desc='user defined mooring cost per length')
-    user_anchor_cost = Float(0.0,iotype='in',units='USD',desc='user defined cost per anchor')
-    misc_cost_factor = Float(10.0,iotype='in',desc='miscellaneous cost factor in percent')
-    number_of_discretizations = Int(20,iotype='in',desc='number of segments for mooring discretization')
-    spar_elevations = Array(iotype='in', units='m',desc = 'end elevation of each section')
-    spar_outer_diameter = Array(iotype='in',units='m',desc='top outer diameter')
-    gravity = Float(9.806, iotype='in', units='m/s**2', desc='gravity')
+class InputMAP(object):
+    """The InputMAP class takes everything from FloatingSE and puts it in the
+    correct format for MAP++. MAP++ then outputs a linearlized stiffness matrix
+    that FloatingSE uses in its optimization analysis."""
+    def __init__(self, water_depth, gravity, water_density, 
+        number_of_mooring_lines):
+        """Initalizes x, y, and z stiffness variables to 0. Initalizes line
+        type, fixed nodes, connect node, and vessel nodes as empyt lists. Sets
+        water depth, gravity, and water density as WATER_DEPTH, GRAVITY, and
+        WATER_DENSITY, respectively."""
+        super(InputMAP, self).__init__()
+        self.x_stiffness = 0
+        self.y_stiffness = 0
+        self.z_stiffness = 0
+        self.line_type = 0
+        self.water_depth = water_depth
+        self.gravity = gravity
+        self.water_density = water_density
+        self.number_of_mooring_lines = number_of_mooring_lines
+        self.MBL = 0
+        self.WML = 0
+        self.AE_storm = 0
+        self.AREA = 0
+        self.MCPL = 0
+        self.diameter = 0
 
-    mooring_total_cost = Float(iotype='out',units='USD',desc='total cost for anchor + legs + miscellaneous costs')
-    mooring_keel_to_CG = Float(iotype='out',units='m',desc='KGM used in spar.py')
-    mooring_vertical_load = Float(iotype='out',units='N',desc='mooring vertical load in all mooring lines')
-    mooring_horizontal_stiffness = Float(iotype='out',units='N/m',desc='horizontal stiffness of one single mooring line')
-    mooring_vertical_stiffness = Float(iotype='out',units='N/m',desc='vertical stiffness of all mooring lines')
-    sum_forces_x = Array(iotype='out',units='N',desc='sume of forces in x direction')
-    offset_x = Array(iotype='out',units='m',desc='X offsets in discretization')
-    damaged_mooring = Array(iotype='out',units='m',desc='range of damaged mooring')
-    intact_mooring = Array(iotype='out',units='m',desc='range of intact mooring')
-    mooring_mass = Float(iotype='out',units='kg',desc='total mass of mooring')
-
-    def __init__(self):
-        super(Map,self).__init__()
-    
-    def execute(self):
-        """Shows the relationship between each of the variables above."""
-        g = self. gravity
-        waterDepth = self.water_depth
-        fairleadDepth = self.fairlead_depth
-        mooringDiameter = self.mooring_diameter
-        scopeRatio = self.scope_ratio
-        pretensionPercent = self.pretension_percent
-        mooringType = self.mooring_type
-        numberMooringLines = self.number_of_mooring_lines
-        fairleadOffset = self.fairlead_offset_from_shell
-        sparOuterDiameter = self.spar_outer_diameter[-1]
-        numberDicrestizations= self.number_of_discretizations
-        waterDensity = self.water_density
-        sparElevations = self.spar_elevations[1:]
-        DRAFT = abs(min(sparElevations))
-        fairlead2seafloor = waterDepth-fairleadDepth 
-        scope = fairlead2seafloor*scopeRatio
-        
-        if mooringType == 'CHAIN':    
-            minBreakingLoad = 27600.*(mooringDiameter**2)*(44.-80.*mooringDiameter)*(10**3)
-            wetMassPerLength = 18070.*(mooringDiameter**2)
-            AE_storm = (1.3788*(mooringDiameter**2)-4.93*(mooringDiameter**3))*(10**11)
-            area = 2.64*(mooringDiameter**2)
-            costPerLength = 0.58*(minBreakingLoad/1000./g)-87.6
-            massInWater = 18070*(mooringDiameter**2)
-        elif mooringType == 'STRAND':
-            minBreakingLoad = (937600*(mooringDiameter**2)-1408.3*mooringDiameter)*(10**3)
-            wetMassPerLength = 4110*(mooringDiameter**2)
-            AE_storm = 9.28*(mooringDiameter**2)*(10**10)
-            area = 0.58*(mooringDiameter**2)
-            costPerLength = 0.42059603*(minBreakingLoad/1000./g)+109.5
-            massInWater = 4110*(mooringDiameter**2)
-        elif mooringType == 'IWRC':
-            minBreakingLoad = 648000*(mooringDiameter**2)*(10**3)
-            wetMassPerLength = 3670*(mooringDiameter**2)
-            AE_storm = 6.01*(mooringDiameter**2)*(10**10)
-            area = 0.54*(mooringDiameter**2)
-            costPerLength = 0.33*(minBreakingLoad/1000./g)+139.5
-            massInWater = 3670*(mooringDiameter**2)
-        elif mooringType == 'FIBER': 
-            minBreakingLoad = (274700*(mooringDiameter**2)+7953.9*mooringDiameter-879.24)*(10**3)
-            wetMassPerLength = 160.9*(mooringDiameter**2)+5.522*mooringDiameter-0.04798
-            AE_storm = (10120*(mooringDiameter**2)+320.7*mooringDiameter-35.47)*(10**6)
-            AE_drift = (5156*(mooringDiameter**2)+142.7*mooringDiameter-16)*(10**6)
-            area = (pi/4)*(mooringDiameter**2)
-            costPerLength = 0.53676471*(minBreakingLoad/1000./g)
-            massInWater = 160.9*(mooringDiameter**2)+5.522*(mooringDiameter)-0.04798
+    def mooring_properties(self, mooringDiameter, line_type):
+        """Minimun breaking load (MBL), wet mass per length (WML), element axial
+        stiffness (AE_storm and AE_drift), area, and MCPL are calcuated here
+        with MOORING DIAMETER and LINE TYPE"""
+        self.diameter = mooringDiameter
+        self.line_type = line_type
+        if line_type == 'CHAIN':
+            # print "I am a chain"
+            self.MBL = (27600.*(mooringDiameter**2)*(44.-80.*mooringDiameter))*10**3
+            self.WML = 18070.*(mooringDiameter**2)
+            self.AE_storm = (1.3788*mooringDiameter**2-4.93*mooringDiameter**3)*10**11
+            self.AREA = 2.64*(mooringDiameter**2)
+            self.MCPL = 0.58*self.MBL/1000./self.gravity-87.6
+            # print "MBL: %d WML: %d AE_storm: %d area: %.4f MCPL: %d" % (self.MBL, self.WML, self.AE_storm, self.AREA, self.MCPL)
+        elif line_type == 'STRAND':
+            self.MBL = (937600*mooringDiameter**2-1408.3*mooringDiameter)*10**3
+            self.WML = 4110*(mooringDiameter**2)
+            self.AE_storm = 9.28*(mooringDiameter**2)*(10**10)
+            self.AREA = 0.58*(mooringDiameter**2)
+            self.MCPL = 0.42059603*(self.MBL/1000./self.gravity)+109.5
+        elif line_type == 'IWRC':
+            self.MBL = 648000*(mooringDiameter**2)*(10**3)
+            self.WML = 3670*(mooringDiameter**2)
+            self.AE_storm = 6.01*(mooringDiameter**2)*(10**10)
+            self.AREA = 0.54*(mooringDiameter**2)
+            self.MCPL = 0.33*(self.MBL/1000./self.gravity)+139.5
+        elif line_type == 'FIBER': 
+            self.MBL = (274700*(mooringDiameter**2)+7953.9*mooringDiameter-879.24)*(10**3)
+            self.WML = 160.9*(mooringDiameter**2)+5.522*mooringDiameter-0.04798
+            self.AE_storm = (10120*(mooringDiameter**2)+320.7*mooringDiameter-35.47)*(10**6)
+            self.AE_drift = (5156*(mooringDiameter**2)+142.7*mooringDiameter-16)*(10**6)
+            self.AREA = (pi/4)*(mooringDiameter**2)
+            self.MCPL = 0.53676471*(self.MBL/1000./self.gravity)
         else: 
             print "PLEASE PICK AVAILABLE MOORIN' TYPE M8"
-        # if user defined values available
-        if self.user_MBL != 0.0:
-            minBreakingLoad = self.user_MBL
-        if self.user_WML != 0.0: 
-            wetMassPerLength = self.user_WML
-        if self.user_AE_storm != 0.0: 
-            AE_storm = self.user_AE_storm 
-        if self.user_MCPL != 0.0: 
-            costPerLength = self.user_MCPL
-        pretension = minBreakingLoad*pretensionPercent/100.
-        wetWeightPerLength = wetMassPerLength*g
+
+    def write_line_dictionary_header(self):
+        """Writes the first three lines of the input.map file:
+---------------------- LINE DICTIONARY ---------------------------------------
+LineType  Diam      MassDenInAir   EA            CB   CIntDamp  Ca   Cdn    Cdt
+(-)       (m)       (kg/m)        (N)           (-)   (Pa-s)    (-)  (-)    (-)
+        """
+        file = open(os.path.abspath("../src/input.map"), "wb")
+        file.write("----------------------")
+        file.write(" LINE DICTIONARY ---------------------------------------\n")
+        file.write("LineType  ")
+        file.write("Diam      ")
+        file.write("MassDenInAir   ")
+        file.write("EA            ")
+        file.write("CB   ")
+        file.write("CIntDamp  ")
+        file.write("Ca   ")
+        file.write("Cdn    ")
+        file.write("Cdt\n")
+        file.write("(-)       ")
+        file.write("(m)       ")
+        file.write("(kg/m)        ")
+        file.write("(N)           ")
+        file.write("(-)   ")
+        file.write("(Pa-s)    ")
+        file.write("(-)  ")
+        file.write("(-)    ")
+        file.write("(-)\n")
+        file.close()
+
+    def write_line_dictionary(self, air_mass_density = "#", 
+        element_axial_stiffness = "#", cable_sea_friction_coefficient=1):
+        """Writes the forth line of the input.map file. This is where 
+        LINE_TYPE, DIAMETER, AIR_MASS_DENSITY, ELEMENT_AXIAL_STIFFNESS, and
+        CABLE_SEA_FRICTION_COEFFICIENT is inputted. 
+        CABLE_SEA_FRICTION_COEFFICIENT defaults to 1 when none is given. If "#"
+        is inputted into AIR_MASS_DENSITY and/or ELEMENT_AXIAL_STIFFNESS, then
+        their respected calculated values are used."""
+        file = open(os.path.abspath("../src/input.map"), "ab")
+        file.write("%s   " % self.line_type)
+        file.write("%.5f   " % self.diameter)
+        if air_mass_density == "#":
+            air_mass_density = self.WML+(self.water_density*self.AREA)
+        file.write("%.5f   " % air_mass_density)
+        if element_axial_stiffness == "#":
+            element_axial_stiffness = self.AE_storm
+        file.write("%.5f   " % element_axial_stiffness)
+        file.write("%.5f   " % cable_sea_friction_coefficient)
+        file.write("1.0E8   ")
+        file.write("0.6   ")
+        file.write("-1.0   ")
+        file.write("0.05\n")
+        file.close()
+
+    def write_node_properties_header(self):
+        """Writes the node properties header:
+---------------------- NODE PROPERTIES ---------------------------------------
+Node  Type       X       Y       Z      M     B     FX      FY      FZ
+(-)   (-)       (m)     (m)     (m)    (kg)  (mˆ3)  (N)     (N)     (N)
+        """
+        file = open(os.path.abspath("../src/input.map"), "ab")
+        file.write("----------------------")
+        file.write(" NODE PROPERTIES ---------------------------------------\n")
+        file.write("Node  ")
+        file.write("Type       ")
+        file.write("X       ")
+        file.write("Y       ")
+        file.write("Z      ")
+        file.write("M     ")
+        file.write("B     ")
+        file.write("FX      ")
+        file.write("FY      ")
+        file.write("FZ\n")
+        file.write("(-)   ")
+        file.write("(-)       ")
+        file.write("(m)     ")
+        file.write("(m)     ")
+        file.write("(m)    ")
+        file.write("(kg)  ")
+        file.write("(mˆ3)  ")
+        file.write("(N)     ")
+        file.write("(N)     ")
+        file.write("(N)\n")
+        file.close()
+
+
+    def write_node_properties(self, number, node_type, x_coordinate, y_coordinate,
+        z_coordinate, point_mass_appl, displaced_volume_appl, x_force_appl ="#",
+        y_force_appl = "#", z_force_appl = "#"):
+        """Writes the input information for a node based on NODE_TYPE. X_FORCE_APPL, 
+        Y_FORCE_APP, Z_FORCE_APP defaults to '#' if none is given."""
+        file = open(os.path.abspath("../src/input.map"), "ab")
+        file.write("%d   " % number)
+        if node_type.lower() == "fix":
+            file.write("%s   " % node_type)
+        elif node_type.lower() == "connect":
+            file.write("%s   " % node_type)
+        elif node_type.lower() == "vessel":
+            file.write("%s   " % node_type)
+        else:
+            raise ValueError("%s is not a valid node type for node %d" 
+                % (node_type, number))
         
-        #I dont think this is necessary with MAP++
-        max_a =(minBreakingLoad-wetWeightPerLength*fairlead2seafloor)/wetWeightPerLength
-        empty_array = array(linspace(0.0, max_a, num=755))
-        H = wetWeightPerLength*empty_array #wet weight per length array
-        Ttop = H + wetWeightPerLength*fairlead2seafloor
-        Vtop = (Ttop**2-H**2)**0.5
-        ang = 90. - arcsin(H/Ttop)*180/pi
-        sp_temp = -(scope/2.)+(fairlead2seafloor/2.)*(1.+(4*empty_array**2/(scope**2.-fairlead2seafloor**2)))**0.5 
-        sp_temp = [0 if i < 0 else i for i in sp_temp]
-        # INITIALIZE ARRanchor_yS
-        Vbot = array([0.]*755)
-        Tbot = array([0.]*755)
-        Tave = array([0.]*755)
-        stretch = array([0.]*755)
-        x = array([0.]*755)
-        s = array([0.]*755)
-        yp = array([0.]*755)
-        sp = array([0.]*755)
-        for i in range (0,755):
-            if sp_temp[i] == 0.: 
-                Vbot[i] = 0.
-                Tbot[i] = H[i]
-                Tave[i] = 0.5*(Ttop[i]+Tbot[i])
-                stretch[i] = 1.+Tave[i]/AE_storm
-                if i == 0:
-                    x[i] = scope*stretch[i] -fairlead2seafloor
-                else: 
-                    x[i] = scope*stretch[i-1] -fairlead2seafloor*(1.+2.*empty_array[i]/fairlead2seafloor)**0.5+empty_array[i]*arccosh(1.+fairlead2seafloor/empty_array[i])
-                s[i] = (fairlead2seafloor**2+2.*fairlead2seafloor*empty_array[i])**0.5
-                sp [i] = 0.
-            else: 
-                s[i] = scope*stretch[i-1]
-                Vbot[i] = Vtop[i]-wetWeightPerLength*s[i]
-                Tbot[i] = (H[i]**2+Vbot[i]**2)**0.5
-                Tave[i] =  0.5*(Ttop[i]+Tbot[i])
-                stretch[i] = 1.+Tave[i]/AE_storm
-                sp[i] = sp_temp[i]*stretch[i-1]
-                x[i] = empty_array[i]*(arcsinh((scope+sp[i])/empty_array[i])-arcsinh(sp[i]/empty_array[i]))*stretch[i-1]
-                
-            if i == 0: 
-                yp[i] = -empty_array[i]+(empty_array[i]**2+sp[i]**2)**0.5
-            else: 
-                yp[i] = (-empty_array[i]+(empty_array[i]**2+sp[i]**2)**0.5)*stretch[i-1]
-        x0 = interp(pretension,Ttop,x)
-        offset = x - x0
-        mkh = array([0.]*755)
-        mkv = array([0.]*755)
-        for i in range(1,755):
-            mkh[i] = (H[i]-H[i-1])/(offset[i]-offset[i-1])
-            mkv[i] = (Vtop[i]-Vtop[i-1])/(offset[i]-offset[i-1])
-
-        if interp(pretension,Ttop,sp)>0.:
-            cat_type = 'semi-taut'
-        else: 
-            cat_type = 'catenary'
-        XANG = interp(pretension,Ttop,ang)
-        XMAX = max(x)
-        TALL = 0.6*minBreakingLoad 
-        XALL = interp(TALL,Ttop,x)
-        TEXT = 0.8*minBreakingLoad 
-        XEXT = interp(TEXT,Ttop,x)
-        # OFFSETS 
-        direction =  array(linspace(0.0,360-360/numberMooringLines,num=numberMooringLines))
-        self.intact_mooring = [-(XALL-x0), XALL/sin(direction[1]/180.*pi)*sin(pi-direction[1]/180*pi-arcsin(x0/XALL*sin(direction[1]/180.*pi)))]
-        self.damaged_mooring = [-(XEXT-x0), XEXT/sin(direction[1]/180.*pi)*sin(pi-direction[1]/180*pi-arcsin(x0/XEXT*sin(direction[1]/180.*pi)))]
-        survival_mooring = [-(XMAX-x0), XMAX/sin(direction[1]/180.*pi)*sin(pi-direction[1]/180*pi-arcsin(x0/XMAX*sin(direction[1]/180.*pi)))]
-
-        # fairlead
-        fairlead_x = array(((sparOuterDiameter/2)+fairleadOffset)*cos(direction*pi/180.))
-        fairlead_y = array(((sparOuterDiameter/2)+fairleadOffset)*sin(direction*pi/180.))
-        fairlead_z = array([-fairleadDepth]*len(fairlead_x))
-        # anchor 
-        anchor_x = array(fairlead_x+x0*cos(direction*pi/180.))
-        anchor_y = array(fairlead_y+x0*sin(direction*pi/180.))
-        anchor_z = array([-waterDepth]*len(anchor_x))
-        # delta 
-        delta = (survival_mooring[1]-survival_mooring[0])/numberDicrestizations
-        X_Offset = array(linspace(survival_mooring[0],survival_mooring[1],num=numberDicrestizations+1))
-        # initialize arrays
-        X_Fairlead = empty((1,numberDicrestizations+1),dtype=object)
-        anchor_distance = empty((1,numberDicrestizations+1),dtype=object)
-        Ttop_tension = empty((1,numberDicrestizations+1),dtype=object)
-        H_Force = empty((1,numberDicrestizations+1),dtype=object)
-        FX = empty((1,numberDicrestizations+1),dtype=object)
-        FY = empty((1,numberDicrestizations+1),dtype=object)
-        sum_FX = array([0.]*(numberDicrestizations+1))
-        stiffness = array([0.]*(numberDicrestizations+1))
-        # fill arrays
-        for i in range(0,numberDicrestizations+1):
-            X_Fairlead[0,i] = array(X_Offset[i]+fairlead_x)
-            anchor_distance[0,i] = array((((X_Fairlead[0,i])-anchor_x)**2+(fairlead_y-anchor_y)**2)**0.5-0.00001)
-            Ttop_vect = array([0.]*numberMooringLines)
-            H_vect = array([0.]*numberMooringLines)
-            for j in range(0,numberMooringLines):
-                Ttop_vect[j]=interp(anchor_distance[0,i][j],x,Ttop)/1000.
-                H_vect[j]=interp(anchor_distance[0,i][j],x,H)/1000.
-            Ttop_tension[0,i] = Ttop_vect
-            H_Force[0,i] = H_vect
-            FX[0,i] = array((anchor_x-X_Fairlead[0,i])/anchor_distance[0,i]*H_Force[0,i])
-            FY[0,i] = array((anchor_y-fairlead_y)/anchor_distance[0,i]*H_Force[0,i])
-            sum_FX[i] = sum(FX[0,i])
-        for i in range(0,numberDicrestizations+1):    
-            if i == numberDicrestizations:
-                stiffness[i] = abs(sum_FX[i]/X_Offset[i])
-            else: 
-                stiffness[i] = abs((sum_FX[i]-sum_FX[i+1])/(X_Offset[i]-X_Offset[i+1]))    
-        FR = power((power(FY,2)+power(FX,2)),0.5)
-        # pack some things 
-        fairlead_loc = [fairlead_x,fairlead_y,fairlead_z]
-        anchor_loc = [anchor_x,anchor_y,anchor_z]
+        if node_type.lower() == "connect":
+            file.write("#%.5f   " % x_coordinate)
+            file.write("#%.5f   " % y_coordinate)
+            file.write("#%.5f   " % z_coordinate)
+            file.write("%.5f   " % point_mass_appl)
+            file.write("%.5f   " % displaced_volume_appl)
+            if not x_force_appl.isdigit() or not y_force_appl.isdigit() or not z_force_appl.isdigit():
+                raise ValueError("%s must have numerical force applied values."
+                    % node_type)
+            file.write("%.5f   " % x_force_appl)
+            file.write("%.5f   " % y_force_appl)
+            file.write("%.5f\n" % z_force_appl)
+        else:
+            file.write("%.5f   " % x_coordinate)
+            file.write("%.5f   " % y_coordinate)
+            if z_coordinate == self.water_depth:
+                file.write("depth   ")
+            else:
+                file.write("%.5f   " % z_coordinate)
+            file.write("%.5f   " % point_mass_appl)
+            file.write("%.5f   " % displaced_volume_appl)
+            if str(x_force_appl).isdigit() or str(y_force_appl).isdigit() or str(z_force_appl).isdigit():
+                raise ValueError("%s can only have '#' force applied values."
+                    % node_type)
+            file.write("%s   " % x_force_appl)
+            file.write("%s   " % y_force_appl)
+            file.write("%s\n" % z_force_appl)
+        file.close()
 
 
-        massInAir = massInWater + waterDensity*pi*(mooringDiameter**2)/4
-        for_MAP = InputMAP(waterDepth, g, waterDensity)
-        for_MAP.write_line_dictionary_header()
-        for_MAP.write_line_dictionary(mooringType, mooringDiameter, massInAir, AE_storm)
-        for_MAP.write_node_properties_header()
-        for_MAP.write_node_properties(1, "FIX", x0, anchor_y[0], anchor_z[0], 0, 0)
-        for_MAP.write_node_properties(2, "VESSEL", fairlead_x[0], fairlead_y[0], fairlead_z[0], 0, 0) 
-        for_MAP.write_line_properties_header()
-        for_MAP.write_line_properties(1, mooringType, scope, 1, 2)
-        for_MAP.write_solver_options(numberMooringLines)
-        #execfile(os.path.abspath("../../src/main.py"))
-        # read the stiffness_matrix.txt
+    def write_line_properties_header(self):
+        """Writes the line properties header:
+---------------------- LINE PROPERTIES ---------------------------------------
+Line    LineType  UnstrLen  NodeAnch  NodeFair  Flags
+(-)      (-)       (m)       (-)       (-)       (-)
+        """
+        file = open(os.path.abspath("../src/input.map"), "ab")
+        file.write("----------------------")
+        file.write(" LINE PROPERTIES ---------------------------------------\n")
+        file.write("Line    ")
+        file.write("LineType  ")
+        file.write("UnstrLen  ")
+        file.write("NodeAnch  ")
+        file.write("NodeFair  ")
+        file.write("Flags\n")
+        file.write("(-)      ")
+        file.write("(-)       ")
+        file.write("(m)       ")
+        file.write("(-)       ")
+        file.write("(-)       ")
+        file.write("(-)\n")
+        file.close()
+
+    def write_line_properties(self, line_number, line_type, unstretched_length,
+        anchor_node_number, fairlead_node_number, control_output_text_stream = " "):
+        """Writes the input information for the line properties. This explains
+        what node number is the ANCHOR and what node number is the FAIRLEAD, 
+        as well as the UNSTRETCHED_LENGTH between the two nodes."""
+        file = open(os.path.abspath("../src/input.map"), "ab")
+        file.write("%d   " % line_number)
+        file.write("%s   " % line_type)
+        # if unstretched_length == "#":
+        #   unstretched_length = 
+        file.write("%.5f   " % unstretched_length)
+        file.write("%d   " % anchor_node_number)
+        file.write("%d   " % fairlead_node_number)
+        file.write("%s\n" % control_output_text_stream)
+        file.close()
+
+    def write_solver_options(self):
+        """Writes the solver options at the end of the input file, as well as 
+        takes the self.NUMBER_OF_MOORING_LINES and places them evenly within 360
+        degrees. For NUMBER_OF_MOORING_LINES = 3:
+---------------------- SOLVER OPTIONS-----------------------------------------
+Option
+(-)
+help
+ integration_dt 0
+ kb_default 3.0e6
+ cb_default 3.0e5
+ wave_kinematics 
+inner_ftol 1e-6
+inner_gtol 1e-6
+inner_xtol 1e-6
+outer_tol 1e-4
+ pg_cooked 10000 1
+ outer_fd 
+ outer_bd 
+ outer_cd
+ inner_max_its 100
+ outer_max_its 500
+repeat 120 240 
+ krylov_accelerator 3
+ ref_position 0.0 0.0 0.0
+        """
+        file = open(os.path.abspath("../src/input.map"), "ab")
+        file.write("----------------------")
+        file.write(" SOLVER OPTIONS-----------------------------------------\n")
+        file.write("Option\n")
+        file.write("(-)\n")
+        file.write("help\n")
+        file.write(" integration_dt 0\n")
+        file.write(" kb_default 3.0e6\n")
+        file.write(" cb_default 3.0e5\n")
+        file.write(" wave_kinematics \n")
+        file.write("inner_ftol 1e-6\n")
+        file.write("inner_gtol 1e-6\n")
+        file.write("inner_xtol 1e-6\n")
+        file.write("outer_tol 1e-4\n")
+        file.write(" pg_cooked 10000 1\n")
+        file.write(" outer_fd \n")
+        file.write(" outer_bd \n")
+        file.write(" outer_cd\n")
+        file.write(" inner_max_its 100\n")
+        file.write(" outer_max_its 500\n")
+        file.write("repeat ")
+        n = 360/self.number_of_mooring_lines
+        degree = n
+        while degree + n <= 360:
+            file.write("%d " % degree)
+            degree += n
+        file.write("\n")
+        file.write(" krylov_accelerator 3\n")
+        file.write(" ref_position 0.0 0.0 0.0\n")
 
 
-        self.sum_forces_x = sum_FX
-        self.offset_x = X_Offset
-        # COST
-        each_leg = costPerLength*scope
-        legs_total = each_leg*numberMooringLines
-        if self.anchor_type =='DRAG':
-            each_anchor = minBreakingLoad/1000./9.806/20*2000
-        elif self.anchor_type == 'PILE':
-            each_anchor = 150000.*(minBreakingLoad/1000./9.806/1250.)**0.5
-        if self.user_anchor_cost != 0.0: 
-            each_anchor = self.user_anchor_cost
-        anchor_total = each_anchor*numberMooringLines
-        misc_cost = (anchor_total+legs_total)*self.misc_cost_factor/100.
-        self.mooring_total_cost = legs_total+anchor_total+misc_cost 
-        # INITIAL CONDITIONS
-        keel2CG = DRAFT - fairleadDepth 
-        mooringVerticalLoad =  interp(pretension,Ttop,Vtop)*numberMooringLines
-        mooringHorizontalStiffness = interp(pretension,Ttop,mkh)
-        mooringVerticalStiffness = interp(pretension,Ttop,mkv)*numberMooringLines
-        TMM = (wetMassPerLength+pi*mooringDiameter**2/4*waterDensity)*scope*numberMooringLines
-        self.mooring_keel_to_CG = keel2CG
-        self.mooring_vertical_load = mooringVerticalLoad 
-        self.mooring_horizontal_stiffness = mooringHorizontalStiffness
-        self.mooring_vertical_stiffness = mooringVerticalStiffness
-        self.mooring_mass = (wetMassPerLength+pi*mooringDiameter**2/4*waterDensity)*scope*numberMooringLines
+def main(depth, gravity, density, total_lines, min_breaking_load, doffset, dangle):
+    """This runs MAP given the water DEPTH [m], GRAVITY[m/s^2], water DENSITY 
+    [kg/m^3], the number of TOTAL_LINES, the MIN_BREAKING_LOAD [N], the DOFFSET
+    [m], and DANGLE [degrees]. The vessel is displaced by DOFFSET until the
+    maxium tension on at least one mooring line is over MIN_BREAKING_LOAD. Then
+    the angle is changed by DANGLE and displaced by the offset once again. All
+    tensions and the diagonals of the stiffness maxtrix are saved in a .txt.""" 
+
+    float_formatter = lambda x: "%.3f" % x
+    set_printoptions(precision=0)
+    set_printoptions(suppress=True)
+    set_printoptions(formatter={'float_kind':float_formatter})
+
+    mooring_1 = Map( )
+
+    mooring_1.map_set_sea_depth(depth)
+    mooring_1.map_set_gravity(gravity)
+    mooring_1.map_set_sea_density(density)
+
+
+    offset = doffset
+    dangle = pi*dangle/180
+    angle = 0
+
+    list_of_system_T = []
+    T = []
+
+    mooring_1.read_file(os.path.abspath("../src/input.map")) # 100 m depth
+    mooring_1.init( )
+
+    epsilon = 1e-3
+    K = mooring_1.linear(epsilon)    
+    print "\nHere is the linearized stiffness matrix with zero vessel displacement:"
+    print array(K)
+    file = open(os.path.abspath("../src/stiffness_diagonals.txt"),"w")
+    file.write(str(diag(array(K))) + "\n")
+    file.close
+
+    for line_number in range(0, total_lines):
+        H,V = mooring_1.get_fairlead_force_2d(line_number)
+        T.append((H**2 + V**2)**.5)
+        # print "Line %d: H = %2.2f [N]  V = %2.2f [N] T = %2.2f [N]"%(line_number, H, V, T[line_number])     
+    
+    # fig = plt.figure()
+    # ax = Axes3D(fig)
+    # for i in range(0,mooring_1.size_lines()):
+    #     x = mooring_1.plot_x( i, 10 )
+    #     y = mooring_1.plot_y( i, 10 )
+    #     z = mooring_1.plot_z( i, 10 )        
+    #     ax.plot(x,y,z,'b-')
+     
+    # ax.set_xlabel('X [m]')
+    # ax.set_ylabel('Y [m]')
+    # ax.set_zlabel('Z [m]')
+     
+    # plt.show()
+    file = open(os.path.abspath("../src/stiffness_diagonals.txt"),"a")
+    # print "lines: %s MBL: %s doffset: %s dangle: %s angle: %s" % (total_lines, min_breaking_load, doffset, dangle, angle) #delete
+    angle_changed = 0 #delete
+    offset_changed = 0 #delete
+
+    intact_mooring = min_breaking_load*.60
+    damaged_mooring = min_breaking_load*.80
+    red_x = []
+    red_y = []
+    yellow_x = []
+    yellow_y = []
+    blue_x = []
+    blue_y = []
+    green_x = [0]
+    green_y = [0]
+
+    while angle < 2*pi:
+        max_tension = 0
+        while max_tension < min_breaking_load:
+            list_of_system_T.append(T[:])
+            surge = offset*cos(angle)
+            sway = offset*sin(angle)
+            mooring_1.displace_vessel(surge,sway,0,0,0,0)
+            mooring_1.update_states(0.0,0)
+         
+            K = mooring_1.linear(epsilon)    
+            # print "\nLinearized stiffness matrix with %2.2f surge and %2.2f sway vessel displacement:\n"%(surge, sway)
+            # print array(K)
+            file.write(str(diag(array(K))) + "\n" )
+            for line_number in range(0, total_lines):
+                H,V = mooring_1.get_fairlead_force_2d(line_number)
+                T[line_number] = (H**2 + V**2)**.5    
+                # print "Line %d: H = %2.2f [N]  V = %2.2f [N] T = %2.2f [N]"%(line_number, H, V, T[line_number]) 
+            offset += doffset
+            offset_changed +=1 #delete
+            max_tension = max(T)   
+            if max_tension > min_breaking_load:
+                red_x.append(surge)
+                red_y.append(sway)
+            elif max_tension > damaged_mooring:
+                yellow_x.append(surge)
+                yellow_y.append(sway)
+            elif max_tension > intact_mooring:
+                blue_x.append(surge)
+                blue_y.append(sway)
+            else:
+                green_x.append(surge)
+                green_y.append(sway)
+        angle += dangle
+        offset = doffset
+        angle_changed += 1 #delete
+    print "angle changed: %d offset changed: %d" %(angle_changed, offset_changed) #delete
+    file.write(str(list_of_system_T) + "\n" )
+    file.close
+
+    plt.plot(red_x, red_y, 'ro', yellow_x, yellow_y, 'yo', blue_x, blue_y, 'bo', green_x, green_y, 'go')
+    plt.axis([-60, 80, -70, 70])
+    plt.show()
+
+    mooring_1.end( )
+
+if __name__ == '__main__':
+    """Testing the interface using homogeneous line OC3 mooring information."""
+    OC3 = InputMAP(320.0, 9.806, 1025.0, 3)
+    OC3.mooring_properties(0.09, "CHAIN")
+    OC3.write_line_dictionary_header()
+    OC3.write_line_dictionary(77.7066, 384243000)
+    OC3.write_node_properties_header()
+    OC3.write_node_properties(1, "FIX", 853.87, 0, 320.0, 0, 0)
+    OC3.write_node_properties(2, "VESSEL", 5.2, 0, -70.0, 0, 0)
+    OC3.write_line_properties_header()
+    OC3.write_line_properties(1, "CHAIN", 902.2, 1, 2, " ")
+    OC3.write_solver_options()
+    depth = OC3.water_depth
+    gravity = OC3.gravity
+    density = OC3.water_density
+    line = OC3.number_of_mooring_lines
+    MBL = OC3.MBL
+    main(depth, gravity, density, line, MBL, 2, 2)

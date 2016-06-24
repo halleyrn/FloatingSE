@@ -5,7 +5,7 @@ from numpy import pi, array, arcsin, arcsinh, arc
 from scipy.optimize import fmin, minimize, linspace
 from sympy.solvers import solve
 from sympy import Symbol
-from MAP_input import MainFile
+from input_map import InputMAP
 
 class Mooring(Component):
     """Creates a mooring component that can be optimized using OpenMDAO.""" 
