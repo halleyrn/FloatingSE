@@ -31,7 +31,7 @@ def example_OC3():
     example.RNA_mass = 125000.
     example.RNA_center_of_gravity_x = 5.75
     example.RNA_center_of_gravity_y = 3.5
-    example.fairlead_depth = 70. 
+    example.fairlead_depth = 13. 
     example.scope_ratio = 1.5
     example.pretension_percent = 5.
     example.mooring_diameter = 0.09
@@ -59,6 +59,5 @@ def example_OC3():
 
 if __name__ == "__main__":
     example_OC3()
-
     
 
