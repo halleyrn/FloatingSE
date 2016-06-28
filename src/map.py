@@ -54,9 +54,13 @@ class InputMAP(object):
         self.AREA = 0
         self.MCPL = 0
         self.diameter = 0
-        self.sum_fx = 0
-        self.offset_x = 0
-
+        self.sum_fx = []
+        self.offset_x = []
+        self.V_initial = 0
+        self.horizontal_stiffness = 0
+        self.vertical_stiffness = 0
+        self.damaged_mooring_bounds = [0,0]
+        self.intact_mooring_bounds = [0,0]
 
     def mooring_properties(self, mooringDiameter, line_type, MBL=0, WML=0,
         AE_storm=0, MCPL=0):
@@ -331,7 +335,7 @@ repeat 120 240
         file.write(" ref_position 0.0 0.0 0.0\n")
 
 
-    def main(self, doffset, dangle):
+    def main(self, doffset, dangle, objective):
         """This runs MAP given the water DEPTH [m], GRAVITY[m/s^2], water DENSITY 
         [kg/m^3], the number of TOTAL_LINES, the MIN_BREAKING_LOAD [N], the DOFFSET
         [m], and DANGLE [degrees]. The vessel is displaced by DOFFSET until the
@@ -354,6 +358,8 @@ repeat 120 240
         offset = doffset
         dangle = pi*dangle/180
         angle = 0
+        intact_mooring = self.MBL*.60
+        damaged_mooring = self.MBL*.80
 
         list_of_system_T = []
         T = []
@@ -365,13 +371,16 @@ repeat 120 240
         K = mooring_1.linear(epsilon)    
         print "\nHere is the linearized stiffness matrix with zero vessel displacement:"
         print array(K)
-        file = open(os.path.abspath("../src/stiffness_diagonals.txt"),"w")
-        file.write(str(diag(array(K))) + "\n")
-        file.close
+        self.horizontal_stiffness = diag(array(K))[0]
+        self.vertical_stiffness = diag(array(K))[3]
+        # file = open(os.path.abspath("../src/stiffness_diagonals.txt"),"w")
+        # file.write(str(diag(array(K))) + "\n")
+        # file.close
 
         for line_number in range(0, self.number_of_mooring_lines):
             H,V = mooring_1.get_fairlead_force_2d(line_number)
             T.append((H**2 + V**2)**.5)
+            self.V_initial += V
             # print "Line %d: H = %2.2f [N]  V = %2.2f [N] T = %2.2f [N]"%(line_number, H, V, T[line_number])     
         
         # fig = plt.figure()
@@ -387,73 +396,145 @@ repeat 120 240
         # ax.set_zlabel('Z [m]')
          
         # plt.show()
-        file = open(os.path.abspath("../src/stiffness_diagonals.txt"),"a")
+
+        # file = open(os.path.abspath("../src/stiffness_diagonals.txt"),"a")
+        
         # print "lines: %s MBL: %s doffset: %s dangle: %s angle: %s" % (self.number_of_mooring_lines, self.MBL, doffset, dangle, angle) #delete
         angle_changed = 0 #delete
         offset_changed = 0 #delete
 
-        intact_mooring = self.MBL*.60
-        damaged_mooring = self.MBL*.80
-        red_x = []
-        red_y = []
-        yellow_x = []
-        yellow_y = []
-        blue_x = []
-        blue_y = []
-        green_x = [0]
-        green_y = [0]
+        if objective.lower() == "find full area" or objective == True:
 
-        while angle < 2*pi:
-            max_tension = 0
+            red_x = []
+            red_y = []
+            yellow_x = []
+            yellow_y = []
+            blue_x = []
+            blue_y = []
+            green_x = [0]
+            green_y = [0]
+
+            # finds the linearized stuiffnes matrix diagonal and tension in each line
+            # as the vessel is displaced around 360 degrees
+            while angle < 2*pi:
+                max_tension = 0
+                while max_tension <= self.MBL:
+                    list_of_system_T.append(T[:])
+                    surge = offset*cos(angle)
+                    sway = offset*sin(angle)
+                    mooring_1.displace_vessel(surge,sway,0,0,0,0)
+                    mooring_1.update_states(0.0,0)
+                 
+                    K = mooring_1.linear(epsilon)    
+                    # print "\nLinearized stiffness matrix with %2.2f surge and %2.2f sway vessel displacement:\n"%(surge, sway)
+                    # print array(K)
+                    # file.write(str(diag(array(K))) + "\n" )
+                    for line_number in range(0, self.number_of_mooring_lines):
+                        fx,fy,fz = mooring_1.get_fairlead_force_3d(line_number)
+                        H,V = mooring_1.get_fairlead_force_2d(line_number)
+                        T[line_number] = (H**2 + V**2)**.5    
+                        # print "Line %d: H = %2.2f [N]  V = %2.2f [N] T = %2.2f [N]"%(line_number, H, V, T[line_number]) 
+                    offset += doffset
+                    offset_changed +=1 #delete
+                    max_tension = max(T)   
+                    if max_tension >= self.MBL:
+                        red_x.append(surge)
+                        red_y.append(sway)
+                    elif max_tension >= damaged_mooring:
+                        yellow_x.append(surge)
+                        yellow_y.append(sway)
+                    elif max_tension >= intact_mooring:
+                        blue_x.append(surge)
+                        blue_y.append(sway)
+                    else:
+                        green_x.append(surge)
+                        green_y.append(sway)
+                angle += dangle
+                offset = doffset
+                angle_changed += 1 #delete
+
+            # uncomment if you want to see offesets plotted
+            plt.plot(red_x, red_y, 'ro', yellow_x, yellow_y, 'yo', blue_x, blue_y, 'bo', green_x, green_y, 'go')
+            plt.axis([-60, 80, -70, 70])
+            plt.show()
+
+        if objective.lower() == "optimization" or objective == True:
+            # find sum of fx at each displacement along the x-axis (list from neg to
+            # pos offset) and the offset in x as well
+            max_tension = 0 
+            surge = 0
+            intact = True
+            damaged = True
             while max_tension <= self.MBL:
-                list_of_system_T.append(T[:])
-                surge = offset*cos(angle)
-                sway = offset*sin(angle)
-                mooring_1.displace_vessel(surge,sway,0,0,0,0)
+                tot_fx = 0
+                mooring_1.displace_vessel(surge,0,0,0,0,0)
                 mooring_1.update_states(0.0,0)
-             
-                K = mooring_1.linear(epsilon)    
-                # print "\nLinearized stiffness matrix with %2.2f surge and %2.2f sway vessel displacement:\n"%(surge, sway)
-                # print array(K)
-                file.write(str(diag(array(K))) + "\n" )
+                # K = mooring_1.linear(epsilon)
                 for line_number in range(0, self.number_of_mooring_lines):
+                    fx,fy,fz = mooring_1.get_fairlead_force_3d(line_number)
+                    tot_fx += -fx
                     H,V = mooring_1.get_fairlead_force_2d(line_number)
-                    T[line_number] = (H**2 + V**2)**.5    
-                    # print "Line %d: H = %2.2f [N]  V = %2.2f [N] T = %2.2f [N]"%(line_number, H, V, T[line_number]) 
-                offset += doffset
+                    T[line_number] = (H**2 + V**2)**.5 
+                max_tension = max(T[:])
+                self.sum_fx.append(tot_fx)
+                self.offset_x.append(surge)
+                if max_tension > intact_mooring and intact:
+                    intact = False
+                    self.intact_mooring_bounds[0] = surge - doffset
+                if max_tension > damaged_mooring and damaged:
+                    damaged = False
+                    self.damaged_mooring_bounds[0] = surge - doffset
+                surge += doffset
                 offset_changed +=1 #delete
-                max_tension = max(T)   
-                if max_tension >= self.MBL:
-                    red_x.append(surge)
-                    red_y.append(sway)
-                elif max_tension >= damaged_mooring:
-                    yellow_x.append(surge)
-                    yellow_y.append(sway)
-                elif max_tension >= intact_mooring:
-                    blue_x.append(surge)
-                    blue_y.append(sway)
-                else:
-                    green_x.append(surge)
-                    green_y.append(sway)
-            angle += dangle
-            offset = doffset
-            angle_changed += 1 #delete
+            max_tension = 0 
+            surge = -doffset
+            intact = True
+            damaged = True
+            while max_tension <= self.MBL:
+                tot_fx = 0
+                mooring_1.displace_vessel(surge,0,0,0,0,0)
+                mooring_1.update_states(0.0,0)
+                # K = mooring_1.linear(epsilon)
+                for line_number in range(0, self.number_of_mooring_lines):
+                    fx,fy,fz = mooring_1.get_fairlead_force_3d(line_number)
+                    tot_fx += -fx
+                    H,V = mooring_1.get_fairlead_force_2d(line_number)
+                    T[line_number] = (H**2 + V**2)**.5 
+                max_tension = max(T[:])
+                self.sum_fx.insert(0, tot_fx)
+                self.offset_x.insert(0, surge)                
+                if max_tension > intact_mooring and intact:
+                    intact = False
+                    self.intact_mooring_bounds[1] = surge + doffset
+                if max_tension > damaged_mooring and damaged:
+                    damaged = False
+                    self.damaged_mooring_bounds[1] = surge + doffset
+                surge -= doffset
+                offset_changed +=1 #delete
+
         print "angle changed: %d offset changed: %d" %(angle_changed, offset_changed) #delete
-        file.write(str(list_of_system_T) + "\n" )
-        file.close
+        # file.write(str(list_of_system_T) + "\n" )
+        # file.close
 
-        # uncomment if you want to see offesets plotted
-        # plt.plot(red_x, red_y, 'ro', yellow_x, yellow_y, 'yo', blue_x, blue_y, 'bo', green_x, green_y, 'go')
-        # plt.axis([-60, 80, -70, 70])
-        # plt.show()
+        mooring_1.end( )
 
-        mooring_1.end( )\
+    def sum_of_fx_and_offset(self):
+        return array(self.sum_fx), array(self.offset_x)
 
-    def sum_of_fx(self):
-        return self.sum_fx
+    def wet_mass_per_length(self):
+        return self.WML
 
-    def offset_x(self):
-        return self.offset_x
+    def cost_per_length(self):
+        return self.MCPL
+
+    def minimum_breaking_load(self):
+        return self.MBL
+
+    def loads_and_stiffnesses(self):
+        return self.V_initial, self.vertical_stiffness, self.horizontal_stiffness
+
+    def intact_and_damaged_mooring(self):
+        return self.intact_mooring_bounds, self.damaged_mooring_bounds
 
 if __name__ == '__main__':
     """Testing the interface using homogeneous line OC3 mooring information."""
@@ -467,4 +548,6 @@ if __name__ == '__main__':
     OC3.write_line_properties_header()
     OC3.write_line_properties(1, "CHAIN", 902.2, 1, 2, " ")
     OC3.write_solver_options()
-    OC3.main(2, 2)
+    OC3.main(2, 2, "optimization")
+    intact_mooring, damaged_mooring = OC3.intact_and_damaged_mooring()
+    print intact_mooring, damaged_mooring

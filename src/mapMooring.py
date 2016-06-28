@@ -1,18 +1,17 @@
 from openmdao.main.api import Component, Assembly,convert_units
 from openmdao.lib.datatypes.api import Float, Array, Str, Int, Bool
 from openmdao.lib.drivers.api import SLSQPdriver
-from numpy import pi, array, arcsin, arcsinh, arc
-from scipy.optimize import fmin, minimize, linspace
+from numpy import pi, array
+from scipy.optimize import fmin, minimize
 from sympy.solvers import solve
 from sympy import Symbol
-from map import InputMAP,
+from map import InputMAP
 
 class MapMooring(Component):
     """Creates a mooring component that can be optimized using OpenMDAO.""" 
     water_density = Float(1025, iotype='in',units='kg/m**3',desc='density of water')
     water_depth = Float(iotype='in',units='m',desc='water depth')
     scope_ratio = Float(1.5, iotype='in',units='m',desc = 'scope to fairlead height ratio')
-    pretension_percent = Float(5.0, iotype='in',desc='Pre-Tension Percentage of MBL (match PreTension)')
     mooring_diameter = Float(.09, iotype='in',units='m',desc='diameter of mooring chain')
     fairlead_depth = Float(13, iotype='in',units='m',desc = 'fairlead depth')
     number_of_mooring_lines = Int(3, iotype='in',desc='number of mooring lines')
@@ -25,7 +24,6 @@ class MapMooring(Component):
     user_MCPL = Float(0.0,iotype='in',units='USD/m',desc='user defined mooring cost per length')
     user_anchor_cost = Float(0.0,iotype='in',units='USD',desc='user defined cost per anchor')
     misc_cost_factor = Float(10.0,iotype='in',desc='miscellaneous cost factor in percent')
-    number_of_discretizations = Int(20,iotype='in',desc='number of segments for mooring discretization')
     spar_elevations = Array(iotype='in', units='m',desc = 'end elevation of each section')
     spar_outer_diameter = Array(iotype='in',units='m',desc='top outer diameter')
     gravity = Float(9.806, iotype='in', units='m/s**2', desc='gravity')
@@ -50,39 +48,44 @@ class MapMooring(Component):
         waterDepth = self.water_depth
         fairleadDepth = self.fairlead_depth
         mooringDiameter = self.mooring_diameter
-        scopeRatio = self.scope_ratio
-        pretensionPercent = self.pretension_percent
         mooringType = self.mooring_type
         numberMooringLines = self.number_of_mooring_lines
-        fairleadOffset = self.fairlead_offset_from_shell
         sparOuterDiameter = self.spar_outer_diameter[-1]
-        numberDicrestizations= self.number_of_discretizations
         waterDensity = self.water_density
         sparElevations = self.spar_elevations[1:]
         DRAFT = abs(min(sparElevations))
         FH = waterDepth-fairleadDepth 
-        scope = FH*scopeRatio
+        scope = FH*self.scope_ratio
+
+        anchor_radius = 0
+        fairlead_radius = (sparOuterDiameter/2) + self.fairlead_offset_from_shell
         
         mooring_system = InputMAP(waterDepth, g, waterDensity, numberMooringLines)
-        mooring_system.mooring_properties(mooringDiameter, mooringType)
+        mooring_system.mooring_properties(mooringDiameter, mooringType, self.user_MBL, self.user_WML, self.user_AE_storm, self.user_MCPL)
         mooring_system.write_line_dictionary_header()
         #do I want to make a new variable that takes in air mass density and element axial stiffness?
         mooring_system.write_line_dictionary(77.7066, 384243000)
 
         mooring_system.write_node_properties_header()
-        #firgure out how to find out the anchor radius and the fairlead radius
-        mooring_system.write_node_properties(1, "FIX", 853.87, 0, -waterDepth, 0, 0)
-        mooring_system.write_node_properties(2, "VESSEL", 5.2, 0, -fairleadDepth, 0, 0)
+        #firgure out how to find out the anchor radius radius
+        mooring_system.write_node_properties(1, "FIX", 853.87, 0, waterDepth, 0, 0)
+        mooring_system.write_node_properties(2, "VESSEL", fairlead_radius, 0, -fairleadDepth, 0, 0)
         
         mooring_system.write_line_properties_header()
         mooring_system.write_line_properties(1, mooringType, scope, 1, 2, " ")
         mooring_system.write_solver_options()
-        mooring_system.main(2, 2)
+        mooring_system.main(2, 2, "optimization")
 
-        self.sum_forces_x = mooring_system.sum_of_fx()
-        self.offset_x = mooring_system.offset_x()
+        self.intact_mooring, self.damaged_mooring = mooring_system.intact_and_damaged_mooring()
+        print self.intact_mooring
+        print self.damaged_mooring
+
+        self.sum_forces_x, self.offset_x = mooring_system.sum_of_fx_and_offset()
+        WML = mooring_system.wet_mass_per_length()
+        MCPL = mooring_system.cost_per_length()
+        MBL = mooring_system.minimum_breaking_load()
         # COST
-        each_leg = MCPL*S
+        each_leg = MCPL*scope
         legs_total = each_leg*numberMooringLines
         if self.anchor_type =='DRAG':
             each_anchor = MBL/1000./9.806/20*2000
@@ -94,13 +97,6 @@ class MapMooring(Component):
         misc_cost = (anchor_total+legs_total)*self.misc_cost_factor/100.
         self.mooring_total_cost = legs_total+anchor_total+misc_cost 
         # INITIAL CONDITIONS
-        KGM = DRAFT - fairleadDepth 
-        VTOP =  np.interp(PTEN,Ttop,Vtop)*numberMooringLines
-        MHK = np.interp(PTEN,Ttop,mkh)
-        MVK = np.interp(PTEN,Ttop,mkv)*numberMooringLines
-        TMM = (WML+pi*mooringDiameter**2/4*waterDensity)*S*numberMooringLines
-        self.mooring_keel_to_CG = KGM
-        self.mooring_vertical_load = VTOP 
-        self.mooring_horizontal_stiffness = MHK
-        self.mooring_vertical_stiffness = MVK
-        self.mooring_mass = (WML+pi*mooringDiameter**2/4*waterDensity)*S*numberMooringLines
+        self.mooring_keel_to_CG = DRAFT - fairleadDepth
+        self.mooring_vertical_load, self.mooring_vertical_stiffness, self.mooring_horizontal_stiffness = mooring_system.loads_and_stiffnesses()
+        self.mooring_mass = (WML+pi*mooringDiameter**2/4*waterDensity)*scope*numberMooringLines
