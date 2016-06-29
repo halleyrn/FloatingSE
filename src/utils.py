@@ -870,18 +870,19 @@ def sys_print(example):
     print 'heel angle: ',example.spar.heel_angle
     print 'min offset unity: ',example.spar.min_offset_unity
     print 'max offset unity: ',example.spar.max_offset_unity 
-    print 'VAL: ',example.spar.VAL
-    print 'VAG: ',example.spar.VAG
-    print 'VEL: ',example.spar.VEL
-    print 'VEG: ',example.spar.VEG
-    print 'web compactness: ',example.spar.web_compactness
-    print 'flange compactness: ',example.spar.flange_compactness
+    # print 'VAL: ',example.spar.VAL
+    # print 'VAG: ',example.spar.VAG
+    # print 'VEL: ',example.spar.VEL
+    # print 'VEG: ',example.spar.VEG
+    # print 'web compactness: ',example.spar.web_compactness
+    # print 'flange compactness: ',example.spar.flange_compactness
     print '-------------------------------'
     print 'spar mass: ', example.spar.spar_mass
     print 'shell mass: ', example.spar.shell_mass
     print 'bulkhead mass: ', example.spar.bulkhead_mass
     print 'stiffener mass: ', example.spar.stiffener_mass
-
-    
+    print 'ballast mass: ', example.spar.ballast_mass 
+    print 'system total mass: ', example.spar.system_total_mass
+    print 'shell mass: ', example.spar.shell_mass
     
     

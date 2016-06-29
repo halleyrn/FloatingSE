@@ -13,7 +13,6 @@ from utils import sys_print
 
 class sparAssembly(Assembly):
     """ Top level assembly """
-    stiffener_curve_fit = Bool(iotye='in', desc='flag for using optimized stiffener dimensions or discrete stiffeners')
    
     def configure(self):
         """Creates a new Assembly containing a chain of Tower_RNA, Spar and
@@ -91,6 +90,7 @@ class sparAssembly(Assembly):
         self.create_passthrough('spar.elevations', 'spar_elevations')
         self.create_passthrough('spar.outer_diameter','spar_outer_diameter')
         self.create_passthrough('spar.water_depth','water_depth')
+        # self.create_passthrough('spar.stiffener_curve_fit', 'stiffener_curve_fit')
         
         # #mooring connections
         # self.create_passthrough('mooring.fairlead_depth','fairlead_depth')
@@ -284,7 +284,8 @@ class sparAssemblyCalculation(sparAssembly):
         self.create_passthrough('spar.elevations', 'spar_elevations')
         self.create_passthrough('spar.outer_diameter','spar_outer_diameter')
         self.create_passthrough('spar.water_depth','water_depth')
-        
+        # self.create_passthrough('spar.stiffener_curve_fit', 'stiffener_curve_fit')
+
         # #mooring connections
         # self.create_passthrough('mooring.fairlead_depth','fairlead_depth')
         # self.connect('spar_elevations',['tower_RNA.spar_elevations','mooring.spar_elevations'])
@@ -326,7 +327,6 @@ class sparAssemblyCalculation(sparAssembly):
         self.connect('water_density','mapMooring.water_density')
         self.connect('gravity','mapMooring.gravity')
 
-        #self.connect('stiffener_curve_fit','spar.stiffener_curve_fit')
         
         """Connect outputs to inputs."""
         self.connect('tower_RNA.RNA_keel_to_CG','spar.RNA_keel_to_CG')
