@@ -184,8 +184,7 @@ def ID(D,WALL):
     return ID if not is_scalar else (ID)
 
 def waveProperties(Hs,T,D,G):
-    """I am not sure what this does, so I will be sure to go back and change
-    this later --Halley"""
+    """Calculated wave height, wave period, and wave number."""
     waveHeight = 1.1*Hs
     wavePeriod = 11.1*(waveHeight/G)**0.5
     k0 = 2 * pi / ( T * (G * D) **0.5)
@@ -198,16 +197,14 @@ def waveProperties(Hs,T,D,G):
     return waveHeight,wavePeriod,waveNumber
 
 def waveU(H,T,k,z,D,theta):
-    """I am not sure what this does, so I will be sure to go back and change
-    this later --Halley"""
+    """CAlucate wave speed."""
     return (pi*H/T)*(cosh(k*(z+D))/sinh(k*D))*cos(theta)
 
 def waveUdot(H,T,k,z,D,theta):
-    """I am not sure what this does, so I will be sure to go back and change
-    this later --Halley"""
+    """Calculate wave acceleration."""
     return (2*pi**2*H/T**2)* (cosh(k*(z+D))/sinh(k*D))*sin(theta)
 
-def windPowerLaw(uref,href,alpha,H) :
+def windPowerLaw(uref,href,alpha,H):
     """I am not sure what this does, so I will be sure to go back and change
     this later --Halley"""
     return uref*(H/href)**alpha
@@ -218,8 +215,7 @@ def pipeBuoyancy(D,WDEN):
     return pi/4 * D**2 *WDEN 
 
 def currentSpeed(XNEW,water_depth): # dummy linear profile; replace with actual site info if available
-    """I am not sure what this does, so I will be sure to go back and change
-    this later --Halley"""
+    """Finds the current speed under a column of water."""
     CDEPTH = [0.000, 61.000, 91.000, water_depth]
     CSPEED = [0.570, 0.570, 0.100, 0.100]
     return interp(abs(XNEW),CDEPTH,CSPEED)
@@ -248,8 +244,7 @@ def CD(U,D,DEN):
         return 0.8
 
 def inertialForce(D,CA,L,A,VDOT,DEN):
-    """I am not sure what this does, so I will be sure to go back and change
-    this later --Halley"""
+    """Calculates the inertial force."""
     IF = 0.25 * pi * DEN * D** 2 * L * (A + CA * (A - VDOT))
     if A < 0:
         IF = -IF
@@ -866,7 +861,7 @@ def sys_print(example):
     print 'wall thickness: ',example.wall_thickness
     print 'spar outer diameters', example.spar.outer_diameter
     print '-------------------------------'
-    print 'WBH: ', example.spar.water_ballast_height
+    print 'water ballast height: ', example.spar.water_ballast_height
     print 'heel angle: ',example.spar.heel_angle
     print 'min offset unity: ',example.spar.min_offset_unity
     print 'max offset unity: ',example.spar.max_offset_unity 
@@ -883,6 +878,5 @@ def sys_print(example):
     print 'stiffener mass: ', example.spar.stiffener_mass
     print 'ballast mass: ', example.spar.ballast_mass 
     print 'system total mass: ', example.spar.system_total_mass
-    print 'shell mass: ', example.spar.shell_mass
     
     
