@@ -136,8 +136,8 @@ LineType  Diam      MassDenInAir   EA            CB   CIntDamp  Ca   Cdn    Cdt
         file.write("(-)\n")
         file.close()
 
-    def write_line_dictionary(self, air_mass_density = "#", 
-        element_axial_stiffness = "#", cable_sea_friction_coefficient=1):
+    def write_line_dictionary(self, air_mass_density, 
+        element_axial_stiffness, cable_sea_friction_coefficient=1):
         """Writes the forth line of the input.map file. This is where 
         LINE_TYPE, DIAMETER, AIR_MASS_DENSITY, ELEMENT_AXIAL_STIFFNESS, and
         CABLE_SEA_FRICTION_COEFFICIENT is inputted. 
@@ -147,10 +147,10 @@ LineType  Diam      MassDenInAir   EA            CB   CIntDamp  Ca   Cdn    Cdt
         file = open(os.path.abspath("../src/input.map"), "ab")
         file.write("%s   " % self.line_type)
         file.write("%.5f   " % self.diameter)
-        if air_mass_density == "#":
+        if air_mass_density == 0:
             air_mass_density = self.WML+(self.water_density*self.AREA)
         file.write("%.5f   " % air_mass_density)
-        if element_axial_stiffness == "#":
+        if element_axial_stiffness == 0:
             element_axial_stiffness = self.AE_storm
         file.write("%.5f   " % element_axial_stiffness)
         file.write("%.5f   " % cable_sea_friction_coefficient)
@@ -480,10 +480,10 @@ repeat 120 240
                 self.offset_x.append(surge)
                 if max_tension > intact_mooring and intact:
                     intact = False
-                    self.intact_mooring_bounds[0] = surge - doffset
+                    self.intact_mooring_bounds[1] = surge - doffset
                 if max_tension > damaged_mooring and damaged:
                     damaged = False
-                    self.damaged_mooring_bounds[0] = surge - doffset
+                    self.damaged_mooring_bounds[1] = surge - doffset
                 surge += doffset
                 offset_changed +=1 #delete
             max_tension = 0 
@@ -505,10 +505,10 @@ repeat 120 240
                 self.offset_x.insert(0, surge)                
                 if max_tension > intact_mooring and intact:
                     intact = False
-                    self.intact_mooring_bounds[1] = surge + doffset
+                    self.intact_mooring_bounds[0] = surge + doffset
                 if max_tension > damaged_mooring and damaged:
                     damaged = False
-                    self.damaged_mooring_bounds[1] = surge + doffset
+                    self.damaged_mooring_bounds[0] = surge + doffset
                 surge -= doffset
                 offset_changed +=1 #delete
 

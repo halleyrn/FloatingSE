@@ -28,6 +28,10 @@ class MapMooring(Component):
     spar_outer_diameter = Array(iotype='in',units='m',desc='top outer diameter')
     gravity = Float(9.806, iotype='in', units='m/s**2', desc='gravity')
 
+    user_mass_density_air = Float(0.0,iotype='in',units='kg/m',desc='user defined mass density in air')
+    user_EA_stiffness = Float(0.0,iotype='in',units='N',desc='user defined elemental axial stiffness')
+    anchor_radius = Float(iotype='in',units='m',desc='radius to anchors from platform centerline')
+
     mooring_total_cost = Float(iotype='out',units='USD',desc='total cost for anchor + legs + miscellaneous costs')
     mooring_keel_to_CG = Float(iotype='out',units='m',desc='KGM used in spar.py')
     mooring_vertical_load = Float(iotype='out',units='N',desc='mooring vertical load in all mooring lines')
@@ -57,29 +61,23 @@ class MapMooring(Component):
         FH = waterDepth-fairleadDepth 
         scope = FH*self.scope_ratio
 
-        anchor_radius = 0
         fairlead_radius = (sparOuterDiameter/2) + self.fairlead_offset_from_shell
         
         mooring_system = InputMAP(waterDepth, g, waterDensity, numberMooringLines)
         mooring_system.mooring_properties(mooringDiameter, mooringType, self.user_MBL, self.user_WML, self.user_AE_storm, self.user_MCPL)
         mooring_system.write_line_dictionary_header()
-        #do I want to make a new variable that takes in air mass density and element axial stiffness?
-        mooring_system.write_line_dictionary(77.7066, 384243000)
-
+        mooring_system.write_line_dictionary(self.user_mass_density_air, self.user_EA_stiffness)
         mooring_system.write_node_properties_header()
-        #firgure out how to find out the anchor radius radius
-        mooring_system.write_node_properties(1, "FIX", 853.87, 0, waterDepth, 0, 0)
+        mooring_system.write_node_properties(1, "FIX", self.anchor_radius, 0, waterDepth, 0, 0)
         mooring_system.write_node_properties(2, "VESSEL", fairlead_radius, 0, -fairleadDepth, 0, 0)
-        
         mooring_system.write_line_properties_header()
         mooring_system.write_line_properties(1, mooringType, scope, 1, 2, " ")
         mooring_system.write_solver_options()
         mooring_system.main(2, 2, "optimization")
 
         self.intact_mooring, self.damaged_mooring = mooring_system.intact_and_damaged_mooring()
-        print self.intact_mooring
-        print self.damaged_mooring
-
+        print self.intact_mooring #delete
+        print self.damaged_mooring #delete
         self.sum_forces_x, self.offset_x = mooring_system.sum_of_fx_and_offset()
         WML = mooring_system.wet_mass_per_length()
         MCPL = mooring_system.cost_per_length()

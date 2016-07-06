@@ -1,7 +1,8 @@
 from openmdao.main.api import Component, Assembly,convert_units
 from openmdao.lib.datatypes.api import Float, Array, Str, Int, Bool
 from openmdao.lib.drivers.api import SLSQPdriver
-from numpy import array, cos, sinh, sin, cosh, log, exp, dot
+from numpy import array, cos, sinh, sin, cosh, log, exp, dot, pi
+import numpy as np
 from scipy.optimize import fmin, minimize
 from sympy.solvers import solve
 from sympy import Symbol
@@ -30,7 +31,7 @@ class Spar(Component):
     outfitting_cost = Float(6980, iotype='in',units='USD',desc='cost of tapered columns in $/ton')
     ballast_cost = Float(100, iotype='in',units='USD',desc='cost of tapered columns in $/ton')
     """Additional inputs."""
-    stiffener_curve_fit = Bool(iotye='in', desc='flag for using optimized stiffener dimensions or discrete stiffeners')
+    stiffener_curve_fit = Bool(False,iotype='in', desc='flag for using optimized stiffener dimensions or discrete stiffeners')
     stiffener_index = Int(iotype='in',desc='index of stiffener from filtered table')
     number_of_sections = Int(iotype='in',desc='number of sections in the spar')
     outer_diameter = Array(iotype='in', units='m',desc = 'outer diameter of each section')
@@ -411,11 +412,16 @@ class Spar(Component):
         # General Load Case
         NPHI = W/(2*pi*R)
         NTHETA = P * RO 
-        K = NPHI/NTHETA 
+        K = NPHI/NTHETA
+        print 'NPHI: ', NPHI
+        print 'NNTHETA: ', NTHETA
         #-----Local Buckling (SECTION 6) - Axial Compression and bending-----# 
         C = (FXCL + FRCL)/FY -1
         KPHIL = 1
-        CST = K * KPHIL /KTHETAL 
+        CST = K * KPHIL /KTHETAL
+        print 'K: ', K
+        print 'KTHETAL: ', KTHETAL
+        print "CST:  ", CST 
         FTHETACL = np.array([0.]*NSEC)
         bnds = (0,None)
         for i in range(0,NSEC):
@@ -430,7 +436,10 @@ class Spar(Component):
         #-----General Instability (SECTION 6) - Axial Compression and bending-----# 
         C = (FXCG + FRCG)/FY -1
         KPHIG = 1
-        CST = K * KPHIG /KTHETAG 
+        CST = K * KPHIG /KTHETAG
+        print 'K: ', K
+        print 'KTHETAG: ', KTHETAG
+        print "CST:  ", CST
         FTHETACG = np.array([0.]*NSEC)
         for i in range(0,NSEC):
             cst = CST[i]
@@ -453,10 +462,19 @@ class Spar(Component):
         for i in range(0,NSEC):
             # axial load    
             FAL[i] = FPHICL[i]/(FOS*calcPsi(FPHICL[i],FY))
+            # print 'FPHICL: ', FPHICL[i]
+            # print 'divided by: ', (FOS*calcPsi(FPHICL[i],FY))
             FAG[i] = FPHICG[i]/(FOS*calcPsi(FPHICG[i],FY))
+            # print 'FPHICG: ', FPHICG[i]
+            # print 'divided by: ', (FOS*calcPsi(FPHICG[i],FY))
             # external pressure
             FEL[i] = FTHETACL[i]/(FOS*calcPsi(FTHETACL[i],FY))
+            # print 'FTHETACL: ', FTHETACL[i]
+            # print 'divided by: ', (FOS*calcPsi(FTHETACL[i],FY))
             FEG[i] = FTHETACG[i]/(FOS*calcPsi(FTHETACG[i],FY))
+            # print 'FTHETACG: ', FTHETACG[i]
+            # print 'divided by: ', (FOS*calcPsi(FTHETACG[i],FY))
+        
         # unity check 
         self.VAL = abs(SIGMAXA / FAL)
         self.VAG = abs(SIGMAXA / FAG)
@@ -464,7 +482,12 @@ class Spar(Component):
         self.VEG = abs(FTHETAS / FEG)
         self.water_ballast_height = WBH
         
-         
+        # print 'FAL: ', FAL
+        # print 'FAG: ', FAG
+        # print 'FEL: ', FEL
+        # print 'FEG: ', FEG
+        # print 'SIGMAXA: ', SIGMAXA
+        # print 'FTHETAS: ', FTHETAS
         
         print 'surge period: ', T_surge
         print 'heave period: ', T_heave

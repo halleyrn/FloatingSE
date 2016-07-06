@@ -79,7 +79,10 @@ def example_OC3():
     example.user_anchor_cost = 0.
     example.misc_cost_factor = 10
     example.number_of_discretizations = 20 #map doesnt use
-    example.spar.stiffener_curve_fit = False #not sure if this is correct
+    example.stiffener_curve_fit = False #not sure if this is correct
+    example.user_mass_density_air = 77.7066
+    example.user_EA_stiffness = 384243000
+    example.anchor_radius = 853.87
     example.run()
     print '-------------OC3---------------'
     sys_print(example)

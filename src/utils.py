@@ -61,7 +61,7 @@ def roots(f, a, b, eps=1e-3):
             break
 
 def calcPsi(F,FY):
-    """Calculates allowable stresses."""
+    """Calculates partial factor of safety."""
     dum = FY/2
     if F <= dum:
         return 1.2
@@ -70,8 +70,7 @@ def calcPsi(F,FY):
     else: return 1
 
 def dragForce(D,CD,L,V,DEN):
-    """I am not sure what this does, so I will be sure to go back and change
-    this later --Halley"""
+    """Calculates drag on a cylinder."""
     DF = 0.5 * DEN * CD * D * L * V**2
     if V < 0 :
         DF = -DF 
@@ -121,8 +120,7 @@ def curWaveDrag(Hs,Tp,WD,ODT,ODB,ELS,SL,CG,VDOT,G,WDEN):
     return m/(SL-CG)
 
 def windDrag(TLEN,TBOD,TTOD,WREFS,WREFH,ALPHA,FB,ADEN,GF):
-    """I am not sure what this does, so I will be sure to go back and change
-    this later --Halley"""
+    """Calculates tower center of gravity and wind force."""
     TCG = (TLEN/4.)*(((TBOD/2.)**2+2.*(TBOD/2.)*(TTOD/2.)+3.*(TTOD/2.)**2.)/((TBOD/2.)**2+(TBOD/2.)*(TTOD/2.)+(TTOD/2.)**2))
     DL = TLEN/100.
     S = -(TBOD-TTOD)/TLEN
@@ -197,11 +195,11 @@ def waveProperties(Hs,T,D,G):
     return waveHeight,wavePeriod,waveNumber
 
 def waveU(H,T,k,z,D,theta):
-    """CAlucate wave speed."""
+    """Calculates horizontal particle velocity."""
     return (pi*H/T)*(cosh(k*(z+D))/sinh(k*D))*cos(theta)
 
 def waveUdot(H,T,k,z,D,theta):
-    """Calculate wave acceleration."""
+    """Caluates horicontal particle acceleration."""
     return (2*pi**2*H/T**2)* (cosh(k*(z+D))/sinh(k*D))*sin(theta)
 
 def windPowerLaw(uref,href,alpha,H):
@@ -210,8 +208,7 @@ def windPowerLaw(uref,href,alpha,H):
     return uref*(H/href)**alpha
 
 def pipeBuoyancy(D,WDEN):
-    """I am not sure what this does, so I will be sure to go back and change
-    this later --Halley"""
+    """Calculates pipe buoyancy per unit length."""
     return pi/4 * D**2 *WDEN 
 
 def currentSpeed(XNEW,water_depth): # dummy linear profile; replace with actual site info if available
@@ -221,8 +218,7 @@ def currentSpeed(XNEW,water_depth): # dummy linear profile; replace with actual 
     return interp(abs(XNEW),CDEPTH,CSPEED)
 
 def CD(U,D,DEN):
-    """I am not sure what this does, so I will be sure to go back and change
-    this later --Halley"""
+    """Finds the CD based on RE."""
     RE = log10(abs(U) * D / DEN)
     if RE <= 5.:
         return 1.2
@@ -244,7 +240,7 @@ def CD(U,D,DEN):
         return 0.8
 
 def inertialForce(D,CA,L,A,VDOT,DEN):
-    """Calculates the inertial force."""
+    """Calculates the drag on a cylinder."""
     IF = 0.25 * pi * DEN * D** 2 * L * (A + CA * (A - VDOT))
     if A < 0:
         IF = -IF

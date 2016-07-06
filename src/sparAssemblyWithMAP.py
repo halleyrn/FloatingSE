@@ -87,7 +87,7 @@ class sparAssembly(Assembly):
         self.create_passthrough('spar.elevations', 'spar_elevations')
         self.create_passthrough('spar.outer_diameter','spar_outer_diameter')
         self.create_passthrough('spar.water_depth','water_depth')
-        # self.create_passthrough('spar.stiffener_curve_fit', 'stiffener_curve_fit')
+        self.create_passthrough('spar.stiffener_curve_fit', 'stiffener_curve_fit')
         
         #mapMooring connections
         self.create_passthrough('mapMooring.fairlead_depth','fairlead_depth')
@@ -247,7 +247,7 @@ class sparAssemblyCalculation(sparAssembly):
         self.create_passthrough('spar.elevations', 'spar_elevations')
         self.create_passthrough('spar.outer_diameter','spar_outer_diameter')
         self.create_passthrough('spar.water_depth','water_depth')
-        # self.create_passthrough('spar.stiffener_curve_fit', 'stiffener_curve_fit')
+        self.create_passthrough('spar.stiffener_curve_fit', 'stiffener_curve_fit')
 
         #mapMooring connections
         self.create_passthrough('mapMooring.fairlead_depth','fairlead_depth')
@@ -268,6 +268,9 @@ class sparAssemblyCalculation(sparAssembly):
         self.create_passthrough('mapMooring.misc_cost_factor','misc_cost_factor')
         self.connect('water_density','mapMooring.water_density')
         self.connect('gravity','mapMooring.gravity')
+        self.create_passthrough('mapMooring.user_mass_density_air','user_mass_density_air')
+        self.create_passthrough('mapMooring.user_EA_stiffness','user_EA_stiffness')
+        self.create_passthrough('mapMooring.anchor_radius','anchor_radius')
 
         
         """Connect outputs to inputs."""
@@ -287,144 +290,3 @@ class sparAssemblyCalculation(sparAssembly):
         self.connect('mapMooring.damaged_mooring','spar.damaged_mooring')
         self.connect('mapMooring.intact_mooring','spar.intact_mooring')
         self.connect('mapMooring.mooring_mass','spar.mooring_mass')
-
-
-def example_218WD_3MW():
-    """Executes an optimization of 218WD 3MW."""
-    example = sparAssembly()
-    example.tower_base_outer_diameter = 4.890
-    example.tower_top_outer_diameter = 2.5
-    example.tower_length = 60.5
-    example.tower_mass =  127877.
-    example.wind_reference_speed = 11.
-    example.wind_reference_height = 75.
-    example.alpha = 0.110
-    example.spar_elevations = [13.,7.,-5.,-20.,-67.]
-    example.example_turbine_size = '3MW'
-    example.rotor_diameter = 101.0
-    example.RNA_mass = 125000.
-    example.RNA_center_of_gravity_x = 4.1
-    example.RNA_center_of_gravity_y = 1.5
-    example.fairlead_depth = 13. 
-    example.scope_ratio = 1.5
-    example.pretension_percent = 5.
-    example.mooring_diameter = 0.09
-    example.number_of_mooring_lines = 3
-    example.water_depth = 218.
-    example.mooring_type = 'CHAIN'
-    example.anchor_type =  'PILE'
-    example.fairlead_offset_from_shell = 0.5
-    example.spar_outer_diameter= [5.000,6.000,6.000,9.000]
-    example.spar.stiffener_curve_fit = True
-    example.neutral_axis = 0.21
-    #example.stiffener_index = 232
-    example.permanent_ballast_height = 3.
-    example.fixed_ballast_height = 5.
-    example.wall_thickness=[0.05,0.05,0.05,0.05]
-    example.number_of_rings = [1,4,4,14]
-    example.number_of_sections = 4
-    example.bulk_head = ['N', 'T', 'N', 'B']
-    example.load_condition = 'N'
-    example.significant_wave_height = 10.820*1.5
-    example.significant_wave_period = 9.800
-    example.run()
-    print '----------218WD_3MW------------'
-    sys_print(example)
-
-def example_218WD_6MW():
-    """Executes an optimization of 218WD 6MW."""
-    example = sparAssembly()
-    example.tower_base_outer_diameter = 6.0
-    example.tower_top_outer_diameter = 3.51
-    example.tower_length = 80.5
-    example.tower_mass =  366952.000
-    example.wind_reference_speed = 11.
-    example.wind_reference_height = 97.
-    example.alpha = 0.110
-    #example.spar_lengths = [6.,12.,15.,52.]
-    example.spar_elevations = [13.,7.,-5.,-20.,-72.]
-    example.example_turbine_size = '6MW'
-    example.rotor_diameter = 154.
-    example.RNA_mass = 365500.000
-    example.RNA_center_of_gravity_x = 5.750
-    example.RNA_center_of_gravity_y = 3.5
-    example.fairlead_depth = 13.
-    example.scope_ratio = 1.5
-    example.pretension_percent = 5.0
-    example.mooring_diameter = 0.090
-    example.number_of_mooring_lines = 3
-    example.water_depth = 218.
-    example.mooring_type = 'CHAIN'
-    example.anchor_type =  'PILE'
-    example.fairlead_offset_from_shell = 0.5
-    example.spar_outer_diameter= [7.000,8.000,8.000,13.000]
-    example.wall_thickness=[0.05,0.05,0.05,0.05]
-    example.spar.stiffener_curve_fit = False
-    #example.neutral_axis = 0.22
-    example.stiffener_index = 271
-    example.fixed_ballast_height = 7.0
-    example.permanent_ballast_height = 3.0
-    #example.wall_thickness=[0.0263,0.0251,0.0262,0.038]
-    example.number_of_rings = [1,4,4,19]
-    example.scope_ratio = 1.5
-    example.pretension_percent = 6.5
-    example.mooring_diameter = 0.075
-    example.number_of_sections = 4
-    example.bulk_head = ['N', 'T', 'N', 'B']
-    example.load_condition = 'N'
-    example.significant_wave_height = 10.820
-    example.significant_wave_period = 9.800
-    example.run()
-    print '----------218WD_6MW------------'
-    sys_print(example)
-
-def example_218WD_10MW():
-    """Executes an optimization of 218WD 10MW."""
-    example = sparAssembly()
-    example.tower_base_outer_diameter = 7.72
-    example.tower_top_outer_diameter = 4.050
-    example.tower_length = 102.630
-    example.tower_mass =  698235.000
-    example.wind_reference_speed = 11.
-    example.wind_reference_height = 119.
-    example.alpha = 0.110
-    #example.spar_lengths = [6.,12.,15.,72.]
-    example.spar_elevations = [13.,7.,-5.,-20.,-92.]
-    example.example_turbine_size = '10MW'
-    example.rotor_diameter = 194.
-    example.RNA_mass = 677000.000
-    example.RNA_center_of_gravity_x = 7.07
-    example.RNA_center_of_gravity_y = 3.370
-    example.fairlead_depth = 13.
-    example.scope_ratio = 1.5
-    example.pretension_percent = 5.0
-    example.mooring_diameter = 0.090
-    example.number_of_mooring_lines = 3
-    example.water_depth = 218.
-    example.mooring_type = 'CHAIN'
-    example.anchor_type =  'PILE'
-    example.fairlead_offset_from_shell = 0.5
-    example.spar_outer_diameter= [8.0,9.0,9.0,15.0]
-    example.wall_thickness=[0.05,0.05,0.05,0.05]
-    example.spar.stiffener_curve_fit = False
-    example.stiffener_index = 282
-    example.fixed_ballast_height = 9.0
-    example.permanent_ballast_height = 4.0
-    # note: these are slightly off from excel: ie the stiffener AR, which resulted in diff in RGM 
-    #example.wall_thickness=[0.0366,0.035,0.035,0.059]
-    #example.neutral_axis = 0.35
-    example.number_of_rings = [1,4,4,40]
-    example.number_of_sections = 4
-    example.bulk_head = ['N', 'T', 'N', 'B']
-    example.load_condition = 'N'
-    example.significant_wave_height = 10.820
-    example.significant_wave_period = 9.800
-    example.run()
-    print '----------218WD_10MW------------'
-    sys_print(example)
-
-if __name__ == "__main__":
-    example_218WD_3MW()
-    #example_218WD_6MW()
-    #example_218WD_10MW()
-    
