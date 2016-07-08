@@ -28,8 +28,8 @@ class Spar(Component):
     """Costs inputs."""
     straight_col_cost = Float(3490, iotype='in',units='USD',desc='cost of straight columns in $/ton')
     tapered_col_cost = Float(4720, iotype='in',units='USD',desc='cost of tapered columns in $/ton')
-    outfitting_cost = Float(6980, iotype='in',units='USD',desc='cost of tapered columns in $/ton')
-    ballast_cost = Float(100, iotype='in',units='USD',desc='cost of tapered columns in $/ton')
+    outfitting_cost = Float(6980, iotype='in',units='USD',desc='cost of outfitting in $/ton')
+    ballast_cost = Float(100, iotype='in',units='USD',desc='cost of ballast in $/ton')
     """Additional inputs."""
     stiffener_curve_fit = Bool(False,iotype='in', desc='flag for using optimized stiffener dimensions or discrete stiffeners')
     stiffener_index = Int(iotype='in',desc='index of stiffener from filtered table')
@@ -365,7 +365,7 @@ class Spar(Component):
         BETA = LR/(pi*R/n)
         left = (1+BETA**2)**2/(0.5+BETA**2)
         right = 0.112*MX**4 / ((1+BETA**2)**2*(0.5+BETA**2))
-        CTHETAL = (left + right)*ALPHATHETAL 
+        CTHETAL = (left + right)*ALPHATHETAL  
         FREL = CTHETAL * pi**2 * E * (T/LR)**2 / (12*(1-PR**2)) # elastic
         FRCL=np.array(NSEC*[0.])
         for i in range(0,len(FREL)):
@@ -413,21 +413,16 @@ class Spar(Component):
         NPHI = W/(2*pi*R)
         NTHETA = P * RO 
         K = NPHI/NTHETA
-        print 'NPHI: ', NPHI
-        print 'NNTHETA: ', NTHETA
         #-----Local Buckling (SECTION 6) - Axial Compression and bending-----# 
         C = (FXCL + FRCL)/FY -1
         KPHIL = 1
         CST = K * KPHIL /KTHETAL
-        print 'K: ', K
-        print 'KTHETAL: ', KTHETAL
-        print "CST:  ", CST 
-        FTHETACL = np.array([0.]*NSEC)
+        FTHETACL = np.array([0.]*NSEC) #external pressure
         bnds = (0,None)
         for i in range(0,NSEC):
             cst = CST[i]
-            fxcl = FXCL[i]
-            frcl = FRCL[i]
+            fxcl = FXCL[i] #something wrong with FXCL
+            frcl = FRCL[i] #something wrong with FRCL
             c = C[i]
             x = Symbol('x')
             ans = solve((cst*x/fxcl)**2 - c*(cst*x/fxcl)*(x/frcl) + (x/frcl)**2 - 1, x)
@@ -437,9 +432,6 @@ class Spar(Component):
         C = (FXCG + FRCG)/FY -1
         KPHIG = 1
         CST = K * KPHIG /KTHETAG
-        print 'K: ', K
-        print 'KTHETAG: ', KTHETAG
-        print "CST:  ", CST
         FTHETACG = np.array([0.]*NSEC)
         for i in range(0,NSEC):
             cst = CST[i]
@@ -462,32 +454,16 @@ class Spar(Component):
         for i in range(0,NSEC):
             # axial load    
             FAL[i] = FPHICL[i]/(FOS*calcPsi(FPHICL[i],FY))
-            # print 'FPHICL: ', FPHICL[i]
-            # print 'divided by: ', (FOS*calcPsi(FPHICL[i],FY))
             FAG[i] = FPHICG[i]/(FOS*calcPsi(FPHICG[i],FY))
-            # print 'FPHICG: ', FPHICG[i]
-            # print 'divided by: ', (FOS*calcPsi(FPHICG[i],FY))
             # external pressure
             FEL[i] = FTHETACL[i]/(FOS*calcPsi(FTHETACL[i],FY))
-            # print 'FTHETACL: ', FTHETACL[i]
-            # print 'divided by: ', (FOS*calcPsi(FTHETACL[i],FY))
             FEG[i] = FTHETACG[i]/(FOS*calcPsi(FTHETACG[i],FY))
-            # print 'FTHETACG: ', FTHETACG[i]
-            # print 'divided by: ', (FOS*calcPsi(FTHETACG[i],FY))
-        
         # unity check 
         self.VAL = abs(SIGMAXA / FAL)
         self.VAG = abs(SIGMAXA / FAG)
         self.VEL = abs(FTHETAS / FEL)
         self.VEG = abs(FTHETAS / FEG)
         self.water_ballast_height = WBH
-        
-        # print 'FAL: ', FAL
-        # print 'FAG: ', FAG
-        # print 'FEL: ', FEL
-        # print 'FEG: ', FEG
-        # print 'SIGMAXA: ', SIGMAXA
-        # print 'FTHETAS: ', FTHETAS
         
         print 'surge period: ', T_surge
         print 'heave period: ', T_heave

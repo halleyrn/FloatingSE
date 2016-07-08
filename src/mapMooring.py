@@ -76,8 +76,6 @@ class MapMooring(Component):
         mooring_system.main(2, 2, "optimization")
 
         self.intact_mooring, self.damaged_mooring = mooring_system.intact_and_damaged_mooring()
-        print self.intact_mooring #delete
-        print self.damaged_mooring #delete
         self.sum_forces_x, self.offset_x = mooring_system.sum_of_fx_and_offset()
         WML = mooring_system.wet_mass_per_length()
         MCPL = mooring_system.cost_per_length()

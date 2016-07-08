@@ -144,8 +144,9 @@ def plasticityRF(F,FY):
     dum = FY/F
     if F > FY/2:
         return F*dum*(1+3.75*dum**2)**(-0.25)
+
     else: 
-        return F*1
+        return F
 
 def frustumVol(D1,D2,H):
     """Calculates frustum volume as an array or as a scalar input"""

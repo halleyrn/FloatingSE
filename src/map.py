@@ -369,8 +369,8 @@ repeat 120 240
 
         epsilon = 1e-3
         K = mooring_1.linear(epsilon)    
-        print "\nHere is the linearized stiffness matrix with zero vessel displacement:"
-        print array(K)
+        # print "\nHere is the linearized stiffness matrix with zero vessel displacement:"
+        # print array(K)
         self.horizontal_stiffness = diag(array(K))[0]
         self.vertical_stiffness = diag(array(K))[3]
         # file = open(os.path.abspath("../src/stiffness_diagonals.txt"),"w")
@@ -512,7 +512,7 @@ repeat 120 240
                 surge -= doffset
                 offset_changed +=1 #delete
 
-        print "angle changed: %d offset changed: %d" %(angle_changed, offset_changed) #delete
+        # print "angle changed: %d offset changed: %d" %(angle_changed, offset_changed) #delete
         # file.write(str(list_of_system_T) + "\n" )
         # file.close
 
@@ -550,4 +550,4 @@ if __name__ == '__main__':
     OC3.write_solver_options()
     OC3.main(2, 2, "optimization")
     intact_mooring, damaged_mooring = OC3.intact_and_damaged_mooring()
-    print intact_mooring, damaged_mooring
+    # print intact_mooring, damaged_mooring
