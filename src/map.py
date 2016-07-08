@@ -549,5 +549,5 @@ if __name__ == '__main__':
     OC3.write_line_properties(1, "CHAIN", 902.2, 1, 2, " ")
     OC3.write_solver_options()
     OC3.main(2, 2, "optimization")
-    intact_mooring, damaged_mooring = OC3.intact_and_damaged_mooring()
+    # intact_mooring, damaged_mooring = OC3.intact_and_damaged_mooring()
     # print intact_mooring, damaged_mooring

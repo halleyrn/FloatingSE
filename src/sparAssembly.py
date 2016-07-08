@@ -12,6 +12,9 @@ from utils import sys_print
 
 class sparAssembly(Assembly):
     """ Top level assembly """
+    number_of_rings = Array([1,4,4,20],iotype='in',desc = 'number of stiffeners in each section')
+    wall_thickness = Array([0.05,0.05,0.05,0.05],iotype='in', units='m',desc = 'wall thickness of each section')
+
    
     def configure(self):
         """Creates a new Assembly containing a chain of Tower_RNA, Spar and
@@ -37,29 +40,32 @@ class sparAssembly(Assembly):
         self.create_passthrough('tower_RNA.length','tower_length')
         self.create_passthrough('tower_RNA.example_turbine_size','example_turbine_size')
         self.create_passthrough('tower_RNA.RNA_center_of_gravity_y', 'RNA_center_of_gravity_y')
-        self.create_passthrough('spar.wall_thickness','wall_thickness')
         self.create_passthrough('tower_RNA.rotor_diameter','rotor_diameter')
         self.create_passthrough('tower_RNA.cut_out_speed','cut_out_speed')
         self.create_passthrough('tower_RNA.air_density','air_density')
+        self.create_passthrough('tower_RNA.RNA_center_of_gravity_x','RNA_center_of_gravity_x')
+        self.create_passthrough('tower_RNA.wind_reference_speed', 'wind_reference_speed')
+        self.create_passthrough('tower_RNA.wind_reference_height','wind_reference_height')
+        self.create_passthrough('tower_RNA.gust_factor','gust_factor')
+        self.create_passthrough('tower_RNA.tower_mass','tower_mass')
+        self.create_passthrough('tower_RNA.RNA_mass','RNA_mass')
+
+        # self.create_passthrough('spar.wall_thickness','wall_thickness')
+        self.connect('wall_thickness','spar.wall_thickness')
         self.connect('air_density','spar.air_density')
-        self.create_passthrough('spar.wind_reference_speed', 'wind_reference_speed')
-        self.connect('wind_reference_speed','tower_RNA.wind_reference_speed')
-        self.create_passthrough('spar.wind_reference_height','wind_reference_height')
-        self.connect('wind_reference_height','tower_RNA.wind_reference_height')
-        self.create_passthrough('spar.gust_factor','gust_factor')
-        self.connect('gust_factor','tower_RNA.gust_factor')
+        self.connect('wind_reference_speed','spar.wind_reference_speed')
+        self.connect('wind_reference_height','spar.wind_reference_height')
+        self.connect('gust_factor','spar.gust_factor')
         self.create_passthrough('spar.alpha', 'alpha')
         self.connect('alpha','tower_RNA.alpha')
-        self.create_passthrough('spar.RNA_center_of_gravity_x','RNA_center_of_gravity_x')
-        self.connect('RNA_center_of_gravity_x','tower_RNA.RNA_center_of_gravity_x')
-        self.create_passthrough('spar.tower_mass','tower_mass')
-        self.connect('tower_mass','tower_RNA.tower_mass')
-        self.create_passthrough('spar.RNA_mass','RNA_mass')
-        self.connect('RNA_mass','tower_RNA.RNA_mass')
+        self.connect('RNA_center_of_gravity_x','spar.RNA_center_of_gravity_x')
+        self.connect('tower_mass','spar.tower_mass')
+        self.connect('RNA_mass','spar.RNA_mass')
         self.create_passthrough('spar.stiffener_index','stiffener_index')
         self.create_passthrough('spar.number_of_sections','number_of_sections')
         self.create_passthrough('spar.bulk_head','bulk_head')
-        self.create_passthrough('spar.number_of_rings','number_of_rings')
+        # self.create_passthrough('spar.number_of_rings','number_of_rings')
+        self.connect('number_of_rings','spar.number_of_rings')        
         self.create_passthrough('spar.neutral_axis','neutral_axis')
         self.create_passthrough('spar.straight_col_cost','straight_col_cost')
         self.create_passthrough('spar.tapered_col_cost','tapered_col_cost')
@@ -87,9 +93,8 @@ class sparAssembly(Assembly):
         self.create_passthrough('spar.elevations', 'spar_elevations')
         self.create_passthrough('spar.outer_diameter','spar_outer_diameter')
         self.create_passthrough('spar.water_depth','water_depth')
-        # self.create_passthrough('spar.stiffener_curve_fit', 'stiffener_curve_fit')
+        self.create_passthrough('spar.stiffener_curve_fit', 'stiffener_curve_fit')
         
-        #mooring connections
         self.create_passthrough('mooring.fairlead_depth','fairlead_depth')
         self.connect('spar_elevations',['tower_RNA.spar_elevations','mooring.spar_elevations'])
         self.connect('spar_outer_diameter','mooring.spar_outer_diameter')
@@ -115,8 +120,6 @@ class sparAssembly(Assembly):
         self.connect('tower_RNA.tower_center_of_gravity','spar.tower_center_of_gravity')
         self.connect('tower_RNA.tower_wind_force','spar.tower_wind_force')
         self.connect('tower_RNA.RNA_wind_force','spar.RNA_wind_force')
-        
-        #mooring connections
         self.connect('mooring.mooring_total_cost','spar.mooring_total_cost')
         self.connect('mooring.mooring_keel_to_CG','spar.mooring_keel_to_CG')
         self.connect('mooring.mooring_vertical_load','spar.mooring_vertical_load')
@@ -128,26 +131,26 @@ class sparAssembly(Assembly):
         self.connect('mooring.intact_mooring','spar.intact_mooring')
         self.connect('mooring.mooring_mass','spar.mooring_mass')
         
-
+        """Specify objective function (what you want to minimize)."""
+        self.driver.add_objective('spar.spar_mass')
        
         """Design variables by adding a range of validity for certain variables."""
         self.driver.add_parameter('neutral_axis',low=10.,high=41.9,scaler=0.01)
-        #self.driver.add_parameter('number_of_rings[0]',low=1,high=5)
+        # self.driver.add_parameter('number_of_rings[0]',low=1,high=5)
         self.driver.add_parameter('number_of_rings[1]',low=1,high=10)
         self.driver.add_parameter('number_of_rings[2]',low=1,high=10)
         self.driver.add_parameter('number_of_rings[3]',low=1,high=50)
+        # self.driver.add_parameter('number_of_rings[4]',low=1,high=50)
         self.driver.add_parameter('wall_thickness[0]',low=1.,high=10.,scaler=0.01)
         self.driver.add_parameter('wall_thickness[1]',low=1.,high=10.,scaler=0.01)
         self.driver.add_parameter('wall_thickness[2]',low=1.,high=10.,scaler=0.01)
         self.driver.add_parameter('wall_thickness[3]',low=10.,high=100.,scaler=0.001)
-        self.driver.add_parameter('scope_ratio',low=15.,high=45.,scaler=0.1)
-        self.driver.add_parameter('pretension_percent',low=2.5,high=10.)
-        self.driver.add_parameter('mooring_diameter',low=30.,high=100.,scaler=0.001)
+        # self.driver.add_parameter('wall_thickness[4]',low=10.,high=100.,scaler=0.001)
+        self.driver.add_parameter('scope_ratio',low=15.,high=45.,scaler=0.1) #mooring
+        self.driver.add_parameter('pretension_percent',low=2.5,high=10.) #mooring
+        self.driver.add_parameter('mooring_diameter',low=30.,high=100.,scaler=0.001) #mooring
         self.driver.add_parameter('fixed_ballast_height',low=30.,high=100.,scaler=0.1)
         self.driver.add_parameter('permanent_ballast_height',low=30.,high=100.,scaler=0.1)
-
-        """Specify objective function (what you want to minimize)."""
-        self.driver.add_objective('spar.spar_mass', name='spar mass')
 
         """Add constraints to the driver."""
         self.driver.add_constraint('spar.water_ballast_height < 7.5')

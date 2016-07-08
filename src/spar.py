@@ -1,12 +1,10 @@
 from openmdao.main.api import Component, Assembly,convert_units
 from openmdao.lib.datatypes.api import Float, Array, Str, Int, Bool
 from openmdao.lib.drivers.api import SLSQPdriver
-from numpy import array, cos, sinh, sin, cosh, log, exp, dot, pi
-import numpy as np
+from numpy import array, cos, sinh, sin, cosh, log, exp, dot, pi, isnan, minimum, asarray, round
 from scipy.optimize import fmin, minimize
 from sympy.solvers import solve
 from sympy import Symbol
-import math
 from utils import full_stiffeners_table,thrust_table,plasticityRF,frustumVol,frustumCG,ID,waveProperties,waveU,waveUdot,CD,inertialForce,windPowerLaw,pipeBuoyancy,rootsearch,bisect,roots,calcPsi,dragForce,curWaveDrag,windDrag,calculateWindCurrentForces
 
 class Spar(Component):
@@ -98,6 +96,7 @@ class Spar(Component):
         super(Spar,self).__init__()
     
     def execute(self):
+        print 'enter spar'
         ''' 
         '''
         # assign all varibles 
@@ -257,7 +256,7 @@ class Spar(Component):
         F_total = RWF+TWF+sum(SWF)+sum(SCF)
         sum_FX = self.sum_forces_x
         X_Offset = self.offset_x
-        if np.isnan(sum_FX).any() or sum_FX[-1] > (-F_total/1000.):
+        if isnan(sum_FX).any() or sum_FX[-1] > (-F_total/1000.):
             self.max_offset_unity = 10.
             self.min_offset_unity = 10.
         else:
@@ -291,7 +290,7 @@ class Spar(Component):
         RF = RO - HW  # radius to flange
         MX = LR/(R*T)**0.5  # geometry parameter
         # effective width of shell plate in longitudinal direction 
-        LE=np.array([0.]*NSEC)
+        LE=array([0.]*NSEC)
         for i in range(0,NSEC):
             if MX[i] <= 1.56: 
                 LE[i]=LR[i]
@@ -307,7 +306,7 @@ class Spar(Component):
         W = (RMASS + TMASS + MBALLAST + SMASS) * G
         P = WDEN * G* abs(ELE)  # hydrostatic pressure at depth of section bottom 
         if Hs != 0: # dynamic head 
-            DH = WAVEH/2*(np.cosh(WAVEN*(WD-abs(ELE)))/np.cosh(WAVEN*WD)) 
+            DH = WAVEH/2*(cosh(WAVEN*(WD-abs(ELE)))/cosh(WAVEN*WD)) 
         else: 
             DH = 0 
         P = P + WDEN*G*DH # hydrostatic pressure + dynamic head
@@ -321,14 +320,14 @@ class Spar(Component):
         BETAc = (E*T/(4*RO**2*Dc))**0.25 # parameter beta 
         TWS = AR/HW
         dum1 = BETAc*LR
-        KT = 8*BETAc**3 * Dc * (np.cosh(dum1) - np.cos(dum1))/ (np.sinh(dum1) + np.sin(dum1))
+        KT = 8*BETAc**3 * Dc * (cosh(dum1) - cos(dum1))/ (sinh(dum1) + sin(dum1))
         KD = E * TWS * (RO**2 - RF**2)/(RO * ((1+PR) * RO**2 + (1-PR) * RF**2))
         dum = dum1/2. 
-        PSIK = 2*(np.sin(dum) * np.cosh(dum) + np.cos(dum) * np.sinh(dum)) / (np.sinh(dum1) + np.sin(dum1))
+        PSIK = 2*(sin(dum) * cosh(dum) + cos(dum) * sinh(dum)) / (sinh(dum1) + sin(dum1))
         PSIK = PSIK.clip(min=0) # psik >= 0; set all negative values of psik to zero
         SIGMAXA = -W/(2*pi*R*T)
         PSIGMA = P + (PR*SIGMAXA*T)/RO
-        PSIGMA = np.minimum(PSIGMA,P) # PSIGMA has to be <= P
+        PSIGMA = minimum(PSIGMA,P) # PSIGMA has to be <= P
         dum = KD/(KD+KT)
         KTHETAL = 1 - PSIK*PSIGMA/P*dum
         FTHETAS = KTHETAL*P*RO/T
@@ -340,18 +339,18 @@ class Spar(Component):
         ALPHAXL = 9/(300+(2*R)/T)**0.4
         CXL = (1+(150/((2*R)/T))*(ALPHAXL**2)*(MX**4))**0.5
         FXEL = CXL * (pi**2 * E / (12 * (1 - PR**2))) * (T/LR)**2 # elastic 
-        FXCL=np.array(NSEC*[0.])
+        FXCL=array(NSEC*[0.])
         for i in range(0,len(FXEL)):
             FXCL[i] = plasticityRF(FXEL[i],FY) # inelastic 
         # external pressure
-        BETA = np.array([0.]*NSEC)
-        ALPHATHETAL = np.array([0.]*NSEC)
+        BETA = array([0.]*NSEC)
+        ALPHATHETAL = array([0.]*NSEC)
         global ZM
         ZM = 12*(MX**2 * (1-PR**2)**.5)**2/pi**4
         for i in range(0,NSEC):
             f=lambda x:x**2*(1+x**2)**4/(2+3*x**2)-ZM[i]
             ans = roots(f, 0.,15.)
-            ans_array = np.asarray(ans)
+            ans_array = asarray(ans)
             is_scalar = False if ans_array.ndim>0 else True
             if is_scalar: 
                 BETA[i] = ans 
@@ -361,20 +360,20 @@ class Spar(Component):
                 ALPHATHETAL[i] = 1
             elif MX[i] >= 5:
                 ALPHATHETAL[i] = 0.8  
-        n = np.round(BETA*pi*R/LR) # solve for smallest whole number n 
+        n = round(BETA*pi*R/LR) # solve for smallest whole number n 
         BETA = LR/(pi*R/n)
         left = (1+BETA**2)**2/(0.5+BETA**2)
         right = 0.112*MX**4 / ((1+BETA**2)**2*(0.5+BETA**2))
         CTHETAL = (left + right)*ALPHATHETAL  
         FREL = CTHETAL * pi**2 * E * (T/LR)**2 / (12*(1-PR**2)) # elastic
-        FRCL=np.array(NSEC*[0.])
+        FRCL=array(NSEC*[0.])
         for i in range(0,len(FREL)):
             FRCL[i] = plasticityRF(FREL[i],FY) # inelastic 
         #-----GENERAL INSTABILITY (SECTION 4)-----# 
         # axial compression and bending 
         AC = AR/(LR*T) # Ar bar 
         ALPHAX = 0.85/(1+0.0025*(OD/T))
-        ALPHAXG = np.array([0.]*NSEC)
+        ALPHAXG = array([0.]*NSEC)
         for i in range(0,NSEC):
             if AC[i] >= 0.2 :
                 ALPHAXG[i] = 0.72
@@ -383,14 +382,14 @@ class Spar(Component):
             else: 
                 ALPHAXG[i] = ALPHAX[i]
         FXEG = ALPHAXG * 0.605 * E * T / R * (1 + AC)**0.5 # elastic
-        FXCG = np.array(NSEC*[0.])
+        FXCG = array(NSEC*[0.])
         for i in range(0,len(FXEG)):
             FXCG[i] = plasticityRF(FXEG[i],FY) # inelastic  
         # external pressure 
         ALPHATHETAG = 0.8
         LAMBDAG = pi * R / LB 
         k = 0.5 
-        PEG = np.array([0.]*NSEC)
+        PEG = array([0.]*NSEC)
         for i in range(0,NSEC):
             t = T[i]
             r = R[i]
@@ -406,7 +405,7 @@ class Spar(Component):
             PEG[i] = f(m,E,t,r,lambdag,k,ier,rc,ro,lr)
         ALPHATHETAG = 0.8 #adequate for ring stiffeners 
         FREG = ALPHATHETAG*PEG*RO*KTHETAG/T # elastic 
-        FRCG = np.array(NSEC*[0.])
+        FRCG = array(NSEC*[0.])
         for i in range(0,len(FREG)):
             FRCG[i] = plasticityRF(FREG[i],FY) # inelastic  
         # General Load Case
@@ -417,7 +416,7 @@ class Spar(Component):
         C = (FXCL + FRCL)/FY -1
         KPHIL = 1
         CST = K * KPHIL /KTHETAL
-        FTHETACL = np.array([0.]*NSEC) #external pressure
+        FTHETACL = array([0.]*NSEC) #external pressure
         bnds = (0,None)
         for i in range(0,NSEC):
             cst = CST[i]
@@ -432,7 +431,7 @@ class Spar(Component):
         C = (FXCG + FRCG)/FY -1
         KPHIG = 1
         CST = K * KPHIG /KTHETAG
-        FTHETACG = np.array([0.]*NSEC)
+        FTHETACG = array([0.]*NSEC)
         for i in range(0,NSEC):
             cst = CST[i]
             fxcg = FXCG[i]
@@ -447,10 +446,10 @@ class Spar(Component):
         FOS = 1.25
         if LOADC == 'N' or LOADC == 'n': 
             FOS = 1.65
-        FAL = np.array([0.]*NSEC)
-        FAG = np.array([0.]*NSEC)
-        FEL = np.array([0.]*NSEC)
-        FEG = np.array([0.]*NSEC)
+        FAL = array([0.]*NSEC)
+        FAG = array([0.]*NSEC)
+        FEL = array([0.]*NSEC)
+        FEG = array([0.]*NSEC)
         for i in range(0,NSEC):
             # axial load    
             FAL[i] = FPHICL[i]/(FOS*calcPsi(FPHICL[i],FY))
@@ -490,4 +489,6 @@ class Spar(Component):
         print 'shell mass: ', self.shell_mass
         print 'bulkhead mass: ', self.bulkhead_mass
         print 'stiffener mass: ', self.stiffener_mass
+        print 'end spar'
+
 #-----------------------------------------------------------------

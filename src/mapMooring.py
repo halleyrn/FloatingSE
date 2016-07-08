@@ -48,6 +48,8 @@ class MapMooring(Component):
     
     def execute(self):
         """Shows the relationship between each of the variables above."""
+        print 'enter mooring'
+
         g = self. gravity
         waterDepth = self.water_depth
         fairleadDepth = self.fairlead_depth
@@ -96,3 +98,5 @@ class MapMooring(Component):
         self.mooring_keel_to_CG = DRAFT - fairleadDepth
         self.mooring_vertical_load, self.mooring_vertical_stiffness, self.mooring_horizontal_stiffness = mooring_system.loads_and_stiffnesses()
         self.mooring_mass = (WML+pi*mooringDiameter**2/4*waterDensity)*scope*numberMooringLines
+        print 'end mooring'
+

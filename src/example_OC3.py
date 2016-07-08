@@ -8,7 +8,7 @@ sys.path.append(os.path.expanduser('~') + '/Dropbox/NREL/NREL_WISDEM/src/twister
 from openmdao.main.api import Component, Assembly, convert_units
 from openmdao.main.datatypes.api import Float, Array, Enum, Str, Int, Bool
 from openmdao.lib.drivers.api import COBYLAdriver,SLSQPdriver
-from sparAssembly import sparAssemblyCalculation
+from sparAssemblyWithMAP import sparAssembly
 import numpy as np
 import time
 #from utils import filtered_stiffeners_table
@@ -16,7 +16,7 @@ from utils import sys_print
 
 def example_OC3():
     """Calculation with properties based mostly on the OC3."""
-    example = sparAssemblyCalculation()
+    example = sparAssembly()
 
     example.example_turbine_size = '3MW' #not sure if this is correct
     example.neutral_axis = .21 #not sure if this number is correct
@@ -49,7 +49,7 @@ def example_OC3():
     example.rotor_diameter = 126.
     example.RNA_center_of_gravity_y = 1.75
     example.RNA_center_of_gravity_x = 1.9
-    example.cut_out_speed 
+    # example.cut_out_speed 
     """Tower Variables"""
     example.tower_base_outer_diameter = 6.5
     example.tower_top_outer_diameter = 3.87
@@ -93,10 +93,6 @@ def example_OC3():
     example.permanent_ballast_height = 3.
     example.fixed_ballast_height = 7.
     example.offset_amplification_factor = 1
-
-
-
-
     example.run()
     print '-------------OC3---------------'
     sys_print(example)

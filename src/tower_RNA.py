@@ -1,12 +1,11 @@
 from openmdao.main.api import Component, Assembly,convert_units
 from openmdao.lib.datatypes.api import Float, Array, Str, Int, Bool
-import numpy as np
+from numpy import pi
 from scipy.optimize import fmin, minimize
 from sympy.solvers import solve
 from sympy import Symbol
 import math
 from utils import windPowerLaw,dragForce,CD,windDrag,thrust_table
-pi=np.pi
 
 class Tower_RNA(Component):
     """Environmental factor inputs."""
@@ -38,6 +37,8 @@ class Tower_RNA(Component):
         super(Tower_RNA,self).__init__()
     
     def execute(self):   
+        print 'enter tower'
+
         # tower
         FB = self.spar_elevations[0]
         TBOD = self.base_outer_diameter
@@ -76,4 +77,6 @@ class Tower_RNA(Component):
         else: 
             RWF = max_thrust*1000*GF**2*0.75
         self.RNA_keel_to_CG = KGR
-        self.RNA_wind_force = RWF 
+        self.RNA_wind_force = RWF
+        print 'end tower'
+ 

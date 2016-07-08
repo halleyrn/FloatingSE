@@ -8,7 +8,7 @@ sys.path.append(os.path.expanduser('~') + '/Dropbox/NREL/NREL_WISDEM/src/twister
 from openmdao.main.api import Component, Assembly, convert_units
 from openmdao.main.datatypes.api import Float, Array, Enum, Str, Int, Bool
 from openmdao.lib.drivers.api import COBYLAdriver,SLSQPdriver
-from sparAssembly import sparAssemblyCalculation
+from sparAssembly import sparAssembly
 import numpy as np
 import time
 #from utils import filtered_stiffeners_table
@@ -16,7 +16,7 @@ from utils import sys_print
 
 def example_OC3():
     """Calculation with properties based mostly on the OC3."""
-    example = sparAssemblyCalculation()
+    example = sparAssembly()
     example.tower_base_outer_diameter = 6.0
     example.tower_top_outer_diameter = 3.5
     example.tower_length = 77.6
