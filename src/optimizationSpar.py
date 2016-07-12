@@ -1,13 +1,11 @@
-from openmdao.main.api import Component, Assembly, convert_units
-from openmdao.main.datatypes.api import Float, Array, Enum, Str, Int, Bool
-from openmdao.lib.drivers.api import COBYLAdriver, SLSQPdriver
+from openmdao.main.api import Assembly, convert_units
+from openmdao.lib.drivers.api import COBYLAdriver
 from spar import Spar
-#from spar_discrete import spar_discrete
-import numpy as np
 import time
-from utils import filtered_stiffeners_table, full_stiffeners_table
+from utils import full_stiffeners_table
 
-class optimizationSpar(Assembly):
+
+class OptimizationSpar(Assembly):
     
     def configure(self):
         self.add('driver',COBYLAdriver())
@@ -69,7 +67,7 @@ def sys_print(example):
     print 'cost: ', example.total_cost
 
 def example_218WD_3MW():
-    example = optimizationSpar()
+    example = OptimizationSpar()
     tt = time.time()
     example.spar.number_of_sections = 4
     example.spar.outer_diameter = [5., 6., 6., 9.]
@@ -166,11 +164,11 @@ def example_218WD_3MW():
     sys_print(second_fit)
 
 def example_218WD_6MW():
-    example = optimizationSpar()
+    example = OptimizationSpar()
     tt = time.time()
     example.spar.number_of_sections = 4
     example.spar.outer_diameter = [7., 8., 8., 13.]
-    example.spar.length =  [6., 12., 15., 52.]
+    example.spar.length = [6., 12., 15., 52.]
     example.spar.end_elevation = [7., -5., -20., -72.]
     example.spar.start_elevation = [13., 7., -5., -20.]
     example.spar.bulk_head = ['N', 'T', 'N', 'B']
@@ -263,7 +261,7 @@ def example_218WD_6MW():
     sys_print(second_fit)
 
 def example_218WD_10MW():
-    example = optimizationSpar()
+    example = OptimizationSpar()
     tt = time.time()
     example.spar.number_of_sections = 4
     example.spar.outer_diameter = [8.,9.,9.,15.]

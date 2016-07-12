@@ -1,39 +1,40 @@
-from openmdao.main.api import Component, Assembly, convert_units
-from openmdao.main.datatypes.api import Float, Array, Enum, Str, Int, Bool
-from openmdao.lib.drivers.api import COBYLAdriver, SLSQPdriver
+from openmdao.main.api import Assembly
+from openmdao.lib.drivers.api import COBYLAdriver
 from mooring import Mooring
 import time
-import numpy as np
 
-class optimizationMooring(Assembly):
+
+class OptimizationMooring(Assembly):
     # variables 
     def configure(self):
-        self.add('driver',COBYLAdriver())
-        self.add('mooring',Mooring())
+        self.add('driver', COBYLAdriver())
+        self.add('mooring', Mooring())
         self.driver.workflow.add('mooring')
 
         self.driver.add_objective('mooring.mooring_total_cost')
 
-        self.driver.add_parameter('mooring.scope_ratio',low=15.,high=50.,scaler=0.1)
-        self.driver.add_parameter('mooring.pretension_percent',low=2.5,high=20.)
-        self.driver.add_parameter('mooring.mooring_diameter',low=3.,high=10.,scaler=0.01)
+        self.driver.add_parameter('mooring.scope_ratio', low=15., high=50., scaler=0.1)
+        self.driver.add_parameter('mooring.pretension_percent', low=2.5, high=20.)
+        self.driver.add_parameter('mooring.mooring_diameter', low=3., high=10., scaler=0.01)
 
         self.driver.add_constraint('mooring.heel_angle <= 6.')
         self.driver.add_constraint('mooring.min_offset_unity < 1.0')
         self.driver.add_constraint('mooring.max_offset_unity < 1.0')
 
+
 def sys_print(example):
-    print 'scope ratio: ',example.scope_ratio
-    print 'pretension percent: ',example.pretension_percent
-    print 'mooring diameter: ',example.mooring_diameter
-    print 'heel angle: ',example.heel_angle
-    print 'min offset unity: ',example.min_offset_unity
-    print 'max offset unity: ',example.max_offset_unity
-    print 'total mooring cost: ',example.mooring_total_cost
+    print 'scope ratio: ', example.scope_ratio
+    print 'pretension percent: ', example.pretension_percent
+    print 'mooring diameter: ', example.mooring_diameter
+    print 'heel angle: ', example.heel_angle
+    print 'min offset unity: ', example.min_offset_unity
+    print 'max offset unity: ', example.max_offset_unity
+    print 'total mooring cost: ', example.mooring_total_cost
+
 
 def example_218WD_3MW():
     tt = time.time()
-    example = optimizationMooring()
+    example = OptimizationMooring()
     # Mooring,settings
     example.mooring.fairlead_depth = 13.
     example.mooring.scope_ratio = 1.5
@@ -80,9 +81,10 @@ def example_218WD_3MW():
     print "Elapsed time: ", time.time()-tt, " seconds"
     sys_print(example.mooring)
 
+
 def example_218WD_6MW():
     tt = time.time()
-    example = optimizationMooring()
+    example = OptimizationMooring()
     example.mooring.fairlead_depth = 13.
     example.mooring.scope_ratio = 1.5
     example.mooring.pretension_percent = 5.0
@@ -128,9 +130,10 @@ def example_218WD_6MW():
     print "Elapsed time: ", time.time()-tt, " seconds"
     sys_print(example.mooring)
 
+
 def example_218WD_10MW():
     tt = time.time()
-    example = optimizationMooring()
+    example = OptimizationMooring()
     example.mooring.fairlead_depth = 13.
     example.mooring.scope_ratio = 1.5
     example.mooring.pretension_percent = 5.0

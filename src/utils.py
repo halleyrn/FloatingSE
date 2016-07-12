@@ -1,11 +1,7 @@
 # -*- coding: utf-8 -*-
-#import numpy as np
-from math import pi, cos, sqrt, radians, sin, exp, log10, log, floor, ceil
-import scipy as scp
-from scipy.optimize import fmin, minimize
-from sympy.solvers import solve
-from sympy import Symbol
-from numpy import asarray, array, cosh, sinh, tanh, interp, append, zeros, str_
+from math import pi, cos, sin, log10, log, ceil, cosh, sinh, tanh
+from numpy import asarray, array, interp, append, zeros
+
 
 def rootsearch(f,a,b,dx):
     """I am not sure what this does, so I will be sure to go back and change
@@ -200,12 +196,12 @@ def waveU(H,T,k,z,D,theta):
     return (pi*H/T)*(cosh(k*(z+D))/sinh(k*D))*cos(theta)
 
 def waveUdot(H,T,k,z,D,theta):
-    """Caluates horicontal particle acceleration."""
+    """Calculates horizontal particle acceleration."""
     return (2*pi**2*H/T**2)* (cosh(k*(z+D))/sinh(k*D))*sin(theta)
 
+
 def windPowerLaw(uref,href,alpha,H):
-    """I am not sure what this does, so I will be sure to go back and change
-    this later --Halley"""
+    """Calculates wind speeds."""
     return uref*(H/href)**alpha
 
 def pipeBuoyancy(D,WDEN):
@@ -377,13 +373,13 @@ def thrust_table(size_of_turbine,ADEN,RWA):
     else: 
         print "examples are 3MW, 6MW, or 10MW"
     thrust = 0.5*ADEN*wind**2.*RWA*Ct/1000.
-    return (wind,Ct,thrust) 
+    return (Ct,thrust.tolist())
 
 def filtered_stiffeners_table():
     """This looks like a incomplete table of stiffiners. Each entry has a name,
     area(m^2), depth(m), web thickness(m), flange width(m), flange thickness(m),
     yna(m), and Ir (m^4)."""
-    TABLE = zeros(125,dtype=[('name',str_, 16),('area','f8'),('d','f8'),('tw','f8'),('bf','f8'),('tf','f8'),('yna','f8'),('Ir','f8')])
+    TABLE = zeros(125,dtype=[('name',str, 35),('area','f8'),('d','f8'),('tw','f8'),('bf','f8'),('tf','f8'),('yna','f8'),('Ir','f8')])
     TABLE [0] = ('ST1.5x3.75',1.1,1.5,0.349,2.51,0.26,1.068,0.2)
     TABLE [1] = ('ST1.5x2.85',0.83,1.5,0.17,2.33,0.26,1.171,0.114)
     TABLE [2] = ('ST2x4.75',1.39,2.,0.326,2.8,0.293,1.447,0.462)
@@ -515,7 +511,7 @@ def full_stiffeners_table():
     """This looks like a table of stiffiners. Each entry has a name, area(m^2),
     depth(m), web thickness(m), flange width(m), flange thickness(m), yna(m),
     and Ir (m^4)."""
-    TABLE = zeros(327,dtype=[('name',str_, 16),('area','f8'),('d','f8'),('tw','f8'),('bf','f8'),('tf','f8'),('yna','f8'),('Ir','f8')])
+    TABLE = zeros(327,dtype=[('name',str, 32),('area','f8'),('d','f8'),('tw','f8'),('bf','f8'),('tf','f8'),('yna','f8'),('Ir','f8')])
     TABLE [0] = ('ST1.5x3.75',1.1, 1.5,0.349,2.51,0.26,1.068,0.2)
     TABLE [1] = ('ST1.5x2.85',0.83,1.5,0.17,2.33,0.26,1.171,0.114)
     TABLE [2] = ('ST2x4.75',1.39,2,0.326,2.8,0.293,1.447,0.462)
