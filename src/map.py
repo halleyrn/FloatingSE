@@ -509,7 +509,8 @@ repeat 120 240
         mooring_1.end()
 
     def sum_of_fx_and_offset(self):
-        return array(self.sum_fx), array(self.offset_x)
+        offset_x = array(self.offset_x)
+        return array(self.sum_fx), offset_x
 
     def wet_mass_per_length(self):
         return self.WML

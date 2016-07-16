@@ -3,7 +3,7 @@
 
 import sys
 import os
-from sparAssembly import SparAssemblyCalculation
+from sparAssemblyWithMAP import SparAssemblyCalculation
 from utils import sys_print
 # just to temporarily change PYTHONPATH without installing
 sys.path.append(os.path.expanduser('~') + '/Dropbox/NREL/NREL_WISDEM/src/twister/rotoraero')
@@ -12,7 +12,7 @@ sys.path.append(os.path.expanduser('~') + '/Dropbox/NREL/NREL_WISDEM/src/twister
 def example_oc3():
     """Calculation with properties based mostly on the OC3."""
     example = SparAssemblyCalculation()
-    example.example_turbine_size = '3MW'  # not sure if this is correct
+    example.example_turbine_size = '5MW'  # not sure if this is correct
     example.neutral_axis = .21  # not sure if this number is correct
     """Cost Variables"""
     example.straight_col_cost = 3492.
@@ -33,9 +33,9 @@ def example_oc3():
     example.gust_factor = 1.0
     """Material Variables"""
     example.material_density = 7850
-    example.E = 200.*(10**9)
+    example.E = 200.e9
     example.nu = .3
-    example.yield_stress = 345.*(10**6)
+    example.yield_stress = 345.e6
     example.permanent_ballast_density = 4000.
     example.fixed_ballast_density = 4492.48
     """RNA Variables"""
@@ -54,10 +54,10 @@ def example_oc3():
     example.stiffener_curve_fit = False  # not sure if this is correct
     """Section Variables"""
     example.spar_outer_diameter = [6.5, 6.5, 9.4, 9.4, 9.4]
-    example.wall_thickness = [.057, .056, .042, .046, .052]
+    example.wall_thickness = [.055, .060, .040, .040, .040]
     example.spar_elevations = [10.0, -4.0, -12.0, -42., -71., -120.]
     example.bulk_head = ['N', 'T', 'N', 'B', 'B']
-    example.number_of_rings = [3, 2, 10, 19, 32]
+    example.number_of_rings = [3, 2, 10, 10, 32]
     example.number_of_sections = 5
     """Mooring Variables"""
     example.fairlead_depth = 70.
@@ -68,7 +68,7 @@ def example_oc3():
     example.mooring_type = 'CHAIN'
     example.user_MBL = 8158000.
     example.user_WML = 71.186
-    example.user_AE_storm = 384243000/.006
+    example.user_AE_storm = 384243000./.006
     example.user_MCPL = 0.
     example.anchor_type = 'PILE'
     example.user_anchor_cost = 0.

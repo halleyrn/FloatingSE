@@ -34,7 +34,6 @@ class TowerRNA(Component):
         super(TowerRNA, self).__init__()
     
     def execute(self):   
-        print 'enter tower'
 
         # tower
         freeboard = self.spar_elevations[0]
@@ -69,4 +68,3 @@ class TowerRNA(Component):
             self.RNA_wind_force = 0.5*air_density*(wind_speed*gust_factor)**2*rotor_swept_area*max_thrust_coefficient
         else:
             self.RNA_wind_force = max_thrust*1000*gust_factor**2*0.75
-        print 'end tower'
