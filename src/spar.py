@@ -537,3 +537,4 @@ class Spar(Component):
         print 'shell mass: ', self.shell_mass
         print 'bulkhead mass: ', self.bulkhead_mass
         print 'stiffener mass: ', self.stiffener_mass
+        print 'end spar'

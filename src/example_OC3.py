@@ -3,7 +3,7 @@
 
 import sys
 import os
-from sparAssemblyWithMAP import SparAssemblyCalculation
+from sparAssemblyWithMAP import SparAssembly
 from utils import sys_print
 # just to temporarily change PYTHONPATH without installing
 sys.path.append(os.path.expanduser('~') + '/Dropbox/NREL/NREL_WISDEM/src/twister/rotoraero')
@@ -11,7 +11,7 @@ sys.path.append(os.path.expanduser('~') + '/Dropbox/NREL/NREL_WISDEM/src/twister
 
 def example_oc3():
     """Calculation with properties based mostly on the OC3."""
-    example = SparAssemblyCalculation()
+    example = SparAssembly()
     example.example_turbine_size = '5MW'  # not sure if this is correct
     example.neutral_axis = .21  # not sure if this number is correct
     """Cost Variables"""

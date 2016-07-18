@@ -24,11 +24,10 @@ under the License.
 
 from mapsys import *
 import matplotlib.pyplot as plt
-from mpl_toolkits.mplot3d import Axes3D
+# from mpl_toolkits.mplot3d import Axes3D
 from math import cos, pi, sin
-from numpy import array, set_printoptions, diag
+from numpy import array, set_printoptions, diag, interp
 import os
-import sys
 
 
 class InputMAP(object):
@@ -62,8 +61,9 @@ class InputMAP(object):
         self.V_initial = 0
         self.horizontal_stiffness = 0
         self.vertical_stiffness = 0
-        self.damaged_mooring_bounds = [0, 0]
-        self.intact_mooring_bounds = [0, 0]
+        # self.damaged_mooring_bounds = [0, 0]
+        # self.intact_mooring_bounds = [0, 0]
+        self.max_tension = []
 
     def mooring_properties(self, mooring_diameter, line_type, mbl=0, wml=0,
                            ae_storm=0, mcpl=0):
@@ -387,11 +387,6 @@ repeat 120 240
          
         # plt.show()
 
-        # print "lines: %s MBL: %s doffset: %s dangle: %s angle: %s" % (self.number_of_mooring_lines, self.MBL, doffset,
-        #                                                               dangle, angle) #delete
-        angle_changed = 0  # delete
-        offset_changed = 0  # delete
-
         if objective.lower() == "find full area" or objective == True:
 
             red_x = []
@@ -425,7 +420,6 @@ repeat 120 240
                         # print "Line %d: horizontal = %2.2f [N]  vertical = %2.2f [N] " \
                         #       "tension = %2.2f [N]" % (line_number, horizontal, vertical, tension[line_number])
                     offset += doffset
-                    offset_changed += 1  # delete
                     max_tension = max(tension)
                     if max_tension >= self.MBL:
                         red_x.append(surge)
@@ -441,7 +435,6 @@ repeat 120 240
                         green_y.append(sway)
                 angle += dangle
                 offset = doffset
-                angle_changed += 1  # delete
 
             # uncomment if you want to see offsets plotted
             plt.plot(red_x, red_y, 'ro', yellow_x, yellow_y, 'yo', blue_x, blue_y, 'bo', green_x, green_y, 'go')
@@ -453,8 +446,6 @@ repeat 120 240
             # pos offset) and the offset in x as well
             max_tension = 0 
             surge = 0
-            intact = True
-            damaged = True
             while max_tension <= self.MBL:
                 tot_fx = 0
                 mooring_1.displace_vessel(surge, 0, 0, 0, 0, 0)
@@ -466,20 +457,12 @@ repeat 120 240
                     horizontal, vertical = mooring_1.get_fairlead_force_2d(line_number)
                     tension[line_number] = (horizontal**2 + vertical**2)**.5
                 max_tension = max(tension[:])
+                self.max_tension.append(max_tension)
                 self.sum_fx.append(tot_fx)
                 self.offset_x.append(surge)
-                if max_tension > intact_mooring and intact:
-                    intact = False
-                    self.intact_mooring_bounds[1] = surge - doffset
-                if max_tension > damaged_mooring and damaged:
-                    damaged = False
-                    self.damaged_mooring_bounds[1] = surge - doffset
                 surge += doffset
-                offset_changed += 1  # delete
-            max_tension = 0 
+            max_tension = 0
             surge = -doffset
-            intact = True
-            damaged = True
             while max_tension <= self.MBL:
                 tot_fx = 0
                 mooring_1.displace_vessel(surge, 0, 0, 0, 0, 0)
@@ -491,17 +474,41 @@ repeat 120 240
                     horizontal, vertical = mooring_1.get_fairlead_force_2d(line_number)
                     tension[line_number] = (horizontal**2 + vertical**2)**.5
                 max_tension = max(tension[:])
+                self.max_tension.insert(0, max_tension)
                 self.sum_fx.insert(0, tot_fx)
-                self.offset_x.insert(0, surge)                
-                if max_tension > intact_mooring and intact:
-                    intact = False
-                    self.intact_mooring_bounds[0] = surge + doffset
-                if max_tension > damaged_mooring and damaged:
-                    damaged = False
-                    self.damaged_mooring_bounds[0] = surge + doffset
+                self.offset_x.insert(0, surge)
                 surge -= doffset
-                offset_changed += 1  # delete
-
+            x = self.offset_x.index(0)
+            positive_x = self.offset_x[x:]
+            negative_x = list(reversed(self.offset_x[:x]))
+            positive_x_max_t = self.max_tension[x:]
+            negative_x_max_t = list(reversed(self.max_tension[:x]))
+            max_x = interp(self.MBL, positive_x_max_t, positive_x)
+            mooring_1.displace_vessel(max_x, 0, 0, 0, 0, 0)
+            mooring_1.update_states(0.0, 0)
+            tot_fx = 0
+            for line_number in range(0, self.number_of_mooring_lines):
+                fx, fy, fz = mooring_1.get_fairlead_force_3d(line_number)
+                tot_fx += -fx
+                horizontal, vertical = mooring_1.get_fairlead_force_2d(line_number)
+                tension[line_number] = (horizontal ** 2 + vertical ** 2) ** .5
+            max_tension = max(tension[:])
+            self.max_tension[-1] = max_tension
+            self.sum_fx[-1] = tot_fx
+            self.offset_x[-1] = max_x
+            min_x = interp(self.MBL, negative_x_max_t, negative_x)
+            mooring_1.displace_vessel(min_x, 0, 0, 0, 0, 0)
+            mooring_1.update_states(0.0, 0)
+            tot_fx = 0
+            for line_number in range(0, self.number_of_mooring_lines):
+                fx, fy, fz = mooring_1.get_fairlead_force_3d(line_number)
+                tot_fx += -fx
+                horizontal, vertical = mooring_1.get_fairlead_force_2d(line_number)
+                tension[line_number] = (horizontal ** 2 + vertical ** 2) ** .5
+            max_tension = max(tension[:])
+            self.max_tension[0] = max_tension
+            self.sum_fx[0] = tot_fx
+            self.offset_x[0] = min_x
         # print "angle changed: %d offset changed: %d" %(angle_changed, offset_changed) #delete
         # opened.write(str(list_of_system_t) + "\n" )
         # opened.close
@@ -509,8 +516,7 @@ repeat 120 240
         mooring_1.end()
 
     def sum_of_fx_and_offset(self):
-        offset_x = array(self.offset_x)
-        return array(self.sum_fx), offset_x
+        return array(self.sum_fx), array(self.offset_x)
 
     def wet_mass_per_length(self):
         return self.WML
@@ -525,7 +531,18 @@ repeat 120 240
         return self.V_initial, self.vertical_stiffness, self.horizontal_stiffness
 
     def intact_and_damaged_mooring(self):
-        return self.intact_mooring_bounds, self.damaged_mooring_bounds
+        x = self.offset_x.index(0)
+        positive_x = self.offset_x[x:]
+        negative_x = list(reversed(self.offset_x[:x]))
+        positive_x_max_t = self.max_tension[x:]
+        negative_x_max_t = list(reversed(self.max_tension[:x]))
+        intact_mooring = float(self.MBL*.60)
+        damaged_mooring = float(self.MBL*.80)
+        intact_mooring_bounds = list([interp(intact_mooring, negative_x_max_t, negative_x)])
+        intact_mooring_bounds.append(interp(intact_mooring, positive_x_max_t, positive_x))
+        damaged_mooring_bounds = list([interp(damaged_mooring, negative_x_max_t, negative_x)])
+        damaged_mooring_bounds.append(interp(damaged_mooring, positive_x_max_t, positive_x))
+        return intact_mooring_bounds, damaged_mooring_bounds
 
 if __name__ == '__main__':
     """Testing the interface using homogeneous line OC3 mooring information."""
@@ -540,5 +557,9 @@ if __name__ == '__main__':
     OC3.write_line_properties(1, "CHAIN", 902.2, 1, 2, " ")
     OC3.write_solver_options()
     OC3.main(2, 2, "optimization")
-    # intact_mooring, damaged_mooring = OC3.intact_and_damaged_mooring()
-    # print intact_mooring, damaged_mooring
+    intact_mooring1, damaged_mooring1 = OC3.intact_and_damaged_mooring()
+    sum_fx1, offset_x1 = OC3.sum_of_fx_and_offset()
+    print sum_fx1
+    print offset_x1
+    print OC3.max_tension
+    print intact_mooring1, damaged_mooring1
