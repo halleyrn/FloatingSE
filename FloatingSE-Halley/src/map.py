@@ -64,7 +64,10 @@ class InputMAP(object):
         # self.damaged_mooring_bounds = [0, 0]
         # self.intact_mooring_bounds = [0, 0]
         self.max_tension = []
+<<<<<<< HEAD:FloatingSE-Halley/src/map.py
         self.PTEN = 0
+=======
+>>>>>>> c8be64ffabfe429634418b79d77c9b0f9738ce3e:src/map.py
 
     def mooring_properties(self, mooring_diameter, line_type, mbl=0, wml=0,
                            ae_storm=0, mcpl=0):

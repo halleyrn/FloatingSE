@@ -1,6 +1,10 @@
 Outputs were generated using MAP++ 1.20.10.
 
+<<<<<<< HEAD:FloatingSE-Halley/src/outlist.map.sum
     Friday July 22-2016 at 16:29:39 PM
+=======
+    Monday July 18-2016 at 14:24:09 PM
+>>>>>>> c8be64ffabfe429634418b79d77c9b0f9738ce3e:src/outlist.map.sum
 
     Gravity constant          [m/s^2]  : 9.81
     Sea density               [kg/m^3] : 1025.00
@@ -8,10 +12,17 @@ Outputs were generated using MAP++ 1.20.10.
     Vessel reference position [m]      : 0.00 , 0.00 , 0.00
 
     Cable Type          : CHAIN
+<<<<<<< HEAD:FloatingSE-Halley/src/outlist.map.sum
     Diameter     [m]    : 0.0307
     Mass Density [kg/m] : 77.71
     EA           [N]    : 384243000.00
     omega        [N/m]  : 754.55
+=======
+    Diameter     [m]    : 0.0901
+    Mass Density [kg/m] : 77.71
+    EA           [N]    : 384243000.00
+    omega        [N/m]  : 697.96
+>>>>>>> c8be64ffabfe429634418b79d77c9b0f9738ce3e:src/outlist.map.sum
     CB                  : 1.00
 
           | Node 1 Data            Node 2 Data            Node 3 Data            Node 4 Data
@@ -22,9 +33,15 @@ Y  [m]    |  0.000                   0.000                 -739.473             
 Z  [m]    |  -320.000               -70.000                -320.000               -70.000
 M  [kg]   |  0.000                   0.000                  0.000                  0.000
 B  [m^3]  |  0.000                   0.000                  0.000                  0.000
+<<<<<<< HEAD:FloatingSE-Halley/src/outlist.map.sum
 FX [N]    | ( 19835514.880)        (-19835514.880)        (-9917760.995)         ( 9917760.995)
 FY [N]    | (-0.000)               ( 0.000)               (-17178066.421)        ( 17178066.421)
 FZ [N]    | (-5526800.692)         ( 6160302.033)         (-5526802.786)         ( 6160304.127)
+=======
+FX [N]    | ( 38484535.233)        (-38484535.233)        (-19242271.176)        ( 19242271.176)
+FY [N]    | (-0.000)               ( 0.000)               (-33328592.262)        ( 33328592.262)
+FZ [N]    | (-11057320.509)        ( 11616450.941)        (-11057322.606)        ( 11616453.038)
+>>>>>>> c8be64ffabfe429634418b79d77c9b0f9738ce3e:src/outlist.map.sum
 
 
           | Node 5 Data            Node 6 Data
@@ -35,14 +52,21 @@ Y  [m]    |   739.473                4.503
 Z  [m]    |  -320.000               -70.000
 M  [kg]   |  0.000                   0.000
 B  [m^3]  |  0.000                   0.000
+<<<<<<< HEAD:FloatingSE-Halley/src/outlist.map.sum
 FX [N]    | (-9917760.995)         ( 9917760.995)
 FY [N]    | ( 17178066.421)        (-17178066.421)
 FZ [N]    | (-5526802.786)         ( 6160304.127)
+=======
+FX [N]    | (-19242271.176)        ( 19242271.176)
+FY [N]    | ( 33328592.262)        (-33328592.262)
+FZ [N]    | (-11057322.606)        ( 11616453.038)
+>>>>>>> c8be64ffabfe429634418b79d77c9b0f9738ce3e:src/outlist.map.sum
 
 
                 | Line 1
                 | ---------------------------------------
 Material        |  CHAIN
+<<<<<<< HEAD:FloatingSE-Halley/src/outlist.map.sum
 Lu        [m]   |  839.574
 Lb        [m]   | 0.000
 H         [N]   |  19835514.880
@@ -54,6 +78,19 @@ VAnch     [N]   |  5526800.692
 TAnch     [N]   |  20591094.591
 AlphaAnch [deg] |  15.570
 L^2-Norm        |  4.804866e-012
+=======
+Lu        [m]   |  801.089
+Lb        [m]   | 0.000
+H         [N]   |  38484535.233
+V         [N]   |  11616450.941
+T         [N]   |  40199519.706
+Alpha     [deg] |  16.796
+HAnch     [N]   |  38484535.233
+VAnch     [N]   |  11057320.509
+TAnch     [N]   |  40041525.807
+AlphaAnch [deg] |  16.030
+L^2-Norm        |  1.414762e-011
+>>>>>>> c8be64ffabfe429634418b79d77c9b0f9738ce3e:src/outlist.map.sum
 Function Evals  |  6
 Jacobian Evals  |  5
 Term. criteria  |  2 : ||x_i - x_{i-1}||  <= INNER_XTOL.
@@ -62,6 +99,7 @@ Term. criteria  |  2 : ||x_i - x_{i-1}||  <= INNER_XTOL.
                 | Line 2
                 | ---------------------------------------
 Material        |  CHAIN
+<<<<<<< HEAD:FloatingSE-Halley/src/outlist.map.sum
 Lu        [m]   |  839.574
 Lb        [m]   | 0.000
 H         [N]   |  19835522.405
@@ -73,6 +111,19 @@ VAnch     [N]   |  5526802.786
 TAnch     [N]   |  20591102.402
 AlphaAnch [deg] |  15.570
 L^2-Norm        |  1.833145e-012
+=======
+Lu        [m]   |  801.089
+Lb        [m]   | 0.000
+H         [N]   |  38484543.159
+V         [N]   |  11616453.038
+T         [N]   |  40199527.900
+Alpha     [deg] |  16.796
+HAnch     [N]   |  38484543.159
+VAnch     [N]   |  11057322.606
+TAnch     [N]   |  40041534.004
+AlphaAnch [deg] |  16.030
+L^2-Norm        |  2.665132e-012
+>>>>>>> c8be64ffabfe429634418b79d77c9b0f9738ce3e:src/outlist.map.sum
 Function Evals  |  6
 Jacobian Evals  |  5
 Term. criteria  |  2 : ||x_i - x_{i-1}||  <= INNER_XTOL.
@@ -81,6 +132,7 @@ Term. criteria  |  2 : ||x_i - x_{i-1}||  <= INNER_XTOL.
                 | Line 3
                 | ---------------------------------------
 Material        |  CHAIN
+<<<<<<< HEAD:FloatingSE-Halley/src/outlist.map.sum
 Lu        [m]   |  839.574
 Lb        [m]   | 0.000
 H         [N]   |  19835522.405
@@ -92,6 +144,19 @@ VAnch     [N]   |  5526802.786
 TAnch     [N]   |  20591102.402
 AlphaAnch [deg] |  15.570
 L^2-Norm        |  1.833145e-012
+=======
+Lu        [m]   |  801.089
+Lb        [m]   | 0.000
+H         [N]   |  38484543.159
+V         [N]   |  11616453.038
+T         [N]   |  40199527.900
+Alpha     [deg] |  16.796
+HAnch     [N]   |  38484543.159
+VAnch     [N]   |  11057322.606
+TAnch     [N]   |  40041534.004
+AlphaAnch [deg] |  16.030
+L^2-Norm        |  2.665132e-012
+>>>>>>> c8be64ffabfe429634418b79d77c9b0f9738ce3e:src/outlist.map.sum
 Function Evals  |  6
 Jacobian Evals  |  5
 Term. criteria  |  2 : ||x_i - x_{i-1}||  <= INNER_XTOL.
@@ -100,7 +165,11 @@ Term. criteria  |  2 : ||x_i - x_{i-1}||  <= INNER_XTOL.
 ---------------------- LINE DICTIONARY ---------------------------------------
 LineType  Diam      MassDenInAir   EA            CB
 [-]       [m]       [kg/m]         [N]           [-]
+<<<<<<< HEAD:FloatingSE-Halley/src/outlist.map.sum
 CHAIN   0.03070   77.70660   384243000.00000   1.00000   1.0E8   0.6   -1.0   0.05
+=======
+CHAIN   0.09006   77.70660   384243000.00000   1.00000   1.0E8   0.6   -1.0   0.05
+>>>>>>> c8be64ffabfe429634418b79d77c9b0f9738ce3e:src/outlist.map.sum
 ---------------------- NODE PROPERTIES ---------------------------------------
 Node  Type       X       Y       Z      M     B     FX    FY    FZ
 [-]   [-]       [m]     [m]     [m]    [kg]  [mˆ3]  [N]   [N]   [N]
@@ -113,9 +182,15 @@ Node  Type       X       Y       Z      M     B     FX    FY    FZ
 ---------------------- LINE PROPERTIES ---------------------------------------
 Line  LineType  UnstrLen  NodeAnch  NodeFair  Flags
 [-]      [-]       [m]       [-]       [-]       [-]
+<<<<<<< HEAD:FloatingSE-Halley/src/outlist.map.sum
 1   CHAIN   839.57419   1   2    
 2   CHAIN   839.57419   3   4   
 3   CHAIN   839.57419   5   6   
+=======
+1   CHAIN   801.08895   1   2    
+2   CHAIN   801.08895   3   4   
+3   CHAIN   801.08895   5   6   
+>>>>>>> c8be64ffabfe429634418b79d77c9b0f9738ce3e:src/outlist.map.sum
 ---------------------- SOLVER OPTIONS-----------------------------------------
 Option 
 [-] 
