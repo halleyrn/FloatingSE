@@ -96,7 +96,4 @@ class MapMooring(Component):
         self.mooring_vertical_load, self.mooring_vertical_stiffness, self.mooring_horizontal_stiffness = \
             mooring_system.loads_and_stiffnesses()
         self.mooring_mass = (wml+pi*mooring_diameter**2/4*water_density)*scope*number_of_lines
-<<<<<<< HEAD:FloatingSE-Halley/src/mapMooring.py
         print 'PTEN', mooring_system.PTEN
-=======
->>>>>>> c8be64ffabfe429634418b79d77c9b0f9738ce3e:src/mapMooring.py

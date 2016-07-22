@@ -293,27 +293,8 @@ class Spar(Component):
             self.max_offset_unity = 10.
             self.min_offset_unity = 10.
         else:
-<<<<<<< HEAD:FloatingSE-Kelly/src/spar.py
             max_offset = interp(array(-total_force/1000), sum_forces_x[::-1], offset_x[::-1])
             min_offset = interp(array(total_force/1000), sum_forces_x[::-1], offset_x[::-1])
-=======
-            # add interp method here to simplify this
-            x1, x2, y1, y2 = 0, 0, 0, 0
-            for j in range(1, len(sum_forces_x.tolist())):
-                if sum_forces_x[j] <= (-total_force/1000.):
-                    x2 = sum_forces_x[j]
-                    x1 = sum_forces_x[j-1]
-                    y2 = offset_x[j]
-                    y1 = offset_x[j-1]
-            max_offset = (y1 + (-total_force / 1000. - x1) * (y2 - y1) / (x2 - x1)) * \
-                offset_amplification_factor
-            i = 0
-            while sum_forces_x[i] > (total_force/1000.):
-                i += 1
-            min_offset = \
-                (offset_x[i-1] + (total_force / 1000. - sum_forces_x[i-1]) *
-                 (offset_x[i] - offset_x[i-1]) / (sum_forces_x[i]-sum_forces_x[i-1]))*offset_amplification_factor
->>>>>>> c8be64ffabfe429634418b79d77c9b0f9738ce3e:src/spar.py
         # unity checks! 
             if self.load_condition == 'E':
                 self.max_offset_unity = max_offset/self.damaged_mooring[1]

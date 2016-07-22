@@ -100,8 +100,6 @@ class Spar(Component):
         super(Spar, self).__init__()
     
     def execute(self):
-        '''
-        '''
         # assign all variables
         gravity = float(self.gravity)
         air_density = float(self.air_density)

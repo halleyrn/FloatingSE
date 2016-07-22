@@ -3,11 +3,7 @@
 
 import sys
 import os
-<<<<<<< HEAD:FloatingSE-Kelly/src/example_OC3.py
 from sparAssembly import SparAssembly
-=======
-from sparAssemblyWithMAP import SparAssembly
->>>>>>> c8be64ffabfe429634418b79d77c9b0f9738ce3e:src/example_OC3.py
 from utils import sys_print
 # just to temporarily change PYTHONPATH without installing
 sys.path.append(os.path.expanduser('~') + '/Dropbox/NREL/NREL_WISDEM/src/twister/rotoraero')
@@ -40,13 +36,8 @@ def example_oc3():
     example.E = 200.e9
     example.nu = .3
     example.yield_stress = 345.e6
-<<<<<<< HEAD:FloatingSE-Kelly/src/example_OC3.py
     example.permanent_ballast_density = 4492.48
     example.fixed_ballast_density = 4000.
-=======
-    example.permanent_ballast_density = 4000.
-    example.fixed_ballast_density = 4492.48
->>>>>>> c8be64ffabfe429634418b79d77c9b0f9738ce3e:src/example_OC3.py
     """RNA Variables"""
     example.RNA_mass = 347460.
     example.rotor_diameter = 126.
@@ -67,11 +58,7 @@ def example_oc3():
     example.wall_thickness = [.055, .060, .040, .040, .040]
     example.spar_elevations = [10.0, -4.0, -12.0, -42., -71., -120.]
     example.bulk_head = ['N', 'T', 'N', 'B', 'B']
-<<<<<<< HEAD:FloatingSE-Kelly/src/example_OC3.py
     example.number_of_rings = [3, 2, 10, 10, 33]
-=======
-    example.number_of_rings = [3, 2, 10, 10, 32]
->>>>>>> c8be64ffabfe429634418b79d77c9b0f9738ce3e:src/example_OC3.py
     example.number_of_sections = 5
     """Mooring Variables"""
     example.fairlead_depth = 70.
@@ -82,11 +69,7 @@ def example_oc3():
     example.mooring_type = 'CHAIN'
     example.user_MBL = 8158000.
     example.user_WML = 71.186
-<<<<<<< HEAD:FloatingSE-Kelly/src/example_OC3.py
     example.user_AE_storm = 384243000.
-=======
-    example.user_AE_storm = 384243000./.006
->>>>>>> c8be64ffabfe429634418b79d77c9b0f9738ce3e:src/example_OC3.py
     example.user_MCPL = 0.
     example.anchor_type = 'PILE'
     example.user_anchor_cost = 0.

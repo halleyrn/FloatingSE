@@ -64,10 +64,7 @@ class InputMAP(object):
         # self.damaged_mooring_bounds = [0, 0]
         # self.intact_mooring_bounds = [0, 0]
         self.max_tension = []
-<<<<<<< HEAD:FloatingSE-Halley/src/map.py
         self.PTEN = 0
-=======
->>>>>>> c8be64ffabfe429634418b79d77c9b0f9738ce3e:src/map.py
 
     def mooring_properties(self, mooring_diameter, line_type, mbl=0, wml=0,
                            ae_storm=0, mcpl=0):
@@ -487,7 +484,7 @@ repeat 120 240
             negative_x = list(reversed(self.offset_x[:x]))
             positive_x_max_t = self.max_tension[x:]
             negative_x_max_t = list(reversed(self.max_tension[:x]))
-            max_x = interp(self.MBL, positive_x_max_t, positive_x)
+            max_x = interp(array(self.MBL), positive_x_max_t, positive_x)
             mooring_1.displace_vessel(max_x, 0, 0, 0, 0, 0)
             mooring_1.update_states(0.0, 0)
             tot_fx = 0
@@ -500,7 +497,7 @@ repeat 120 240
             self.max_tension[-1] = max_tension
             self.sum_fx[-1] = tot_fx
             self.offset_x[-1] = max_x
-            min_x = interp(self.MBL, negative_x_max_t, negative_x)
+            min_x = interp(array(self.MBL), negative_x_max_t, negative_x)
             mooring_1.displace_vessel(min_x, 0, 0, 0, 0, 0)
             mooring_1.update_states(0.0, 0)
             tot_fx = 0
@@ -542,10 +539,10 @@ repeat 120 240
         negative_x_max_t = list(reversed(self.max_tension[:x]))
         intact_mooring = float(self.MBL*.60)
         damaged_mooring = float(self.MBL*.80)
-        intact_mooring_bounds = list([interp(intact_mooring, negative_x_max_t, negative_x)])
-        intact_mooring_bounds.append(interp(intact_mooring, positive_x_max_t, positive_x))
-        damaged_mooring_bounds = list([interp(damaged_mooring, negative_x_max_t, negative_x)])
-        damaged_mooring_bounds.append(interp(damaged_mooring, positive_x_max_t, positive_x))
+        intact_mooring_bounds = list([interp(array(intact_mooring), negative_x_max_t, negative_x)])
+        intact_mooring_bounds.append(interp(array(intact_mooring), positive_x_max_t, positive_x))
+        damaged_mooring_bounds = list([interp(array(damaged_mooring), negative_x_max_t, negative_x)])
+        damaged_mooring_bounds.append(interp(array(damaged_mooring), positive_x_max_t, positive_x))
         return intact_mooring_bounds, damaged_mooring_bounds
 
 if __name__ == '__main__':

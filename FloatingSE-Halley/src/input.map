@@ -1,11 +1,7 @@
 ---------------------- LINE DICTIONARY ---------------------------------------
 LineType  Diam      MassDenInAir   EA            CB   CIntDamp  Ca   Cdn    Cdt
 (-)       (m)       (kg/m)        (N)           (-)   (Pa-s)    (-)  (-)    (-)
-<<<<<<< HEAD:FloatingSE-Halley/src/input.map
 CHAIN   0.03070   77.70660   384243000.00000   1.00000   1.0E8   0.6   -1.0   0.05
-=======
-CHAIN   0.09006   77.70660   384243000.00000   1.00000   1.0E8   0.6   -1.0   0.05
->>>>>>> c8be64ffabfe429634418b79d77c9b0f9738ce3e:src/input.map
 ---------------------- NODE PROPERTIES ---------------------------------------
 Node  Type       X       Y       Z      M     B     FX      FY      FZ
 (-)   (-)       (m)     (m)     (m)    (kg)  (mˆ3)  (N)     (N)     (N)
@@ -14,11 +10,7 @@ Node  Type       X       Y       Z      M     B     FX      FY      FZ
 ---------------------- LINE PROPERTIES ---------------------------------------
 Line    LineType  UnstrLen  NodeAnch  NodeFair  Flags
 (-)      (-)       (m)       (-)       (-)       (-)
-<<<<<<< HEAD:FloatingSE-Halley/src/input.map
-1   CHAIN   839.57419   1   2    
-=======
-1   CHAIN   801.08895   1   2    
->>>>>>> c8be64ffabfe429634418b79d77c9b0f9738ce3e:src/input.map
+1   CHAIN   839.57419   1   2
 ---------------------- SOLVER OPTIONS-----------------------------------------
 Option
 (-)

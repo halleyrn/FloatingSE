@@ -850,7 +850,6 @@ def full_stiffeners_table():
 def sys_print(example):
     """Prints the results of the optimization."""
     print 'scope ratio: ',example.scope_ratio
-    #print 'pretension percent: ',example.pretension_percent
     print 'mooring diameter: ',example.mooring_diameter
     print 'PBH: ', example.permanent_ballast_height
     print 'FBH: ', example.fixed_ballast_height
