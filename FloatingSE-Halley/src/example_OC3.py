@@ -5,6 +5,7 @@ import sys
 import os
 from sparAssemblyWithMAP import SparAssembly
 from utils import sys_print
+import time
 # just to temporarily change PYTHONPATH without installing
 sys.path.append(os.path.expanduser('~') + '/Dropbox/NREL/NREL_WISDEM/src/twister/rotoraero')
 
@@ -88,8 +89,11 @@ def example_oc3():
     example.permanent_ballast_height = 3.
     example.fixed_ballast_height = 7.
     example.offset_amplification_factor = 1
+    tt = time.time()
     example.run()
     print '-------------OC3---------------'
+    print "Executed:", example.spar.exec_count
+    print "Time to execute:", time.time()-tt, "seconds"
     sys_print(example)
 
 if __name__ == "__main__":

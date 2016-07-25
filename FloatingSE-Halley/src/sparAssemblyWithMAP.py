@@ -19,9 +19,7 @@ class SparAssembly(Assembly):
         """Create optimizer instance."""
         # self.add('driver', COBYLAdriver())
         self.add('driver', NEWSUMTdriver())
-        # self.driver.maxfun = 10
-        self.driver.itmax = 10
-        self.driver.iprint = 2
+        self.driver.maxfun = 10000
 
         """Select component instances."""
         self.add('towerRNA', TowerRNA())
@@ -150,6 +148,13 @@ class SparAssembly(Assembly):
         self.driver.add_objective('spar.spar_mass', name='spar mass')
 
         """Add constraints to the driver."""
+        self.driver.add_constraint('mooring_diameter > 0.09')
+        self.driver.add_constraint('wall_thickness[0] > 0.0254')
+        self.driver.add_constraint('wall_thickness[1] > 0.0254')
+        self.driver.add_constraint('wall_thickness[2] > 0.0254')
+        self.driver.add_constraint('wall_thickness[3] > 0.0254')
+        self.driver.add_constraint('mapMooring.pretension < 1000000')
+        # self.driver.add_constraint('mapMooring.MBL - mapMooring.pretension> 0.0')
         self.driver.add_constraint('spar.water_ballast_height < 7.5')
         self.driver.add_constraint('spar.water_ballast_height > 5.5')
         self.driver.add_constraint('spar.flange_compactness < 1.')

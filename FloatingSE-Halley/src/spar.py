@@ -94,7 +94,7 @@ class Spar(Component):
     shell_mass = Float(iotype='out', units='kg', desc='total mass of spar system')
     bulkhead_mass = Float(iotype='out', units='kg', desc='total mass of spar system')
     stiffener_mass = Float(iotype='out', units='kg', desc='total mass of spar system')
-    total_force = Float(iotype='out', units='N')
+    total_force = Float(iotype='out', units='N') #delete
 
     def __init__(self):
         super(Spar, self).__init__()

@@ -39,6 +39,7 @@ class MapMooring(Component):
     damaged_mooring = Array(iotype='out', units='m', desc='range of damaged mooring')
     intact_mooring = Array(iotype='out', units='m', desc='range of intact mooring')
     mooring_mass = Float(iotype='out', units='kg', desc='total mass of mooring')
+    pretension = Float(iotype='out', units='N', desc='tension of the mooring system at initial position')
 
     def __init__(self):
         super(MapMooring, self).__init__()
@@ -79,7 +80,7 @@ class MapMooring(Component):
         self.sum_forces_x, self.offset_x = mooring_system.sum_of_fx_and_offset()
         wml = mooring_system.wet_mass_per_length()
         mcpl = mooring_system.cost_per_length()
-        mbl = mooring_system.minimum_breaking_load()
+        mbl, self.pretension = mooring_system.minimum_breaking_load_and_tensions()
         # COST
         each_leg = mcpl*scope
         legs_total = each_leg*number_of_lines
@@ -96,4 +97,5 @@ class MapMooring(Component):
         self.mooring_vertical_load, self.mooring_vertical_stiffness, self.mooring_horizontal_stiffness = \
             mooring_system.loads_and_stiffnesses()
         self.mooring_mass = (wml+pi*mooring_diameter**2/4*water_density)*scope*number_of_lines
-        print 'PTEN', mooring_system.PTEN
+        print 'n/PTEN', mooring_system.PTEN
+

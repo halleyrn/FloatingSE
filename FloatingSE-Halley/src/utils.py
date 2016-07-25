@@ -849,7 +849,15 @@ def full_stiffeners_table():
 
 def sys_print(example):
     """Prints the results of the optimization."""
+    # print 'MBL', example.mapMooring.user_MBL
+    # print 'WML', example.mapMooring.user_WML
+    # print 'AE storm',example.mapMooring.user_AE_storm
+    # print 'MCPL', example.mapMooring.user_MCPL
+    # print 'mass density in air',example.mapMooring.user_mass_density_air
+    # print 'EA stiffness', example.mapMooring.user_EA_stiffness
+    # print 'anchor radius', example.mapMooring.anchor_radius
     print 'scope ratio: ',example.scope_ratio
+    print 'pretension', example.mapMooring.pretension
     print 'mooring diameter: ',example.mooring_diameter
     print 'PBH: ', example.permanent_ballast_height
     print 'FBH: ', example.fixed_ballast_height

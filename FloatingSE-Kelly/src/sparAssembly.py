@@ -146,6 +146,11 @@ class SparAssembly(Assembly):
         self.driver.add_parameter('permanent_ballast_height', low=30., high=100., scaler=0.1)
 
         """Add constraints to the driver."""
+        self.driver.add_constraint('mooring_diameter > 0.09')
+        self.driver.add_constraint('wall_thickness[0] > 0.0254')
+        self.driver.add_constraint('wall_thickness[1] > 0.0254')
+        self.driver.add_constraint('wall_thickness[2] > 0.0254')
+        self.driver.add_constraint('wall_thickness[3] > 0.0254')
         self.driver.add_constraint('spar.water_ballast_height < 7.5')
         self.driver.add_constraint('spar.water_ballast_height > 5.5')
         self.driver.add_constraint('spar.flange_compactness < 1.')

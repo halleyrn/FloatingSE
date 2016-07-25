@@ -158,7 +158,7 @@ class Mooring(Component):
         TEXT = 0.8*MBL 
         XEXT = np.interp(TEXT,Ttop,x)
         # OFFSETS 
-        direction =  np.array(np.linspace(0.0,360-360/NM,num=NM))
+        direction = np.array(np.linspace(0.0,360-360/NM,num=NM))
         self.intact_mooring = [-(XALL-x0), XALL/np.sin(direction[1]/180.*np.pi)*np.sin(np.pi-direction[1]/180*np.pi-np.arcsin(x0/XALL*np.sin(direction[1]/180.*np.pi)))]
         self.damaged_mooring = [-(XEXT-x0), XEXT/np.sin(direction[1]/180.*np.pi)*np.sin(np.pi-direction[1]/180*np.pi-np.arcsin(x0/XEXT*np.sin(direction[1]/180.*np.pi)))]
         survival_mooring = [-(XMAX-x0), XMAX/np.sin(direction[1]/180.*np.pi)*np.sin(np.pi-direction[1]/180*np.pi-np.arcsin(x0/XMAX*np.sin(direction[1]/180.*np.pi)))]

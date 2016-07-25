@@ -360,9 +360,7 @@ repeat 120 240
         mooring_1.init()
 
         epsilon = 1e-3
-        K = mooring_1.linear(epsilon)    
-        # print "\nHere is the linearized stiffness matrix with zero vessel displacement:"
-        # print array(K)
+        K = mooring_1.linear(epsilon)
         diagonal = array(diag(array(K)))
         self.horizontal_stiffness = diagonal.item(0)
         self.vertical_stiffness = diagonal.item(2)
@@ -371,9 +369,8 @@ repeat 120 240
             horizontal, vertical = mooring_1.get_fairlead_force_2d(line_number)
             tension.append((horizontal**2 + vertical**2)**.5)
             self.V_initial += vertical
-            # print "Line %d: horizontal = %2.2f [N]  vertical = %2.2f [N] " \
-            #       "tension = %2.2f [N]" % (line_number, horizontal, vertical, tension[line_number])
-        self.PTEN = tension[0]
+        self.PTEN = max(tension[:])
+        # uncomment if you want a graphical depiction of what the spar will look like
         # fig = plt.figure()
         # ax = Axes3D(fig)
         # for i in range(0,mooring_1.size_lines()):
@@ -381,15 +378,14 @@ repeat 120 240
         #     y = mooring_1.plot_y( i, 10 )
         #     z = mooring_1.plot_z( i, 10 )        
         #     ax.plot(x,y,z,'b-')
-         
         # ax.set_xlabel('X [m]')
         # ax.set_ylabel('Y [m]')
         # ax.set_zlabel('Z [m]')
-         
         # plt.show()
 
-        if objective.lower() == "find full area" or objective == True:
-
+        if objective == "find full area" or objective == True:
+            # finds the linearized stiffness matrix diagonal and tension in each line
+            # as the vessel is displaced around 360 degrees
             red_x = []
             red_y = []
             yellow_x = []
@@ -398,9 +394,6 @@ repeat 120 240
             blue_y = []
             green_x = [0.]
             green_y = [0.]
-
-            # finds the linearized stiffness matrix diagonal and tension in each line
-            # as the vessel is displaced around 360 degrees
             while angle < 2*pi:
                 max_tension = 0
                 while max_tension <= self.MBL:
@@ -409,17 +402,9 @@ repeat 120 240
                     sway = offset*sin(angle)
                     mooring_1.displace_vessel(surge, sway, 0, 0, 0, 0)
                     mooring_1.update_states(0.0, 0)
-                 
-                    # K = mooring_1.linear(epsilon)
-                    # print "\nLinearized stiffness matrix with %2.2f surge and %2.2f sway vessel displacement:\n" % \
-                    #       (surge, sway)
-                    # print array(K)
                     for line_number in range(0, self.number_of_mooring_lines):
-                        # fx ,fy ,fz = mooring_1.get_fairlead_force_3d(line_number)
                         horizontal, vertical = mooring_1.get_fairlead_force_2d(line_number)
                         tension[line_number] = (horizontal**2 + vertical**2)**.5
-                        # print "Line %d: horizontal = %2.2f [N]  vertical = %2.2f [N] " \
-                        #       "tension = %2.2f [N]" % (line_number, horizontal, vertical, tension[line_number])
                     offset += doffset
                     max_tension = max(tension)
                     if max_tension >= self.MBL:
@@ -436,13 +421,12 @@ repeat 120 240
                         green_y.append(sway)
                 angle += dangle
                 offset = doffset
-
             # uncomment if you want to see offsets plotted
             plt.plot(red_x, red_y, 'ro', yellow_x, yellow_y, 'yo', blue_x, blue_y, 'bo', green_x, green_y, 'go')
-            plt.axis([-60, 80, -70, 70])
+            plt.axis([-40, 80, -70, 70])
             plt.show()
 
-        if objective.lower() == "optimization" or objective == True:
+        if objective == "optimization" or objective == True:
             # find sum of fx at each displacement along the x-axis (list from neg to
             # pos offset) and the offset in x as well
             max_tension = 0 
@@ -451,7 +435,6 @@ repeat 120 240
                 tot_fx = 0
                 mooring_1.displace_vessel(surge, 0, 0, 0, 0, 0)
                 mooring_1.update_states(0.0, 0)
-                # K = mooring_1.linear(epsilon)
                 for line_number in range(0, self.number_of_mooring_lines):
                     fx, fy, fz = mooring_1.get_fairlead_force_3d(line_number)
                     tot_fx += -fx
@@ -468,7 +451,6 @@ repeat 120 240
                 tot_fx = 0
                 mooring_1.displace_vessel(surge, 0, 0, 0, 0, 0)
                 mooring_1.update_states(0.0, 0)
-                # K = mooring_1.linear(epsilon)
                 for line_number in range(0, self.number_of_mooring_lines):
                     fx, fy, fz = mooring_1.get_fairlead_force_3d(line_number)
                     tot_fx += -fx
@@ -510,10 +492,6 @@ repeat 120 240
             self.max_tension[0] = max_tension
             self.sum_fx[0] = tot_fx
             self.offset_x[0] = min_x
-        # print "angle changed: %d offset changed: %d" %(angle_changed, offset_changed) #delete
-        # opened.write(str(list_of_system_t) + "\n" )
-        # opened.close
-
         mooring_1.end()
 
     def sum_of_fx_and_offset(self):
@@ -525,8 +503,8 @@ repeat 120 240
     def cost_per_length(self):
         return self.MCPL
 
-    def minimum_breaking_load(self):
-        return self.MBL
+    def minimum_breaking_load_and_tensions(self):
+        return self.MBL, self.PTEN
 
     def loads_and_stiffnesses(self):
         return self.V_initial, self.vertical_stiffness, self.horizontal_stiffness
@@ -547,17 +525,19 @@ repeat 120 240
 
 if __name__ == '__main__':
     """Testing the interface using homogeneous line OC3 mooring information."""
+    scope = 70*3.190191
+    mooringDiameter = .091469
     OC3 = InputMAP(320.0, 9.806, 1025.0, 3)
-    OC3.mooring_properties(0.09, "CHAIN")
+    OC3.mooring_properties(mooringDiameter, "CHAIN")
     OC3.write_line_dictionary_header()
     OC3.write_line_dictionary(77.7066, 384243000)
     OC3.write_node_properties_header()
     OC3.write_node_properties(1, "FIX", 853.87, 0, 320.0, 0, 0)
     OC3.write_node_properties(2, "VESSEL", 5.2, 0, -70.0, 0, 0)
     OC3.write_line_properties_header()
-    OC3.write_line_properties(1, "CHAIN", 902.2, 1, 2, " ")
+    OC3.write_line_properties(1, "CHAIN", scope, 1, 2, " ")
     OC3.write_solver_options()
-    OC3.main(2, 2, "optimization")
+    OC3.main(.5, 2, "optimization")
     intact_mooring1, damaged_mooring1 = OC3.intact_and_damaged_mooring()
     sum_fx1, offset_x1 = OC3.sum_of_fx_and_offset()
     print sum_fx1
