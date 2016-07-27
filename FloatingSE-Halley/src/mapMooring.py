@@ -40,6 +40,7 @@ class MapMooring(Component):
     intact_mooring = Array(iotype='out', units='m', desc='range of intact mooring')
     mooring_mass = Float(iotype='out', units='kg', desc='total mass of mooring')
     pretension = Float(iotype='out', units='N', desc='tension of the mooring system at initial position')
+    MBL = Float(iotype='out', units='N', desc='minimum breaking load')
 
     def __init__(self):
         super(MapMooring, self).__init__()
@@ -80,15 +81,15 @@ class MapMooring(Component):
         self.sum_forces_x, self.offset_x = mooring_system.sum_of_fx_and_offset()
         wml = mooring_system.wet_mass_per_length()
         mcpl = mooring_system.cost_per_length()
-        mbl, self.pretension = mooring_system.minimum_breaking_load_and_tensions()
+        self.MBL, self.pretension = mooring_system.minimum_breaking_load_and_tensions()
         # COST
         each_leg = mcpl*scope
         legs_total = each_leg*number_of_lines
         each_anchor = self.user_anchor_cost
         if self.anchor_type == 'DRAG':
-            each_anchor = mbl/1000./9.806/20*2000
+            each_anchor = self.MBL/1000./9.806/20*2000
         if self.anchor_type == 'PILE':
-            each_anchor = 150000.*(mbl/1000./9.806/1250.)**0.5
+            each_anchor = 150000.*(self.MBL/1000./9.806/1250.)**0.5
         anchor_total = each_anchor*number_of_lines
         misc_cost = (anchor_total+legs_total)*misc_cost_factor/100.
         self.mooring_total_cost = legs_total+anchor_total+misc_cost 
@@ -97,5 +98,4 @@ class MapMooring(Component):
         self.mooring_vertical_load, self.mooring_vertical_stiffness, self.mooring_horizontal_stiffness = \
             mooring_system.loads_and_stiffnesses()
         self.mooring_mass = (wml+pi*mooring_diameter**2/4*water_density)*scope*number_of_lines
-        print 'n/PTEN', mooring_system.PTEN
 

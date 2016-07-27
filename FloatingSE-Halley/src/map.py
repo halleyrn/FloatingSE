@@ -525,7 +525,7 @@ repeat 120 240
 
 if __name__ == '__main__':
     """Testing the interface using homogeneous line OC3 mooring information."""
-    scope = 70*3.190191
+    scope = 250*3.190191
     mooringDiameter = .091469
     OC3 = InputMAP(320.0, 9.806, 1025.0, 3)
     OC3.mooring_properties(mooringDiameter, "CHAIN")

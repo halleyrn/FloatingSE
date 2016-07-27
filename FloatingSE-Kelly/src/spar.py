@@ -526,3 +526,6 @@ class Spar(Component):
         print 'bulkhead mass: ', self.bulkhead_mass
         print 'stiffener mass: ', self.stiffener_mass
         print 'end spar'
+        print 'permanent ballast mass', permanent_ballast_mass
+        print 'fixed ballast mass', fixed_ballast_mass
+        print 'water ballast mass', water_ballast_mass

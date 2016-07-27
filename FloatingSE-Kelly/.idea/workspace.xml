@@ -2,20 +2,15 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="e2197955-5bd7-4495-ade2-2ba15abb9a37" name="Default" comment="">
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/../FloatingSE-Halley/.idea/vcs.xml" afterPath="$PROJECT_DIR$/../FloatingSE-Halley/.idea/vcs.xml" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/../FloatingSE-Halley/.idea/workspace.xml" afterPath="$PROJECT_DIR$/../FloatingSE-Halley/.idea/workspace.xml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/../FloatingSE-Halley/src/example_OC3.py" afterPath="$PROJECT_DIR$/../FloatingSE-Halley/src/example_OC3.py" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/../FloatingSE-Halley/src/input.map" afterPath="$PROJECT_DIR$/../FloatingSE-Halley/src/input.map" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/../FloatingSE-Halley/src/map.py" afterPath="$PROJECT_DIR$/../FloatingSE-Halley/src/map.py" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/../FloatingSE-Halley/src/mapMooring.py" afterPath="$PROJECT_DIR$/../FloatingSE-Halley/src/mapMooring.py" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/../FloatingSE-Halley/src/outlist.map.sum" afterPath="$PROJECT_DIR$/../FloatingSE-Halley/src/outlist.map.sum" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/../FloatingSE-Halley/src/spar.py" afterPath="$PROJECT_DIR$/../FloatingSE-Halley/src/spar.py" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/../FloatingSE-Halley/src/sparAssemblyWithMAP.py" afterPath="$PROJECT_DIR$/../FloatingSE-Halley/src/sparAssemblyWithMAP.py" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/../FloatingSE-Halley/src/utils.py" afterPath="$PROJECT_DIR$/../FloatingSE-Halley/src/utils.py" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/vcs.xml" afterPath="$PROJECT_DIR$/.idea/vcs.xml" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/example_OC3.py" afterPath="$PROJECT_DIR$/src/example_OC3.py" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/mooring.py" afterPath="$PROJECT_DIR$/src/mooring.py" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/spar.py" afterPath="$PROJECT_DIR$/src/spar.py" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/sparAssembly.py" afterPath="$PROJECT_DIR$/src/sparAssembly.py" />
     </list>
     <ignored path="FloatingSE.iws" />
@@ -31,7 +26,7 @@
   <component name="ChangesViewManager" flattened_view="true" show_ignored="false" />
   <component name="CoverageDataManager">
     <SUITE FILE_PATH="coverage/FloatingSE$tower_RNA.coverage" NAME="tower_RNA Coverage Results" MODIFIED="1468441780321" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/src" />
-    <SUITE FILE_PATH="coverage/FloatingSE-Kelly$example_OC3.coverage" NAME="example_OC3 Coverage Results" MODIFIED="1469489037906" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/src" />
+    <SUITE FILE_PATH="coverage/FloatingSE-Kelly$example_OC3.coverage" NAME="example_OC3 Coverage Results" MODIFIED="1469566901841" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/src" />
     <SUITE FILE_PATH="coverage/FloatingSE$example_OC3.coverage" NAME="example_OC3 Coverage Results" MODIFIED="1468251533658" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/src" />
   </component>
   <component name="CreatePatchCommitExecutor">
@@ -53,7 +48,7 @@
       <file leaf-file-name="mooring.py" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/mooring.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="638">
+            <state relative-caret-position="918">
               <caret line="57" column="17" selection-start-line="57" selection-start-column="17" selection-end-line="57" selection-end-column="17" />
               <folding />
             </state>
@@ -83,7 +78,7 @@
       <file leaf-file-name="utils.py" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/utils.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="221">
+            <state relative-caret-position="204">
               <caret line="13" column="24" selection-start-line="13" selection-start-column="24" selection-end-line="13" selection-end-column="24" />
               <folding>
                 <element signature="e#24#89#0" expanded="true" />
@@ -95,11 +90,9 @@
       <file leaf-file-name="sparAssembly.py" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/sparAssembly.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="289">
-              <caret line="17" column="14" selection-start-line="17" selection-start-column="14" selection-end-line="17" selection-end-column="14" />
-              <folding>
-                <element signature="e#0#38#0" expanded="true" />
-              </folding>
+            <state relative-caret-position="17">
+              <caret line="1" column="37" selection-start-line="1" selection-start-column="37" selection-end-line="1" selection-end-column="37" />
+              <folding />
             </state>
           </provider>
         </entry>
@@ -116,10 +109,10 @@
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="example_OC3.py" pinned="false" current-in-tab="true">
+      <file leaf-file-name="example_OC3.py" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/example_OC3.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="681">
+            <state relative-caret-position="1026">
               <caret line="94" column="0" selection-start-line="94" selection-start-column="0" selection-end-line="94" selection-end-column="0" />
               <folding>
                 <element signature="e#41#51#0" expanded="true" />
@@ -128,11 +121,11 @@
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="spar.py" pinned="false" current-in-tab="false">
+      <file leaf-file-name="spar.py" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/src/spar.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="774">
-              <caret line="95" column="16" selection-start-line="95" selection-start-column="16" selection-end-line="95" selection-end-column="16" />
+            <state relative-caret-position="397">
+              <caret line="513" column="25" selection-start-line="513" selection-start-column="25" selection-end-line="513" selection-end-column="25" />
               <folding>
                 <element signature="e#0#54#0" expanded="true" />
               </folding>
@@ -166,10 +159,10 @@
         <option value="$PROJECT_DIR$/src/sparAssemblyWithMAP.py" />
         <option value="$PROJECT_DIR$/src/map.py" />
         <option value="$PROJECT_DIR$/src/utils.py" />
-        <option value="$PROJECT_DIR$/src/spar.py" />
         <option value="$PROJECT_DIR$/src/mooring.py" />
-        <option value="$PROJECT_DIR$/src/sparAssembly.py" />
         <option value="$PROJECT_DIR$/src/example_OC3.py" />
+        <option value="$PROJECT_DIR$/src/sparAssembly.py" />
+        <option value="$PROJECT_DIR$/src/spar.py" />
       </list>
     </option>
   </component>
@@ -240,6 +233,8 @@
       <foldersAlwaysOnTop value="true" />
     </navigator>
     <panes>
+      <pane id="Scope" />
+      <pane id="Scratches" />
       <pane id="ProjectPane">
         <subPane>
           <PATH>
@@ -306,12 +301,10 @@
           </PATH>
         </subPane>
       </pane>
-      <pane id="Scope" />
-      <pane id="Scratches" />
     </panes>
   </component>
   <component name="PropertiesComponent">
-    <property name="last_opened_file_path" value="$PROJECT_DIR$" />
+    <property name="last_opened_file_path" value="$PROJECT_DIR$/../FloatingSE-Halley" />
     <property name="WebServerToolWindowFactoryState" value="false" />
     <property name="settings.editor.selected.configurable" value="project.propVCSSupport.Mappings" />
     <property name="settings.editor.splitter.proportion" value="0.2" />
@@ -617,13 +610,13 @@
     <frame x="960" y="0" width="960" height="1160" extended-state="0" />
     <editor active="true" />
     <layout>
-      <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.30333334" sideWeight="0.5" order="0" side_tool="false" content_ui="combo" />
+      <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.31" sideWeight="0.5" order="0" side_tool="false" content_ui="combo" />
       <window_info id="TODO" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.32997987" sideWeight="0.5" order="6" side_tool="false" content_ui="tabs" />
       <window_info id="Event Log" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.6161516" sideWeight="0.5044444" order="7" side_tool="true" content_ui="tabs" />
       <window_info id="Database" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="Python Console" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.29969183" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="Version Control" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.32997987" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
-      <window_info id="Run" active="true" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.077844314" sideWeight="0.49555555" order="2" side_tool="false" content_ui="tabs" />
+      <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.20558882" sideWeight="0.49555555" order="2" side_tool="false" content_ui="tabs" />
       <window_info id="Structure" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
       <window_info id="Terminal" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25224328" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="Favorites" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="2" side_tool="true" content_ui="tabs" />
@@ -972,7 +965,7 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/src/utils.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="221">
+        <state relative-caret-position="204">
           <caret line="13" column="24" selection-start-line="13" selection-start-column="24" selection-end-line="13" selection-end-column="24" />
           <folding>
             <element signature="e#24#89#0" expanded="true" />
@@ -980,40 +973,38 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/spar.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="774">
-          <caret line="95" column="16" selection-start-line="95" selection-start-column="16" selection-end-line="95" selection-end-column="16" />
-          <folding>
-            <element signature="e#0#54#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/src/mooring.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="638">
+        <state relative-caret-position="918">
           <caret line="57" column="17" selection-start-line="57" selection-start-column="17" selection-end-line="57" selection-end-column="17" />
           <folding />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/sparAssembly.py">
+    <entry file="file://$PROJECT_DIR$/src/example_OC3.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="289">
-          <caret line="17" column="14" selection-start-line="17" selection-start-column="14" selection-end-line="17" selection-end-column="14" />
+        <state relative-caret-position="1026">
+          <caret line="94" column="0" selection-start-line="94" selection-start-column="0" selection-end-line="94" selection-end-column="0" />
           <folding>
-            <element signature="e#0#38#0" expanded="true" />
+            <element signature="e#41#51#0" expanded="true" />
           </folding>
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/example_OC3.py">
+    <entry file="file://$PROJECT_DIR$/src/sparAssembly.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="681">
-          <caret line="94" column="0" selection-start-line="94" selection-start-column="0" selection-end-line="94" selection-end-column="0" />
+        <state relative-caret-position="17">
+          <caret line="1" column="37" selection-start-line="1" selection-start-column="37" selection-end-line="1" selection-end-column="37" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/spar.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="397">
+          <caret line="513" column="25" selection-start-line="513" selection-start-column="25" selection-end-line="513" selection-end-column="25" />
           <folding>
-            <element signature="e#41#51#0" expanded="true" />
+            <element signature="e#0#54#0" expanded="true" />
           </folding>
         </state>
       </provider>

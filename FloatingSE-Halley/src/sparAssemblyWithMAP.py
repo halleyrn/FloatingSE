@@ -1,7 +1,6 @@
 from openmdao.main.api import Assembly
 from openmdao.main.datatypes.api import Array
-# from openmdao.lib.drivers.api import COBYLAdriver
-from openmdao.lib.drivers.api import SLSQPdriver, CONMINdriver, NEWSUMTdriver
+from openmdao.lib.drivers.api import COBYLAdriver
 from spar import Spar
 from towerRNA import TowerRNA
 from mapMooring import MapMooring
@@ -17,8 +16,7 @@ class SparAssembly(Assembly):
         Mooring components, as well as a constrained optimizer."""
         print 'start configure'
         """Create optimizer instance."""
-        # self.add('driver', COBYLAdriver())
-        self.add('driver', NEWSUMTdriver())
+        self.add('driver', COBYLAdriver())
         self.driver.maxfun = 10000
 
         """Select component instances."""
@@ -153,8 +151,7 @@ class SparAssembly(Assembly):
         self.driver.add_constraint('wall_thickness[1] > 0.0254')
         self.driver.add_constraint('wall_thickness[2] > 0.0254')
         self.driver.add_constraint('wall_thickness[3] > 0.0254')
-        self.driver.add_constraint('mapMooring.pretension < 1000000')
-        # self.driver.add_constraint('mapMooring.MBL - mapMooring.pretension> 0.0')
+        self.driver.add_constraint('mapMooring.MBL*0.14 - mapMooring.pretension> 0.0')
         self.driver.add_constraint('spar.water_ballast_height < 7.5')
         self.driver.add_constraint('spar.water_ballast_height > 5.5')
         self.driver.add_constraint('spar.flange_compactness < 1.')

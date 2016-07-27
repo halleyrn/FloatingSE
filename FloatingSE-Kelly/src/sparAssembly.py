@@ -16,8 +16,8 @@ class SparAssembly(Assembly):
         Mooring components, as well as a constrained optimizer."""
 
         """Create optimizer instance."""
-        # self.add('driver', COBYLAdriver())
-        self.add('driver', NEWSUMTdriver())
+        self.add('driver', COBYLAdriver())
+        # self.add('driver', NEWSUMTdriver())
         self.driver.maxfun = 10000
 
         """Select component instances."""
@@ -151,6 +151,7 @@ class SparAssembly(Assembly):
         self.driver.add_constraint('wall_thickness[1] > 0.0254')
         self.driver.add_constraint('wall_thickness[2] > 0.0254')
         self.driver.add_constraint('wall_thickness[3] > 0.0254')
+        self.driver.add_constraint('pretension_percent < 14')
         self.driver.add_constraint('spar.water_ballast_height < 7.5')
         self.driver.add_constraint('spar.water_ballast_height > 5.5')
         self.driver.add_constraint('spar.flange_compactness < 1.')
