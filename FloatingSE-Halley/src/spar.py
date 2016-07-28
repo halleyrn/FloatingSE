@@ -72,29 +72,48 @@ class Spar(Component):
     damaged_mooring = Array(iotype='in', units='m', desc='range of damaged mooring')
     intact_mooring = Array(iotype='in', units='m', desc='range of intact mooring')
     mooring_mass = Float(iotype='in', units='kg', desc='total mass of mooring')
-    """Outputs."""
+    """Outputs for stiffener."""
+    Ar = Float(iotype='out', unit='m**2', desc='cross-sectional area of member')
+    d = Float(iotype='out', unit='m', desc='overall depth of member, parallel to X-axis')
+    tw = Float(iotype='out', unit='m', desc='thickness of web of member')
+    bf = Float(iotype='out', unit='m', desc='width of flange of member')
+    tf = Float(iotype='out', unit='m', desc='thickness of flange of member')
+    yna = Float(iotype='out', unit='m', desc='distance from outer face of flange to web toe to fillet')
+    Ir = Float(iotype='out', unit='m', desc='moment of inertia for a stiffener')
     flange_compactness = Float(iotype='out', desc='check for flange compactness')
     web_compactness = Float(iotype='out', desc='check for web compactness')
+    """Outputs for costs."""
+    spar_cost = Float(iotype='out', units='USD', desc='cost of spar or hull')
+    outfit_cost = Float(iotype='out', units='USD', desc='cost of outfitting')
+    ballasts_cost = Float(iotype='out', units='USD', desc='cost of fixed ballast')
+    total_cost = Float(iotype='out', units='USD', desc='cost of mooring, fixed ballast, outfitting, and spar')
+    """Outputs for sections."""
     VAL = Array(iotype='out', desc='unity check for axial load - local buckling')
     VAG = Array(iotype='out', desc='unity check for axial load - general instability')
     VEL = Array(iotype='out', desc='unity check for external pressure - local buckling')
     VEG = Array(iotype='out', desc='unity check for external pressure - general instability')
+    """Outputs for platform."""
+    spar_mass = Float(iotype='out', units='kg', desc='mass of spar')
+    ballast_mass = Float(iotype='out', units='kg', desc='ballasts mass')
+    system_total_mass = Float(iotype='out', units='kg', desc='total mass of spar, ballasts, and mooring')
+    shell_mass = Float(iotype='out', units='kg', desc='mass of shell')
+    bulkhead_mass = Float(iotype='out', units='kg', desc='mass of bulkhead')
+    stiffener_mass = Float(iotype='out', units='kg', desc='mass of stiffener')
+    outfitting_mass = Float(iotype='out', units='kg', desc='mass of stiffener')
+    permanent_ballast_mass = Float(iotype='out', units='kg', desc='mass of permanent ballast')
+    fixed_ballast_mass = Float(iotype='out', units='kg', desc='mass of fixed ballast')
+    """Outputs for sizing."""
     platform_stability_check = Float(iotype='out', desc='check for platform stability')
     heel_angle = Float(iotype='out', desc='heel angle unity check')
     min_offset_unity = Float(iotype='out', desc='minimum offset unity check')
     max_offset_unity = Float(iotype='out', desc='maximum offset unity check')
-    total_cost = Float(iotype='out', units='USD', desc='cost of mooring and spar')
-    water_ballast_height = Float(iotype='out', units='m', desc='height of water ballast')
-    spar_cost = Float(iotype='out', units='USD', desc='cost of mooring and spar')
-    outfit_cost = Float(iotype='out', units='USD', desc='cost of mooring and spar')
-    ballasts_cost = Float(iotype='out', units='USD', desc='cost of mooring and spar')
-    spar_mass = Float(iotype='out', units='kg', desc='mass of spar')
-    ballast_mass = Float(iotype='out', units='kg', desc='ballasts mass')
-    system_total_mass = Float(iotype='out', units='kg', desc='total mass of spar system')
-    shell_mass = Float(iotype='out', units='kg', desc='total mass of spar system')
-    bulkhead_mass = Float(iotype='out', units='kg', desc='total mass of spar system')
-    stiffener_mass = Float(iotype='out', units='kg', desc='total mass of spar system')
-    total_force = Float(iotype='out', units='N') #delete
+    water_ballast_height = Float(iotype='out', units='m', desc='height of variable ballast')
+    water_ballast_mass = Float(iotype='out', units='kg', desc='mass of variable ballast')
+    total_force = Float(iotype='out', units='N', desc='total of all environmental forces')
+    surge_period = Float(iotype='out', units='s')
+    heave_period = Float(iotype='out', units='s')
+    pitch_stiffness = Float(iotype='out', units='N*m/rad')
+    pitch_period = Float(iotype='out', units='s')
 
     def __init__(self):
         super(Spar, self).__init__()
@@ -496,21 +515,6 @@ class Spar(Component):
         self.VEL = abs(FTHETAS / FEL)
         self.VEG = abs(FTHETAS / FEG)
 
-        print 'surge period: ', surge_t
-        print 'heave period: ', heave_t
-        print 'pitch stiffness: ', pitch_k
-        print 'pitch period: ', pitch_t
-        print 'stiffener_yna: ', stiffener_yna
-        print 'number of stiffeners: ', self.number_of_rings
-        print 'wall thickness: ', self.wall_thickness
-        print 'VAL: ', self.VAL
-        print 'VAG: ', self.VAG
-        print 'VEL: ', self.VEL
-        print 'VEG: ', self.VEG
-        print 'web compactness: ', self.web_compactness
-        print 'flange compactness: ', self.flange_compactness
-        print 'heel angle: ', self.heel_angle
-        print 'outer diameters: ', self.outer_diameter
         self.spar_mass = shell_bulkhead_ring_mass
         self.ballast_mass = ballast_mass
         self.system_total_mass = \
@@ -519,10 +523,3 @@ class Spar(Component):
         self.shell_mass = shell_mass 
         self.bulkhead_mass = bulkhead_mass
         self.stiffener_mass = ring_mass
-        print 'spar mass: ', self.spar_mass
-        print 'shell mass: ', self.shell_mass
-        print 'bulkhead mass: ', self.bulkhead_mass
-        print 'stiffener mass: ', self.stiffener_mass
-        print 'permanent ballast mass', permanent_ballast_mass
-        print 'fixed ballast mass', fixed_ballast_mass
-        print 'water ballast mass', water_ballast_mass

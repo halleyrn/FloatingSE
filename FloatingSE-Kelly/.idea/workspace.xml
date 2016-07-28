@@ -5,13 +5,7 @@
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/../FloatingSE-Halley/.idea/workspace.xml" afterPath="$PROJECT_DIR$/../FloatingSE-Halley/.idea/workspace.xml" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/../FloatingSE-Halley/src/input.map" afterPath="$PROJECT_DIR$/../FloatingSE-Halley/src/input.map" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/../FloatingSE-Halley/src/map.py" afterPath="$PROJECT_DIR$/../FloatingSE-Halley/src/map.py" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/../FloatingSE-Halley/src/mapMooring.py" afterPath="$PROJECT_DIR$/../FloatingSE-Halley/src/mapMooring.py" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/../FloatingSE-Halley/src/outlist.map.sum" afterPath="$PROJECT_DIR$/../FloatingSE-Halley/src/outlist.map.sum" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/../FloatingSE-Halley/src/spar.py" afterPath="$PROJECT_DIR$/../FloatingSE-Halley/src/spar.py" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/../FloatingSE-Halley/src/sparAssemblyWithMAP.py" afterPath="$PROJECT_DIR$/../FloatingSE-Halley/src/sparAssemblyWithMAP.py" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/spar.py" afterPath="$PROJECT_DIR$/src/spar.py" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/sparAssembly.py" afterPath="$PROJECT_DIR$/src/sparAssembly.py" />
     </list>
     <ignored path="FloatingSE.iws" />
     <ignored path=".idea/workspace.xml" />
@@ -26,7 +20,7 @@
   <component name="ChangesViewManager" flattened_view="true" show_ignored="false" />
   <component name="CoverageDataManager">
     <SUITE FILE_PATH="coverage/FloatingSE$tower_RNA.coverage" NAME="tower_RNA Coverage Results" MODIFIED="1468441780321" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/src" />
-    <SUITE FILE_PATH="coverage/FloatingSE-Kelly$example_OC3.coverage" NAME="example_OC3 Coverage Results" MODIFIED="1469566901841" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/src" />
+    <SUITE FILE_PATH="coverage/FloatingSE-Kelly$example_OC3.coverage" NAME="example_OC3 Coverage Results" MODIFIED="1469577914596" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/src" />
     <SUITE FILE_PATH="coverage/FloatingSE$example_OC3.coverage" NAME="example_OC3 Coverage Results" MODIFIED="1468251533658" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/src" />
   </component>
   <component name="CreatePatchCommitExecutor">
@@ -112,7 +106,7 @@
       <file leaf-file-name="example_OC3.py" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/example_OC3.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="1026">
+            <state relative-caret-position="1530">
               <caret line="94" column="0" selection-start-line="94" selection-start-column="0" selection-end-line="94" selection-end-column="0" />
               <folding>
                 <element signature="e#41#51#0" expanded="true" />
@@ -124,8 +118,8 @@
       <file leaf-file-name="spar.py" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/src/spar.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="397">
-              <caret line="513" column="25" selection-start-line="513" selection-start-column="25" selection-end-line="513" selection-end-column="25" />
+            <state relative-caret-position="362">
+              <caret line="491" column="31" selection-start-line="491" selection-start-column="31" selection-end-line="491" selection-end-column="31" />
               <folding>
                 <element signature="e#0#54#0" expanded="true" />
               </folding>
@@ -173,7 +167,8 @@
     <sorting>DEFINITION_ORDER</sorting>
   </component>
   <component name="ProjectFrameBounds">
-    <option name="x" value="960" />
+    <option name="x" value="835" />
+    <option name="y" value="147" />
     <option name="width" value="960" />
     <option name="height" value="1160" />
   </component>
@@ -607,28 +602,28 @@
     </todo-panel>
   </component>
   <component name="ToolWindowManager">
-    <frame x="960" y="0" width="960" height="1160" extended-state="0" />
+    <frame x="835" y="147" width="960" height="1160" extended-state="0" />
     <editor active="true" />
     <layout>
-      <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.31" sideWeight="0.5" order="0" side_tool="false" content_ui="combo" />
+      <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.32333332" sideWeight="0.5" order="0" side_tool="false" content_ui="combo" />
       <window_info id="TODO" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.32997987" sideWeight="0.5" order="6" side_tool="false" content_ui="tabs" />
       <window_info id="Event Log" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.6161516" sideWeight="0.5044444" order="7" side_tool="true" content_ui="tabs" />
       <window_info id="Database" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="Python Console" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.29969183" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="Version Control" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.32997987" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
-      <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.20558882" sideWeight="0.49555555" order="2" side_tool="false" content_ui="tabs" />
       <window_info id="Structure" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
       <window_info id="Terminal" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25224328" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="Favorites" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="2" side_tool="true" content_ui="tabs" />
-      <window_info id="Debug" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.29511467" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="Cvs" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="4" side_tool="false" content_ui="tabs" />
       <window_info id="Message" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
       <window_info id="Commander" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.4" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
       <window_info id="Inspection" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.4" sideWeight="0.5" order="5" side_tool="false" content_ui="tabs" />
+      <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.20538385" sideWeight="0.49555555" order="2" side_tool="false" content_ui="tabs" />
       <window_info id="Hierarchy" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="2" side_tool="false" content_ui="combo" />
       <window_info id="Find" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.32896763" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
       <window_info id="Ant Build" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
       <window_info id="Concurrent Activities Diagram" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.32944608" sideWeight="0.5" order="8" side_tool="false" content_ui="tabs" />
+      <window_info id="Debug" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.29511467" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
     </layout>
     <layout-to-restore>
       <window_info id="TODO" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.32997987" sideWeight="0.5" order="6" side_tool="false" content_ui="tabs" />
@@ -665,13 +660,6 @@
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
-      <breakpoints>
-        <line-breakpoint enabled="true" type="python-line">
-          <url>file://$PROJECT_DIR$/src/spar.py</url>
-          <line>508</line>
-          <option name="timeStamp" value="28" />
-        </line-breakpoint>
-      </breakpoints>
       <breakpoints-dialog>
         <breakpoints-dialog />
       </breakpoints-dialog>
@@ -983,7 +971,7 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/src/example_OC3.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="1026">
+        <state relative-caret-position="1530">
           <caret line="94" column="0" selection-start-line="94" selection-start-column="0" selection-end-line="94" selection-end-column="0" />
           <folding>
             <element signature="e#41#51#0" expanded="true" />
@@ -1001,8 +989,8 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/src/spar.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="397">
-          <caret line="513" column="25" selection-start-line="513" selection-start-column="25" selection-end-line="513" selection-end-column="25" />
+        <state relative-caret-position="362">
+          <caret line="491" column="31" selection-start-line="491" selection-start-column="31" selection-end-line="491" selection-end-column="31" />
           <folding>
             <element signature="e#0#54#0" expanded="true" />
           </folding>

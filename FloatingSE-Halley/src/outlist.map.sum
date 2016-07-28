@@ -1,6 +1,6 @@
 Outputs were generated using MAP++ 1.20.10.
 
-    Tuesday July 26-2016 at 17:56:25 PM
+    Wednesday July 27-2016 at 17:07:00 PM
 
     Gravity constant          [m/s^2]  : 9.81
     Sea density               [kg/m^3] : 1025.00
@@ -8,10 +8,10 @@ Outputs were generated using MAP++ 1.20.10.
     Vessel reference position [m]      : 0.00 , 0.00 , 0.00
 
     Cable Type          : CHAIN
-    Diameter     [m]    : 0.0895
+    Diameter     [m]    : 0.0900
     Mass Density [kg/m] : 77.71
     EA           [N]    : 384243000.00
-    omega        [N/m]  : 698.77
+    omega        [N/m]  : 698.05
     CB                  : 1.00
 
           | Node 1 Data            Node 2 Data            Node 3 Data            Node 4 Data
@@ -22,9 +22,9 @@ Y  [m]    |  0.000                   0.000                 -739.473             
 Z  [m]    |  -320.000               -70.000                -320.000               -70.000
 M  [kg]   |  0.000                   0.000                  0.000                  0.000
 B  [m^3]  |  0.000                   0.000                  0.000                  0.000
-FX [N]    | ( 948846.064)          (-967934.751)          (-474423.457)          ( 483967.703)
-FY [N]    | (-0.000)               ( 0.000)               (-821725.554)          ( 838256.674)
-FZ [N]    | ( 0.000)               ( 606305.976)          ( 0.000)               ( 606306.170)
+FX [N]    | ( 641594.934)          (-736004.009)          (-320797.773)          ( 368002.233)
+FY [N]    | (-0.000)               ( 0.000)               (-555638.057)          ( 637398.582)
+FZ [N]    | ( 0.000)               ( 535404.973)          ( 0.000)               ( 535405.126)
 
 
           | Node 5 Data            Node 6 Data
@@ -35,25 +35,25 @@ Y  [m]    |   739.473                4.503
 Z  [m]    |  -320.000               -70.000
 M  [kg]   |  0.000                   0.000
 B  [m^3]  |  0.000                   0.000
-FX [N]    | (-474423.457)          ( 483967.703)
-FY [N]    | ( 821725.554)          (-838256.674)
-FZ [N]    | ( 0.000)               ( 606306.170)
+FX [N]    | (-320797.773)          ( 368002.233)
+FY [N]    | ( 555638.057)          (-637398.582)
+FZ [N]    | ( 0.000)               ( 535405.126)
 
 
                 | Line 1
                 | ---------------------------------------
 Material        |  CHAIN
-Lu        [m]   |  894.992
-Lb        [m]   |  27.318
-H         [N]   |  967934.751
-V         [N]   |  606305.976
-T         [N]   |  1142149.122
-Alpha     [deg] |  32.063
-HAnch     [N]   |  948846.064
+Lu        [m]   |  902.250
+Lb        [m]   |  135.247
+H         [N]   |  736004.009
+V         [N]   |  535404.973
+T         [N]   |  910143.059
+Alpha     [deg] |  36.034
+HAnch     [N]   |  641594.934
 VAnch     [N]   | 0.000
-TAnch     [N]   |  948846.064
+TAnch     [N]   |  641594.934
 AlphaAnch [deg] | 0.000
-L^2-Norm        |  3.142818e-009
+L^2-Norm        |  8.948211e-009
 Function Evals  |  5
 Jacobian Evals  |  4
 Term. criteria  |  2 : ||x_i - x_{i-1}||  <= INNER_XTOL.
@@ -62,17 +62,17 @@ Term. criteria  |  2 : ||x_i - x_{i-1}||  <= INNER_XTOL.
                 | Line 2
                 | ---------------------------------------
 Material        |  CHAIN
-Lu        [m]   |  894.992
-Lb        [m]   |  27.317
-H         [N]   |  967935.426
-V         [N]   |  606306.170
-T         [N]   |  1142149.798
-Alpha     [deg] |  32.063
-HAnch     [N]   |  948846.933
+Lu        [m]   |  902.250
+Lb        [m]   |  135.247
+H         [N]   |  736004.481
+V         [N]   |  535405.126
+T         [N]   |  910143.530
+Alpha     [deg] |  36.034
+HAnch     [N]   |  641595.559
 VAnch     [N]   | 0.000
-TAnch     [N]   |  948846.933
+TAnch     [N]   |  641595.559
 AlphaAnch [deg] | 0.000
-L^2-Norm        |  3.142917e-009
+L^2-Norm        |  8.948264e-009
 Function Evals  |  5
 Jacobian Evals  |  4
 Term. criteria  |  2 : ||x_i - x_{i-1}||  <= INNER_XTOL.
@@ -81,17 +81,17 @@ Term. criteria  |  2 : ||x_i - x_{i-1}||  <= INNER_XTOL.
                 | Line 3
                 | ---------------------------------------
 Material        |  CHAIN
-Lu        [m]   |  894.992
-Lb        [m]   |  27.317
-H         [N]   |  967935.426
-V         [N]   |  606306.170
-T         [N]   |  1142149.798
-Alpha     [deg] |  32.063
-HAnch     [N]   |  948846.933
+Lu        [m]   |  902.250
+Lb        [m]   |  135.247
+H         [N]   |  736004.481
+V         [N]   |  535405.126
+T         [N]   |  910143.530
+Alpha     [deg] |  36.034
+HAnch     [N]   |  641595.559
 VAnch     [N]   | 0.000
-TAnch     [N]   |  948846.933
+TAnch     [N]   |  641595.559
 AlphaAnch [deg] | 0.000
-L^2-Norm        |  3.142917e-009
+L^2-Norm        |  8.948264e-009
 Function Evals  |  5
 Jacobian Evals  |  4
 Term. criteria  |  2 : ||x_i - x_{i-1}||  <= INNER_XTOL.
@@ -100,7 +100,7 @@ Term. criteria  |  2 : ||x_i - x_{i-1}||  <= INNER_XTOL.
 ---------------------- LINE DICTIONARY ---------------------------------------
 LineType  Diam      MassDenInAir   EA            CB
 [-]       [m]       [kg/m]         [N]           [-]
-CHAIN   0.08949   77.70660   384243000.00000   1.00000   1.0E8   0.6   -1.0   0.05
+CHAIN   0.09000   77.70660   384243000.00000   1.00000   1.0E8   0.6   -1.0   0.05
 ---------------------- NODE PROPERTIES ---------------------------------------
 Node  Type       X       Y       Z      M     B     FX    FY    FZ
 [-]   [-]       [m]     [m]     [m]    [kg]  [mˆ3]  [N]   [N]   [N]
@@ -113,9 +113,9 @@ Node  Type       X       Y       Z      M     B     FX    FY    FZ
 ---------------------- LINE PROPERTIES ---------------------------------------
 Line  LineType  UnstrLen  NodeAnch  NodeFair  Flags
 [-]      [-]       [m]       [-]       [-]       [-]
-1   CHAIN   894.99243   1   2    
-2   CHAIN   894.99243   3   4   
-3   CHAIN   894.99243   5   6   
+1   CHAIN   902.25000   1   2    
+2   CHAIN   902.25000   3   4   
+3   CHAIN   902.25000   5   6   
 ---------------------- SOLVER OPTIONS-----------------------------------------
 Option 
 [-] 

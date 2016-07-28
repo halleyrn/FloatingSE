@@ -1,0 +1,31 @@
+Run on 07/27/2016 17:07:04
+-----Cost Inputs-----
+cost of straight columns:  3492.000000 USD/ton
+cost of tapered columns:  4721.000000 USD/ton
+cost of outfitting:  18651.000000 USD/ton
+cost of ballast:  100.000000 USD/ton
+-----Cost Outputs-----
+cost of spar (or hull):  6811756.772848 USD
+cost of outfitting:  1764148.562590 USD
+cost of fixed ballast:  282965.605267 USD
+cost of mooring,  fixed ballast,  outfitting,  and spar:  10450710.957493 USD
+-----Environmental Inputs-----
+gravity:  9.806
+air density:  1.198
+-----Material Inputs-----
+-----RNA Inputs-----
+-----RNA Outputs-----
+-----Tower Inputs-----
+-----Tower Outputs-----
+-----Stiffener Inputs-----
+-----Stiffener Outputs-----
+-----Section Inputs-----
+-----Section Outputs-----
+-----Mooring Inputs-----
+user minimum breaking load: 8158000.00000
+-----Mooring Outputs-----
+calculated minimum breaking load: 8158000.00000
+-----Platform Inputs-----
+-----Platform Outputs-----
+-----Sizing Inputs-----
+-----Sizing Outputs-----

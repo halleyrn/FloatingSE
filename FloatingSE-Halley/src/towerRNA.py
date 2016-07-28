@@ -24,10 +24,11 @@ class TowerRNA(Component):
     tower_mass = Float(iotype='in', units='kg', desc='tower mass')
     RNA_mass = Float(iotype='in', units='kg', desc='RNA mass')
     user_tower_cg = Float(0.0, iotype='in', units='m', desc='user defined tower CG ')
-    """Outputs."""
+    """Outputs for tower."""
     tower_center_of_gravity = Float(iotype='out', units='m', desc='tower center of gravity')
     tower_keel_to_CG = Float(iotype='out', units='m', desc='keel to tower center of gravity')
     tower_wind_force = Float(iotype='out', units='N', desc='wind force on tower')
+    """Outputs for RNA."""
     RNA_keel_to_CG = Float(iotype='out', units='m', desc='keel to RNA center of gravity')
     RNA_wind_force = Float(iotype='out', units='N', desc='wind force on RNA')
     

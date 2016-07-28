@@ -3,8 +3,8 @@
 
 import sys
 import os
-from sparAssemblyWithMAP import SparAssembly
-from utils import sys_print
+from sparAssemblyWithMAP import SparAssembly, SparAssemblyCalculation
+from utils import sys_print, save_sys_log
 import time
 # just to temporarily change PYTHONPATH without installing
 sys.path.append(os.path.expanduser('~') + '/Dropbox/NREL/NREL_WISDEM/src/twister/rotoraero')
@@ -12,7 +12,7 @@ sys.path.append(os.path.expanduser('~') + '/Dropbox/NREL/NREL_WISDEM/src/twister
 
 def example_oc3():
     """Calculation with properties based mostly on the OC3."""
-    example = SparAssembly()
+    example = SparAssemblyCalculation()
     example.example_turbine_size = '5MW'  # not sure if this is correct
     example.neutral_axis = .21  # not sure if this number is correct
     """Cost Variables"""
@@ -64,7 +64,6 @@ def example_oc3():
     """Mooring Variables"""
     example.fairlead_depth = 70.
     example.scope_ratio = 3.609
-    example.pretension_percent = 11.173  # map doesnt use
     example.number_of_mooring_lines = 3
     example.mooring_diameter = .09
     example.mooring_type = 'CHAIN'
@@ -76,7 +75,6 @@ def example_oc3():
     example.user_anchor_cost = 0.
     example.misc_cost_factor = 10
     example.fairlead_offset_from_shell = .5
-    example.number_of_discretizations = 20  # map doesnt use
     example.user_mass_density_air = 77.7066
     example.user_EA_stiffness = 384243000.
     example.anchor_radius = 853.87
@@ -95,6 +93,7 @@ def example_oc3():
     print "Executed:", example.spar.exec_count
     print "Time to execute:", time.time()-tt, "seconds"
     sys_print(example)
+    save_sys_log(example)
 
 if __name__ == "__main__":
     example_oc3()

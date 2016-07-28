@@ -27,8 +27,9 @@ class MapMooring(Component):
     user_mass_density_air = Float(0.0, iotype='in', units='kg/m', desc='user defined mass density in air')
     user_EA_stiffness = Float(0.0, iotype='in', units='N', desc='user defined elemental axial stiffness')
     anchor_radius = Float(iotype='in', units='m', desc='radius to anchors from platform center line')
-
+    """Outputs for cost."""
     mooring_total_cost = Float(iotype='out', units='USD', desc='total cost for anchor + legs + miscellaneous costs')
+    """Outputs for mooring."""
     mooring_keel_to_CG = Float(iotype='out', units='m', desc='KGM used in spar.py')
     mooring_vertical_load = Float(iotype='out', units='N', desc='mooring vertical load in all mooring lines')
     mooring_horizontal_stiffness = Float(iotype='out', units='N/m', desc='horizontal stiffness of one single '
@@ -40,7 +41,13 @@ class MapMooring(Component):
     intact_mooring = Array(iotype='out', units='m', desc='range of intact mooring')
     mooring_mass = Float(iotype='out', units='kg', desc='total mass of mooring')
     pretension = Float(iotype='out', units='N', desc='tension of the mooring system at initial position')
-    MBL = Float(iotype='out', units='N', desc='minimum breaking load')
+    MBL = Float(iotype='out', units='N', desc='calculated minimum breaking load')
+    scope = Float(iotype='out', units='m', desc='calculated length of a mooring line')
+    WML = Float(iotype='out', units='kg/m', desc='calculated wet mass per length')
+    AE_storm = Float(iotype='out', units='N', desc='calculated E modulus')
+    MCPL = Float(iotype='out', units='USD/m', desc='calculated mooring cost per length')
+    anchor_cost = Float(iotype='out', units='USD', desc='calculated anchor cost')
+    mass_density_air = Float(iotype='out', units='kg/m', desc='calculated mass density in air')
 
     def __init__(self):
         super(MapMooring, self).__init__()
@@ -98,4 +105,3 @@ class MapMooring(Component):
         self.mooring_vertical_load, self.mooring_vertical_stiffness, self.mooring_horizontal_stiffness = \
             mooring_system.loads_and_stiffnesses()
         self.mooring_mass = (wml+pi*mooring_diameter**2/4*water_density)*scope*number_of_lines
-

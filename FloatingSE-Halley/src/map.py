@@ -24,7 +24,7 @@ under the License.
 
 from mapsys import *
 import matplotlib.pyplot as plt
-# from mpl_toolkits.mplot3d import Axes3D
+from mpl_toolkits.mplot3d import Axes3D
 from math import cos, pi, sin
 from numpy import array, set_printoptions, diag, interp
 import os
@@ -371,17 +371,17 @@ repeat 120 240
             self.V_initial += vertical
         self.PTEN = max(tension[:])
         # uncomment if you want a graphical depiction of what the spar will look like
-        # fig = plt.figure()
-        # ax = Axes3D(fig)
-        # for i in range(0,mooring_1.size_lines()):
-        #     x = mooring_1.plot_x( i, 10 )
-        #     y = mooring_1.plot_y( i, 10 )
-        #     z = mooring_1.plot_z( i, 10 )        
-        #     ax.plot(x,y,z,'b-')
-        # ax.set_xlabel('X [m]')
-        # ax.set_ylabel('Y [m]')
-        # ax.set_zlabel('Z [m]')
-        # plt.show()
+        fig = plt.figure()
+        ax = Axes3D(fig)
+        for i in range(0, mooring_1.size_lines()):
+            x = mooring_1.plot_x(i, 10)
+            y = mooring_1.plot_y(i, 10)
+            z = mooring_1.plot_z(i, 10)
+            ax.plot(x, y, z, 'b-')
+        ax.set_xlabel('X [m]')
+        ax.set_ylabel('Y [m]')
+        ax.set_zlabel('Z [m]')
+        plt.show()
 
         if objective == "find full area" or objective == True:
             # finds the linearized stiffness matrix diagonal and tension in each line
@@ -423,7 +423,7 @@ repeat 120 240
                 offset = doffset
             # uncomment if you want to see offsets plotted
             plt.plot(red_x, red_y, 'ro', yellow_x, yellow_y, 'yo', blue_x, blue_y, 'bo', green_x, green_y, 'go')
-            plt.axis([-40, 80, -70, 70])
+            plt.axis([-50, 80, -70, 70])
             plt.show()
 
         if objective == "optimization" or objective == True:
@@ -525,8 +525,8 @@ repeat 120 240
 
 if __name__ == '__main__':
     """Testing the interface using homogeneous line OC3 mooring information."""
-    scope = 250*3.190191
-    mooringDiameter = .091469
+    scope = 902.2
+    mooringDiameter = .09
     OC3 = InputMAP(320.0, 9.806, 1025.0, 3)
     OC3.mooring_properties(mooringDiameter, "CHAIN")
     OC3.write_line_dictionary_header()
@@ -537,7 +537,7 @@ if __name__ == '__main__':
     OC3.write_line_properties_header()
     OC3.write_line_properties(1, "CHAIN", scope, 1, 2, " ")
     OC3.write_solver_options()
-    OC3.main(.5, 2, "optimization")
+    OC3.main(2, 2, "find full area")
     intact_mooring1, damaged_mooring1 = OC3.intact_and_damaged_mooring()
     sum_fx1, offset_x1 = OC3.sum_of_fx_and_offset()
     print sum_fx1
