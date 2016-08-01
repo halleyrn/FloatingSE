@@ -63,6 +63,7 @@ class InputMAP(object):
         self.vertical_stiffness = 0
         # self.damaged_mooring_bounds = [0, 0]
         # self.intact_mooring_bounds = [0, 0]
+        self.air_mass_density = 0
         self.max_tension = []
         self.PTEN = 0
 
@@ -149,7 +150,9 @@ LineType  Diam      MassDenInAir   EA            CB   CIntDamp  Ca   Cdn    Cdt
         opened.write("%s   " % self.line_type)
         opened.write("%.5f   " % self.diameter)
         if air_mass_density == 0:
-            air_mass_density = self.WML+(self.water_density*self.AREA)
+            self.air_mass_density = self.WML+(self.water_density*self.AREA)
+        else:
+            self.air_mass_density = air_mass_density
         opened.write("%.5f   " % air_mass_density)
         if element_axial_stiffness == 0:
             element_axial_stiffness = self.AE_storm
@@ -508,6 +511,9 @@ repeat 120 240
 
     def loads_and_stiffnesses(self):
         return self.V_initial, self.vertical_stiffness, self.horizontal_stiffness
+
+    def calculated(self):
+        return self.AE_storm, self.MCPL, self.air_mass_density
 
     def intact_and_damaged_mooring(self):
         x = self.offset_x.index(0)

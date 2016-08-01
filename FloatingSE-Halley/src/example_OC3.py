@@ -13,12 +13,10 @@ sys.path.append(os.path.expanduser('~') + '/Dropbox/NREL/NREL_WISDEM/src/twister
 def example_oc3():
     """Calculation with properties based mostly on the OC3."""
     example = SparAssemblyCalculation()
-    example.example_turbine_size = '5MW'  # not sure if this is correct
-    example.neutral_axis = .21  # not sure if this number is correct
     """Cost Variables"""
-    example.straight_col_cost = 3492.
-    example.tapered_col_cost = 4721.
-    example.outfitting_cost = 18651.
+    example.straight_col_cost = 3490.
+    example.tapered_col_cost = 4720.
+    example.outfitting_cost = 6980.
     example.ballast_cost = 100.  # not sure if this number is correct
     """Environment Variables"""
     example.air_density = 1.198
@@ -44,7 +42,8 @@ def example_oc3():
     example.rotor_diameter = 126.
     example.RNA_center_of_gravity_y = 1.75
     example.RNA_center_of_gravity_x = 1.9
-    # example.cut_out_speed 
+    # example.cut_out_speed
+    example.example_turbine_size = '5MW'
     """Tower Variables"""
     example.tower_base_outer_diameter = 6.5
     example.tower_top_outer_diameter = 3.87
@@ -53,12 +52,13 @@ def example_oc3():
     example.user_tower_cg = 43.4
     """Stiffener Variables"""
     example.stiffener_index = 259
-    example.stiffener_curve_fit = False  # not sure if this is correct
+    example.stiffener_curve_fit = False
+    # example.neutral_axis
     """Section Variables"""
     example.spar_outer_diameter = [6.5, 6.5, 9.4, 9.4, 9.4]
     example.wall_thickness = [.055, .060, .040, .040, .040]
     example.spar_elevations = [10.0, -4.0, -12.0, -42., -71., -120.]
-    example.bulk_head = ['N', 'T', 'N', 'B', 'B']
+    example.bulk_head = ['N', 'N', 'N', 'N', 'B']
     example.number_of_rings = [3, 2, 10, 10, 33]
     example.number_of_sections = 5
     """Mooring Variables"""
@@ -77,7 +77,7 @@ def example_oc3():
     example.fairlead_offset_from_shell = .5
     example.user_mass_density_air = 77.7066
     example.user_EA_stiffness = 384243000.
-    example.anchor_radius = 853.87
+    example.anchor_radius = 853.929
     """Platform Variables"""
     example.shell_mass_factor = 1
     example.bulkhead_mass_factor = 1.25

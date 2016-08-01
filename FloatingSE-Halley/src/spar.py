@@ -194,6 +194,13 @@ class Spar(Component):
             self.neutral_axis = stiffener_yna
             stiffener_moment_of_inertia = convert_units(stiffener[7], 'inch**4', 'm**4')
         stiffener_web_height = stiffener_depth - stiffener_flange_thickness
+        self.Ar = stiffener_area
+        self.d = stiffener_depth
+        self.tw = stiffener_web_thickness
+        self.bf = stiffener_flange_width
+        self.tf = stiffener_flange_thickness
+        self.yna = stiffener_yna
+        self.Ir = stiffener_moment_of_inertia
         section_shell_masses, section_ring_masses, section_bulkhead_masses, section_buoyancies, section_wind_forces, \
             section_wind_moments, section_currentwave_forces, section_currentwave_moments, section_keel_to_cgs, \
             section_keel_to_center_buoyancies = \
@@ -209,8 +216,8 @@ class Spar(Component):
         shell_bulkhead_ring_mass = shell_mass + bulkhead_mass + ring_mass
         shell_bulkhead_ring_masses = \
             array(section_shell_masses) + array(section_bulkhead_masses) + array(section_ring_masses)
-        outfitting_mass = shell_bulkhead_ring_mass * float(self.outfitting_factor)
-        mass = shell_bulkhead_ring_mass*float(self.spar_mass_factor) + outfitting_mass
+        self.outfitting_mass = shell_bulkhead_ring_mass * float(self.outfitting_factor)
+        mass = shell_bulkhead_ring_mass*float(self.spar_mass_factor) + self.outfitting_mass
         section_keel_to_cgs = dot(shell_bulkhead_ring_masses, array(section_keel_to_cgs)) / shell_bulkhead_ring_mass
         keel_to_center_of_buoyancy = \
             dot(array(section_buoyancies), array(section_keel_to_center_buoyancies)) / shell_buoyancy
@@ -221,12 +228,15 @@ class Spar(Component):
         ballast_volume_per_length = pi/4.*(base_outer_diameter-2*wall_thicknesses[-1])**2.
         kgpb = (permanent_ballast_height/2.)+wall_thicknesses[-1] 
         permanent_ballast_mass = ballast_volume_per_length*permanent_ballast_height*permanent_ballast_density
-        kgfb = (fixed_ballast_height/2.)+permanent_ballast_height+wall_thicknesses[-1] 
+        self.permanent_ballast_mass = permanent_ballast_mass
+        kgfb = (fixed_ballast_height/2.)+permanent_ballast_height+wall_thicknesses[-1]
         fixed_ballast_mass = ballast_volume_per_length*fixed_ballast_height*fixed_ballast_density
+        self.fixed_ballast_mass = fixed_ballast_mass
         tower_keel_to_cg = tower_center_of_gravity+freeboard+draft
         water_ballast_mass = \
             shell_buoyancy - mass - rna_mass - tower_mass - mooring_vertical_load / gravity - fixed_ballast_mass -\
             permanent_ballast_mass
+        self.water_ballast_mass = water_ballast_mass
         water_ballast_height = water_ballast_mass / (water_density * ballast_volume_per_length)
         self.water_ballast_height = water_ballast_height
         kgwb = water_ballast_height / 2. + permanent_ballast_height + fixed_ballast_height + wall_thicknesses[-1]
@@ -266,7 +276,7 @@ class Spar(Component):
         ballast_cost = float(self.ballast_cost)
         mooring_cost = float(self.mooring_total_cost)
         self.spar_cost = straight_col_cost * columns_mass / 1000. + tapered_col_cost * tapered_mass / 1000.
-        self.outfit_cost = outfitting_cost * outfitting_mass / 1000.
+        self.outfit_cost = outfitting_cost * self.outfitting_mass / 1000.
         self.ballasts_cost = ballast_cost * (fixed_ballast_mass + permanent_ballast_mass) / 1000.
         self.total_cost = self.spar_cost + self.outfit_cost + self.ballasts_cost + mooring_cost
 
@@ -298,10 +308,11 @@ class Spar(Component):
         # [PLATFORM STIFFNESS]
         k33_heave = water_density * gravity * ((pi/4.) * odtw**2) + mooring_vertical_stiffness  # heave
         # [PERIOD]
-        surge_t = 2 * pi * ((total_mass + surge) / mooring_horizontal_stiffness)**0.5
-        heave_t = 2 * pi * ((total_mass + heave) / k33_heave)**0.5
+        self.surge_period = 2 * pi * ((total_mass + surge) / mooring_horizontal_stiffness)**0.5
+        self.heave_period = 2 * pi * ((total_mass + heave) / k33_heave)**0.5
         pitch_k = gm * shell_buoyancy * gravity
-        pitch_t = 2 * pi * (pitch / pitch_k)**0.5
+        self.pitch_stiffness = pitch_k
+        self.pitch_period = 2 * pi * (array(pitch).item(3) / pitch_k)**0.5
         total_force = rna_wind_force + tower_wind_force + sum(section_wind_forces) + sum(section_currentwave_forces)
         self.total_force = total_force
         sum_forces_x = array(self.sum_forces_x)

@@ -66,7 +66,7 @@ class MapMooring(Component):
         spar_elevations = self.spar_elevations[1:]
         draft = abs(min(spar_elevations))
         fairlead_height = water_depth-fairlead_depth
-        scope = fairlead_height*float(self.scope_ratio)
+        self.scope = fairlead_height*float(self.scope_ratio)
         fairlead_offset_from_shell = float(self.fairlead_offset_from_shell)
         misc_cost_factor = float(self.misc_cost_factor)
         fairlead_radius = (spar_outer_diameter/2) + fairlead_offset_from_shell
@@ -80,23 +80,25 @@ class MapMooring(Component):
         mooring_system.write_node_properties(1, "FIX", self.anchor_radius, 0, water_depth, 0, 0)
         mooring_system.write_node_properties(2, "VESSEL", fairlead_radius, 0, -fairlead_depth, 0, 0)
         mooring_system.write_line_properties_header()
-        mooring_system.write_line_properties(1, mooring_type, scope, 1, 2, " ")
+        mooring_system.write_line_properties(1, mooring_type, self.scope, 1, 2, " ")
         mooring_system.write_solver_options()
         mooring_system.main(2, 2, "optimization")
 
+        self.AE_storm, self.MCPL, self.mass_density_air = mooring_system.calculated()
         self.intact_mooring, self.damaged_mooring = mooring_system.intact_and_damaged_mooring()
         self.sum_forces_x, self.offset_x = mooring_system.sum_of_fx_and_offset()
-        wml = mooring_system.wet_mass_per_length()
+        self.WML = mooring_system.wet_mass_per_length()
         mcpl = mooring_system.cost_per_length()
         self.MBL, self.pretension = mooring_system.minimum_breaking_load_and_tensions()
         # COST
-        each_leg = mcpl*scope
+        each_leg = mcpl*self.scope
         legs_total = each_leg*number_of_lines
         each_anchor = self.user_anchor_cost
         if self.anchor_type == 'DRAG':
             each_anchor = self.MBL/1000./9.806/20*2000
         if self.anchor_type == 'PILE':
             each_anchor = 150000.*(self.MBL/1000./9.806/1250.)**0.5
+        self.anchor_cost = each_anchor
         anchor_total = each_anchor*number_of_lines
         misc_cost = (anchor_total+legs_total)*misc_cost_factor/100.
         self.mooring_total_cost = legs_total+anchor_total+misc_cost 
@@ -104,4 +106,4 @@ class MapMooring(Component):
         self.mooring_keel_to_CG = draft - fairlead_depth
         self.mooring_vertical_load, self.mooring_vertical_stiffness, self.mooring_horizontal_stiffness = \
             mooring_system.loads_and_stiffnesses()
-        self.mooring_mass = (wml+pi*mooring_diameter**2/4*water_density)*scope*number_of_lines
+        self.mooring_mass = (self.WML+pi*mooring_diameter**2/4*water_density)*self.scope*number_of_lines

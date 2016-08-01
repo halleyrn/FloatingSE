@@ -1,31 +1,287 @@
-Run on 07/27/2016 17:07:04
+Run on 08/01/2016 11:53:56
 -----Cost Inputs-----
-cost of straight columns:  3492.000000 USD/ton
-cost of tapered columns:  4721.000000 USD/ton
-cost of outfitting:  18651.000000 USD/ton
-cost of ballast:  100.000000 USD/ton
+cost of straight columns:  3492.00 USD/ton
+cost of tapered columns:  4721.00 USD/ton
+cost of outfitting:  18651.00 USD/ton
+cost of ballast:  100.00 USD/ton
 -----Cost Outputs-----
-cost of spar (or hull):  6811756.772848 USD
-cost of outfitting:  1764148.562590 USD
-cost of fixed ballast:  282965.605267 USD
-cost of mooring,  fixed ballast,  outfitting,  and spar:  10450710.957493 USD
+cost of spar (or hull):  6811756.77 USD
+cost of outfitting:  1764148.56 USD
+cost of fixed ballast:  282965.61 USD
+cost of mooring, fixed ballast, outfitting, and spar:  10450710.96 USD
 -----Environmental Inputs-----
-gravity:  9.806
-air density:  1.198
+gravity:  9.806 m/s**2
+air density:  1.198 kg/m**3
+water depth:  320.000 m
+water density:  1025.000 kg/m**3
+load condition:  N
+significant wave height:  8.000 m
+significant wave period:  10.000 m
+wind reference wave height:  89.350 m
+wind reference wave speed:  11.000 m/s
+alpha:  0.110
+gust:  1.000
 -----Material Inputs-----
+material density:  7850.000
+E:  2.000000e+11
+nu:  0.300
+yield stress:  3.450000e+08
+permanent ballast density:  4492.480
+fixed ballast density:  4000.000
 -----RNA Inputs-----
+RNA mass:  347460.000
+rotor diameter:  126.000
+RNA center of gravity y:  1.750
+RNA center of gravity x:  1.900
+cut out speed:  25.000
+turbine size:  5MW
 -----RNA Outputs-----
+RNA keel to CG:  209.350
+RNA wind force:  394934.070
 -----Tower Inputs-----
+base outer diameter:  6.500
+top outer diameter:  3.870
+tower length:  77.600
+tower mass:  249718.000
+user tower CG:  43.400
 -----Tower Outputs-----
+tower center of gravity:  43.400
+tower keep to CG:  173.400
+tower wind forces:  25897.438
 -----Stiffener Inputs-----
+stiffener index:  259
+stiffener curve fit:  False
+neutral axis:  0.000
 -----Stiffener Outputs-----
+cross-sectional area of member:  0.022
+overall depth of member, parallel to X-axis:  0.399
+thickness of web of member:  0.021
+width of flange of member:  0.384
+thickness of flange of member:  0.038
+distance from outer face of flange to web toe to fillet:  0.312
+moment of inertia for a stiffener:  0.000
+check for flange compactness:  0.557
+check for web compactness:  0.711
 -----Section Inputs-----
+outer diameter:  [6.5, 6.5, 9.4, 9.4, 9.4]
+wall thickness:  [0.055, 0.06, 0.04, 0.04, 0.04]
+elevations:  [10.0, -4.0, -12.0, -42.0, -71.0, -120.0]
+bulk head:  [N, T, N, B, B]
+number of rings:  [3, 2, 10, 10, 33]
+number of sections:  5.000
 -----Section Outputs-----
+axial load - local buckling unity:  [0.333482, 0.299336, 0.556348, 0.852460, 0.913425]
+axial load - general instability unity:  [0.323521, 0.292168, 0.399105, 0.495203, 0.807172]
+external pressure - local buckling unity:  [0.400179, 0.359204, 0.587138, 0.834066, 0.802797]
+external pressure - general instability unity:  [0.186061, 0.233061, 0.621240, 0.794324, 1.217428]
 -----Mooring Inputs-----
-user minimum breaking load: 8158000.00000
+fairlead depth: 70.000
+scope ratio: 3.609
+number of mooring lines: 3
+diameter: 0.090
+type: CHAIN
+user minimum breaking load: 8158000.000
+user wet mass per length: 71.186
+user E modulus: 384243000.000
+user cost per length: 0.000
+anchor type: PILE
+user anchor cost: 0.000
+miscellaneous cost factor in percent: 10.000
+fairlead offset from shell: 0.500
+user mass density in air: 77.707
+user elemental axial stiffness: 384243000.000
+radius to anchors from platform center line: 853.870
 -----Mooring Outputs-----
-calculated minimum breaking load: 8158000.00000
+mooring keel to CG: 50.000
+mooring vertical load in all mooring lines: 1606215.226
+linearized horizontal stiffness: 40993.910
+linearized vertical stiffness: 11899.024
+sum of forces in x direction: [7385.487588, 6709.047283, 5932.971014, 5167.606301, 4419.128580, 3697.864458, 3020.470308, 2410.662417, 1893.475649, 1481.462280, 1166.295635, 926.758770, 741.155483, 592.832857, 470.317609, 364.015104, 265.008526, 171.918446, 83.849583, -0.000456, -80.353452, -157.861866, -233.119082, -306.668610, -379.012331, -450.617842, -521.925012, -593.351835, -665.299661, -738.830211, -816.468449, -899.588939, -989.744555, -1088.822967, -1199.129240, -1323.466415, -1465.192741, -1628.185340, -1816.646253, -2034.677964, -2285.598237, -2571.170126, -2891.096410, -3243.087257, -3623.482631, -4028.087864, -4452.859358, -4894.287487, -5349.516842, -5816.311690, -6292.957676, -6778.152574, -7270.909222, -7770.477319, -8276.283433, -8573.955532]
+X offsets in discretization: [-37.728460, -36.000000, -34.000000, -32.000000, -30.000000, -28.000000, -26.000000, -24.000000, -22.000000, -20.000000, -18.000000, -16.000000, -14.000000, -12.000000, -10.000000, -8.000000, -6.000000, -4.000000, -2.000000, 0.000000, 2.000000, 4.000000, 6.000000, 8.000000, 10.000000, 12.000000, 14.000000, 16.000000, 18.000000, 20.000000, 22.000000, 24.000000, 26.000000, 28.000000, 30.000000, 32.000000, 34.000000, 36.000000, 38.000000, 40.000000, 42.000000, 44.000000, 46.000000, 48.000000, 50.000000, 52.000000, 54.000000, 56.000000, 58.000000, 60.000000, 62.000000, 64.000000, 66.000000, 68.000000, 70.000000, 71.166345]
+range of damaged mooring: [-33.615084, 63.773545]
+range of intact mooring: [-29.342443, 56.022701]
+total mass of mooring: 210332.795
+tension of the mooring system at initial position: 910143.530
+used minimum breaking load: 8158000.000
+used length of a mooring line: 902.250
+used wet mass per length: 71.186
+used E modulus: 384243000.000
+used mooring cost per length: 399.007
+used anchor cost: 122372.028
+used mass density in air: 77.707
 -----Platform Inputs-----
+shell mass factor: 1.000
+bulkhead mass factor: 1.250
+ring mass factor: 1.000
+outfitting factor: 0.060
+spar mass factor: 1.040
+permanent ballast height: 3.000
+fixed ballast height: 7.000
+offset amplification factor: 1.000
 -----Platform Outputs-----
------Sizing Inputs-----
+spar mass: 1576455.742
+ballast mass: 5734860.886
+system total mass: 7521649.423
+shell mass: 1212977.225
+bulkhead mass: 72375.776
+stiffener mass: 291102.741
+outfitting mass: 94587.345
+permanent ballast mass: 919452.109
+fixed ballast mass: 1910203.944
 -----Sizing Outputs-----
+platform stability check: 0.700
+heel angle: 6.767
+min offset unity: 0.813
+max offset unity: 0.761
+water ballast height: 41.546
+water ballast mass: 2905204.834
+total force: 2372355.058
+surge period: 126.445
+heave period: 30.628
+pitch stiffness: 1405015412.847
+pitch period: 31.963
+
+
+
+Run on 08/01/2016 14:11:20
+-----Cost Inputs-----
+cost of straight columns:  3490.00 USD/ton
+cost of tapered columns:  4720.00 USD/ton
+cost of outfitting:  6980.00 USD/ton
+cost of ballast:  100.00 USD/ton
+-----Cost Outputs-----
+cost of spar (or hull):  6682425.35 USD
+cost of outfitting:  641122.88 USD
+cost of fixed ballast:  282965.61 USD
+cost of mooring, fixed ballast, outfitting, and spar:  9198353.85 USD
+-----Environmental Inputs-----
+gravity:  9.806 m/s**2
+air density:  1.198 kg/m**3
+water depth:  320.000 m
+water density:  1025.000 kg/m**3
+load condition:  N
+significant wave height:  8.000 m
+significant wave period:  10.000 m
+wind reference wave height:  89.350 m
+wind reference wave speed:  11.000 m/s
+alpha:  0.110
+gust:  1.000
+-----Material Inputs-----
+material density:  7850.000
+E:  2.000000e+11
+nu:  0.300
+yield stress:  3.450000e+08
+permanent ballast density:  4492.480
+fixed ballast density:  4000.000
+-----RNA Inputs-----
+RNA mass:  347460.000
+rotor diameter:  126.000
+RNA center of gravity y:  1.750
+RNA center of gravity x:  1.900
+cut out speed:  25.000
+turbine size:  5MW
+-----RNA Outputs-----
+RNA keel to CG:  209.350
+RNA wind force:  394934.070
+-----Tower Inputs-----
+base outer diameter:  6.500
+top outer diameter:  3.870
+tower length:  77.600
+tower mass:  249718.000
+user tower CG:  43.400
+-----Tower Outputs-----
+tower center of gravity:  43.400
+tower keep to CG:  173.400
+tower wind forces:  25897.438
+-----Stiffener Inputs-----
+stiffener index:  259
+stiffener curve fit:  False
+neutral axis:  0.000
+-----Stiffener Outputs-----
+cross-sectional area of member:  0.022
+overall depth of member, parallel to X-axis:  0.399
+thickness of web of member:  0.021
+width of flange of member:  0.384
+thickness of flange of member:  0.038
+distance from outer face of flange to web toe to fillet:  0.312
+moment of inertia for a stiffener:  0.000
+check for flange compactness:  0.557
+check for web compactness:  0.711
+-----Section Inputs-----
+outer diameter:  [6.5, 6.5, 9.4, 9.4, 9.4]
+wall thickness:  [0.055, 0.06, 0.04, 0.04, 0.04]
+elevations:  [10.0, -4.0, -12.0, -42.0, -71.0, -120.0]
+bulk head:  [N, N, N, N, B]
+number of rings:  [3, 2, 10, 10, 33]
+number of sections:  5.000
+-----Section Outputs-----
+axial load - local buckling unity:  [0.333476, 0.299330, 0.556345, 0.852457, 0.913424]
+axial load - general instability unity:  [0.323515, 0.292162, 0.399100, 0.495199, 0.807169]
+external pressure - local buckling unity:  [0.400171, 0.359196, 0.587133, 0.834064, 0.802796]
+external pressure - general instability unity:  [0.186060, 0.233059, 0.621234, 0.794318, 1.217426]
+-----Mooring Inputs-----
+fairlead depth: 70.000
+scope ratio: 3.609
+number of mooring lines: 3
+diameter: 0.090
+type: CHAIN
+user minimum breaking load: 8158000.000
+user wet mass per length: 71.186
+user E modulus: 384243000.000
+user cost per length: 0.000
+anchor type: PILE
+user anchor cost: 0.000
+miscellaneous cost factor in percent: 10.000
+fairlead offset from shell: 0.500
+user mass density in air: 77.707
+user elemental axial stiffness: 384243000.000
+radius to anchors from platform center line: 853.929
+-----Mooring Outputs-----
+mooring keel to CG: 50.000
+mooring vertical load in all mooring lines: 1607736.472
+linearized horizontal stiffness: 41107.775
+linearized vertical stiffness: 11909.196
+sum of forces in x direction: [7384.406390, 6731.002884, 5954.631424, 5188.830774, 4439.682972, 3717.361312, 3038.308299, 2426.067664, 1905.809785, 1490.650122, 1172.831986, 931.319572, 744.313454, 594.994587, 471.754885, 365.054992, 265.759459, 172.401955, 84.083775, -0.000557, -80.575604, -158.296335, -233.758404, -307.507389, -380.047065, -451.846780, -523.348034, -594.970357, -667.116561, -740.962926, -818.998321, -902.579939, -993.277951, -1093.001341, -1204.080736, -1329.348210, -1472.191304, -1636.511144, -1826.515987, -2046.282644, -2299.060932, -2586.508890, -2908.213164, -3261.791209, -3643.535319, -4049.247205, -4474.908282, -4917.045770, -5372.841621, -5840.092602, -6317.110503, -6802.613263, -7295.628946, -7795.418638, -8301.417406, -8572.219328]
+X offsets in discretization: [-37.669313, -36.000000, -34.000000, -32.000000, -30.000000, -28.000000, -26.000000, -24.000000, -22.000000, -20.000000, -18.000000, -16.000000, -14.000000, -12.000000, -10.000000, -8.000000, -6.000000, -4.000000, -2.000000, 0.000000, 2.000000, 4.000000, 6.000000, 8.000000, 10.000000, 12.000000, 14.000000, 16.000000, 18.000000, 20.000000, 22.000000, 24.000000, 26.000000, 28.000000, 30.000000, 32.000000, 34.000000, 36.000000, 38.000000, 40.000000, 42.000000, 44.000000, 46.000000, 48.000000, 50.000000, 52.000000, 54.000000, 56.000000, 58.000000, 60.000000, 62.000000, 64.000000, 66.000000, 68.000000, 70.000000, 71.061008]
+range of damaged mooring: [-33.555808, 63.666635]
+range of intact mooring: [-29.283102, 55.914079]
+total mass of mooring: 210332.795
+tension of the mooring system at initial position: 911706.363
+used minimum breaking load: 8158000.000
+used length of a mooring line: 902.250
+used wet mass per length: 71.186
+used E modulus: 384243000.000
+used mooring cost per length: 399.007
+used anchor cost: 122372.028
+used mass density in air: 77.707
+-----Platform Inputs-----
+shell mass factor: 1.000
+bulkhead mass factor: 1.250
+ring mass factor: 1.000
+outfitting factor: 0.060
+spar mass factor: 1.040
+permanent ballast height: 3.000
+fixed ballast height: 7.000
+offset amplification factor: 1.000
+-----Platform Outputs-----
+spar mass: 1530856.932
+ballast mass: 5784864.443
+system total mass: 7526054.170
+shell mass: 1212977.225
+bulkhead mass: 26776.966
+stiffener mass: 291102.741
+outfitting mass: 91851.416
+permanent ballast mass: 919452.109
+fixed ballast mass: 1910203.944
+-----Sizing Outputs-----
+platform stability check: 0.699
+heel angle: 6.748
+min offset unity: 0.813
+max offset unity: 0.760
+water ballast height: 42.261
+water ballast mass: 2955208.390
+total force: 2372322.606
+surge period: 126.269
+heave period: 30.627
+pitch stiffness: 1409095956.098
+pitch period: 31.920
