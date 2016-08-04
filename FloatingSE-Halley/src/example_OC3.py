@@ -12,7 +12,7 @@ sys.path.append(os.path.expanduser('~') + '/Dropbox/NREL/NREL_WISDEM/src/twister
 
 def example_oc3():
     """Calculation with properties based mostly on the OC3."""
-    example = SparAssemblyCalculation()
+    example = SparAssembly()
     """Cost Variables"""
     example.straight_col_cost = 3490.
     example.tapered_col_cost = 4720.

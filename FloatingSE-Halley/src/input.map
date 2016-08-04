@@ -10,7 +10,7 @@ Node  Type       X       Y       Z      M     B     FX      FY      FZ
 ---------------------- LINE PROPERTIES ---------------------------------------
 Line    LineType  UnstrLen  NodeAnch  NodeFair  Flags
 (-)      (-)       (m)       (-)       (-)       (-)
-1   CHAIN   902.25000   1   2    
+1   CHAIN   895.02354   1   2    
 ---------------------- SOLVER OPTIONS-----------------------------------------
 Option
 (-)

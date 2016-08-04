@@ -14,10 +14,10 @@ class SparAssembly(Assembly):
     def configure(self):
         """Creates a new Assembly containing a chain of Tower_RNA, Spar and
         Mooring components, as well as a constrained optimizer."""
-        print 'start configure'
+
         """Create optimizer instance."""
         self.add('driver', COBYLAdriver())
-        self.driver.maxfun = 10000
+        self.driver.maxfun = 100000
 
         """Select component instances."""
         self.add('towerRNA', TowerRNA())
@@ -133,50 +133,55 @@ class SparAssembly(Assembly):
         self.driver.add_parameter('number_of_rings[1]', low=1, high=10)
         self.driver.add_parameter('number_of_rings[2]', low=1, high=10)
         self.driver.add_parameter('number_of_rings[3]', low=1, high=50)
-        self.driver.add_parameter('wall_thickness[0]', low=1., high=10., scaler=0.01)
-        self.driver.add_parameter('wall_thickness[1]', low=1., high=10., scaler=0.01)
-        self.driver.add_parameter('wall_thickness[2]', low=1., high=10., scaler=0.01)
-        self.driver.add_parameter('wall_thickness[3]', low=10., high=100., scaler=0.001)
+        # self.driver.add_parameter('wall_thickness[0]', low=1., high=10., scaler=0.01)
+        # self.driver.add_parameter('wall_thickness[1]', low=1., high=10., scaler=0.01)
+        # self.driver.add_parameter('wall_thickness[2]', low=1., high=10., scaler=0.01)
+        # self.driver.add_parameter('wall_thickness[3]', low=10., high=100., scaler=0.001)
         self.driver.add_parameter('scope_ratio', low=15., high=45., scaler=0.1)
-        self.driver.add_parameter('mooring_diameter', low=30., high=100., scaler=0.001)
+        # self.driver.add_parameter('mooring_diameter', low=30., high=100., scaler=0.001)
         self.driver.add_parameter('fixed_ballast_height', low=30., high=100., scaler=0.1)
         self.driver.add_parameter('permanent_ballast_height', low=30., high=100., scaler=0.1)
+
+        self.driver.add_parameter('wall_thickness[0]', low=2.54, high=10., scaler=0.01)
+        self.driver.add_parameter('wall_thickness[1]', low=2.54, high=10., scaler=0.01)
+        self.driver.add_parameter('wall_thickness[2]', low=2.54, high=10., scaler=0.01)
+        self.driver.add_parameter('wall_thickness[3]', low=25.4, high=100., scaler=0.001)
+        self.driver.add_parameter('mooring_diameter', low=90., high=100., scaler=0.001)
 
         """Specify objective function (what you want to minimize)."""
         self.driver.add_objective('spar.spar_mass', name='spar mass')
 
         """Add constraints to the driver."""
-        self.driver.add_constraint('mooring_diameter > 0.09')
-        self.driver.add_constraint('wall_thickness[0] > 0.0254')
-        self.driver.add_constraint('wall_thickness[1] > 0.0254')
-        self.driver.add_constraint('wall_thickness[2] > 0.0254')
-        self.driver.add_constraint('wall_thickness[3] > 0.0254')
-        self.driver.add_constraint('mapMooring.MBL*0.14 - mapMooring.pretension> 0.0')
-        self.driver.add_constraint('spar.water_ballast_height < 7.5')
-        self.driver.add_constraint('spar.water_ballast_height > 5.5')
+        # self.driver.add_constraint('mooring_diameter > 0.09')
+        # self.driver.add_constraint('wall_thickness[0] > 0.0254')
+        # self.driver.add_constraint('wall_thickness[1] > 0.0254')
+        # self.driver.add_constraint('wall_thickness[2] > 0.0254')
+        # self.driver.add_constraint('wall_thickness[3] > 0.0254')
+        # self.driver.add_constraint('mapMooring.MBL*0.14 - mapMooring.pretension> 0.0')
+        self.driver.add_constraint('mapMooring.tension_check < 1.')
+        self.driver.add_constraint('spar.water_ballast_height > 0.')
         self.driver.add_constraint('spar.flange_compactness < 1.')
         self.driver.add_constraint('spar.web_compactness < 1.')
-        self.driver.add_constraint('spar.VAL[0] < 0.99')
-        self.driver.add_constraint('spar.VAL[1] < 0.99')
-        self.driver.add_constraint('spar.VAL[2] < 0.99')
-        self.driver.add_constraint('spar.VAL[3] < 0.99')
-        self.driver.add_constraint('spar.VAG[0] < 0.99')
-        self.driver.add_constraint('spar.VAG[1] < 0.99')
-        self.driver.add_constraint('spar.VAG[2] < 0.99')
-        self.driver.add_constraint('spar.VAG[3] < 0.99')
-        self.driver.add_constraint('spar.VEL[0] < 0.99')
-        self.driver.add_constraint('spar.VEL[1] < 0.99')
-        self.driver.add_constraint('spar.VEL[2] < 0.99')
-        self.driver.add_constraint('spar.VEL[3] < 0.99')
-        self.driver.add_constraint('spar.VEG[0] < 0.99')
-        self.driver.add_constraint('spar.VEG[1] < 0.99')
-        self.driver.add_constraint('spar.VEG[2] < 0.99')
-        self.driver.add_constraint('spar.VEG[3] < 0.99')
+        self.driver.add_constraint('spar.VAL[0] < 1.')
+        self.driver.add_constraint('spar.VAL[1] < 1.')
+        self.driver.add_constraint('spar.VAL[2] < 1.')
+        self.driver.add_constraint('spar.VAL[3] < 1.')
+        self.driver.add_constraint('spar.VAG[0] < 1.')
+        self.driver.add_constraint('spar.VAG[1] < 1.')
+        self.driver.add_constraint('spar.VAG[2] < 1.')
+        self.driver.add_constraint('spar.VAG[3] < 1.')
+        self.driver.add_constraint('spar.VEL[0] < 1.')
+        self.driver.add_constraint('spar.VEL[1] < 1.')
+        self.driver.add_constraint('spar.VEL[2] < 1.')
+        self.driver.add_constraint('spar.VEL[3] < 1.')
+        self.driver.add_constraint('spar.VEG[0] < 1.')
+        self.driver.add_constraint('spar.VEG[1] < 1.')
+        self.driver.add_constraint('spar.VEG[2] < 1.')
+        self.driver.add_constraint('spar.VEG[3] < 1.')
         self.driver.add_constraint('spar.platform_stability_check < 1.')
         self.driver.add_constraint('spar.heel_angle <= 6.')
         self.driver.add_constraint('spar.min_offset_unity < 1.0')
         self.driver.add_constraint('spar.max_offset_unity < 1.0')
-        print 'end configure'
 
 
 class SparAssemblyCalculation(SparAssembly):

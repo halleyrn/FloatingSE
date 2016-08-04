@@ -48,6 +48,7 @@ class MapMooring(Component):
     MCPL = Float(iotype='out', units='USD/m', desc='calculated mooring cost per length')
     anchor_cost = Float(iotype='out', units='USD', desc='calculated anchor cost')
     mass_density_air = Float(iotype='out', units='kg/m', desc='calculated mass density in air')
+    tension_check = Float(iotype='out', desc='unity check for the pretension')
 
     def __init__(self):
         super(MapMooring, self).__init__()
@@ -107,3 +108,4 @@ class MapMooring(Component):
         self.mooring_vertical_load, self.mooring_vertical_stiffness, self.mooring_horizontal_stiffness = \
             mooring_system.loads_and_stiffnesses()
         self.mooring_mass = (self.WML+pi*mooring_diameter**2/4*water_density)*self.scope*number_of_lines
+        self.tension_check = self.pretension/(self.MBL*0.14)

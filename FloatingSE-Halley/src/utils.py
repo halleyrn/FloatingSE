@@ -900,6 +900,7 @@ def sys_print(example):
     print 'max offset', example.spar.offset_x[-1]
     print 'min offset', example.spar.offset_x[0]
     print 'total force (kN)', example.spar.total_force/1000
+    print 'force_check:', example.mapMooring.tension_check
     print 'mooring horizontal stiffness', example.spar.mooring_horizontal_stiffness
     print 'VAL: ', example.spar.VAL
     print 'VAG: ', example.spar.VAG

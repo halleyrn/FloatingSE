@@ -374,17 +374,17 @@ repeat 120 240
             self.V_initial += vertical
         self.PTEN = max(tension[:])
         # uncomment if you want a graphical depiction of what the spar will look like
-        fig = plt.figure()
-        ax = Axes3D(fig)
-        for i in range(0, mooring_1.size_lines()):
-            x = mooring_1.plot_x(i, 10)
-            y = mooring_1.plot_y(i, 10)
-            z = mooring_1.plot_z(i, 10)
-            ax.plot(x, y, z, 'b-')
-        ax.set_xlabel('X [m]')
-        ax.set_ylabel('Y [m]')
-        ax.set_zlabel('Z [m]')
-        plt.show()
+        # fig = plt.figure()
+        # ax = Axes3D(fig)
+        # for i in range(0, mooring_1.size_lines()):
+        #     x = mooring_1.plot_x(i, 10)
+        #     y = mooring_1.plot_y(i, 10)
+        #     z = mooring_1.plot_z(i, 10)
+        #     ax.plot(x, y, z, 'b-')
+        # ax.set_xlabel('X [m]')
+        # ax.set_ylabel('Y [m]')
+        # ax.set_zlabel('Z [m]')
+        # plt.show()
 
         if objective == "find full area" or objective == True:
             # finds the linearized stiffness matrix diagonal and tension in each line
