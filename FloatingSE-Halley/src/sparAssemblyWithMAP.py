@@ -139,8 +139,8 @@ class SparAssembly(Assembly):
         # self.driver.add_parameter('wall_thickness[3]', low=10., high=100., scaler=0.001)
         self.driver.add_parameter('scope_ratio', low=15., high=45., scaler=0.1)
         # self.driver.add_parameter('mooring_diameter', low=30., high=100., scaler=0.001)
-        self.driver.add_parameter('fixed_ballast_height', low=30., high=100., scaler=0.1)
-        self.driver.add_parameter('permanent_ballast_height', low=30., high=100., scaler=0.1)
+        self.driver.add_parameter('fixed_ballast_height', low=10., high=100., scaler=0.1)
+        self.driver.add_parameter('permanent_ballast_height', low=10., high=100., scaler=0.1)
 
         self.driver.add_parameter('wall_thickness[0]', low=2.54, high=10., scaler=0.01)
         self.driver.add_parameter('wall_thickness[1]', low=2.54, high=10., scaler=0.01)
@@ -149,7 +149,7 @@ class SparAssembly(Assembly):
         self.driver.add_parameter('mooring_diameter', low=90., high=100., scaler=0.001)
 
         """Specify objective function (what you want to minimize)."""
-        self.driver.add_objective('spar.spar_mass', name='spar mass')
+        self.driver.add_objective('spar.spar_mass/1000000', name='spar mass')
 
         """Add constraints to the driver."""
         # self.driver.add_constraint('mooring_diameter > 0.09')

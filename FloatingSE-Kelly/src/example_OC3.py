@@ -3,7 +3,7 @@
 
 import sys
 import os
-from sparAssembly import SparAssembly
+from sparAssembly import SparAssembly, SparAssemblyCalculation
 from utils import sys_print
 import time
 # just to temporarily change PYTHONPATH without installing
@@ -52,7 +52,7 @@ def example_oc3():
     example.user_tower_cg = 43.4
     """Stiffener Variables"""
     example.stiffener_index = 259
-    example.stiffener_curve_fit = False  # not sure if this is correct
+    example.stiffener_curve_fit = True  # not sure if this is correct
     example.neutral_axis = 0.312166  # not sure if this number is correct
     """Section Variables"""
     example.spar_outer_diameter = [6.5, 6.5, 9.4, 9.4, 9.4]

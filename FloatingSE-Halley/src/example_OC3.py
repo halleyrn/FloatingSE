@@ -52,8 +52,8 @@ def example_oc3():
     example.user_tower_cg = 43.4
     """Stiffener Variables"""
     example.stiffener_index = 259
-    example.stiffener_curve_fit = False
-    # example.neutral_axis
+    example.stiffener_curve_fit = True
+    example.neutral_axis = 0.312166
     """Section Variables"""
     example.spar_outer_diameter = [6.5, 6.5, 9.4, 9.4, 9.4]
     example.wall_thickness = [.055, .060, .040, .040, .040]

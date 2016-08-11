@@ -193,6 +193,7 @@ class Spar(Component):
         shell_bulkhead_ring_masses = \
             array(section_shell_masses) + array(section_bulkhead_masses) + array(section_ring_masses)
         outfitting_mass = shell_bulkhead_ring_mass * float(self.outfitting_factor)
+        print 'outfitting mass:', outfitting_mass
         mass = shell_bulkhead_ring_mass*float(self.spar_mass_factor) + outfitting_mass
         section_keel_to_cgs = dot(shell_bulkhead_ring_masses, array(section_keel_to_cgs)) / shell_bulkhead_ring_mass
         keel_to_center_of_buoyancy = \
@@ -521,10 +522,8 @@ class Spar(Component):
         self.shell_mass = shell_mass 
         self.bulkhead_mass = bulkhead_mass
         self.stiffener_mass = ring_mass
+        print 'mooring mass:', self.mooring_mass
         print 'spar mass: ', self.spar_mass
-        print 'shell mass: ', self.shell_mass
-        print 'bulkhead mass: ', self.bulkhead_mass
-        print 'stiffener mass: ', self.stiffener_mass
         print 'end spar'
         print 'permanent ballast mass', permanent_ballast_mass
         print 'fixed ballast mass', fixed_ballast_mass

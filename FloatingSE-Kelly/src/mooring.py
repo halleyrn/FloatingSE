@@ -31,7 +31,7 @@ class Mooring(Component):
     mooring_vertical_load = Float(iotype='out', units='N', desc='mooring vertical load in all mooring lines')
     mooring_horizontal_stiffness = Float(iotype='out', units='N/m', desc='horizontal stiffness of one single mooring line')
     mooring_vertical_stiffness = Float(iotype='out', units='N/m', desc='vertical stiffness of all mooring lines')
-    sum_forces_x = Array(iotype='out', units='N', desc='sume of forces in x direction')
+    sum_forces_x = Array(iotype='out', units='N', desc='sum of forces in x direction')
     offset_x = Array(iotype='out', units='m', desc='X offsets in discretization')
     damaged_mooring = Array(iotype='out', units='m', desc='range of damaged mooring')
     intact_mooring = Array(iotype='out', units='m', desc='range of intact mooring')

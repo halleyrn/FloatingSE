@@ -126,7 +126,7 @@ class SparAssembly(Assembly):
         self.connect('mooring.mooring_mass', 'spar.mooring_mass')
         
         """Specify objective function (what you want to minimize)."""
-        self.driver.add_objective('spar.spar_mass')
+        self.driver.add_objective('spar.spar_mass/1000000')
        
         """Design variables by adding a range of validity for certain variables."""
         self.driver.add_parameter('neutral_axis', low=10., high=41.9, scaler=0.01)
@@ -134,21 +134,15 @@ class SparAssembly(Assembly):
         self.driver.add_parameter('number_of_rings[1]', low=1, high=10)
         self.driver.add_parameter('number_of_rings[2]', low=1, high=10)
         self.driver.add_parameter('number_of_rings[3]', low=1, high=50)
-        # self.driver.add_parameter('wall_thickness[0]', low=1., high=10., scaler=0.01)
-        # self.driver.add_parameter('wall_thickness[1]', low=1., high=10., scaler=0.01)
-        # self.driver.add_parameter('wall_thickness[2]', low=1., high=10., scaler=0.01)
-        # self.driver.add_parameter('wall_thickness[3]', low=10., high=100., scaler=0.001)
-        self.driver.add_parameter('scope_ratio', low=15., high=45., scaler=0.1)
-        self.driver.add_parameter('pretension_percent', low=2.5, high=10.)
-        # self.driver.add_parameter('mooring_diameter', low=30., high=100., scaler=0.001)
-        self.driver.add_parameter('fixed_ballast_height', low=30., high=100., scaler=0.1)
-        self.driver.add_parameter('permanent_ballast_height', low=30., high=100., scaler=0.1)
-
         self.driver.add_parameter('wall_thickness[0]', low=2.54, high=10., scaler=0.01)
         self.driver.add_parameter('wall_thickness[1]', low=2.54, high=10., scaler=0.01)
         self.driver.add_parameter('wall_thickness[2]', low=2.54, high=10., scaler=0.01)
-        self.driver.add_parameter('wall_thickness[3]', low=25.4, high=100., scaler=0.001)
-        self.driver.add_parameter('mooring_diameter', low=90., high=100., scaler=0.001)
+        self.driver.add_parameter('wall_thickness[3]', low=2.54, high=10., scaler=0.01)
+        self.driver.add_parameter('scope_ratio', low=15., high=45., scaler=0.1)
+        self.driver.add_parameter('pretension_percent', low=2.5, high=14.)
+        self.driver.add_parameter('mooring_diameter', low=90., high=180., scaler=0.001)
+        self.driver.add_parameter('fixed_ballast_height', low=10., high=100., scaler=0.1)
+        self.driver.add_parameter('permanent_ballast_height', low=10., high=100., scaler=0.1)
 
         """Add constraints to the driver."""
         # self.driver.add_constraint('mooring_diameter > 0.09')
@@ -156,7 +150,7 @@ class SparAssembly(Assembly):
         # self.driver.add_constraint('wall_thickness[1] > 0.0254')
         # self.driver.add_constraint('wall_thickness[2] > 0.0254')
         # self.driver.add_constraint('wall_thickness[3] > 0.0254')
-        self.driver.add_constraint('pretension_percent < 14')
+        # self.driver.add_constraint('pretension_percent < 14')
         self.driver.add_constraint('spar.water_ballast_height > 0.')
         self.driver.add_constraint('spar.flange_compactness < 1.')
         self.driver.add_constraint('spar.web_compactness < 1.')
